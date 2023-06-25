@@ -1,13 +1,27 @@
 import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
+import { useRegisterMutation } from "../features/user/userApi";
+import { LoaderBig } from "../utils/Loader";
+import { useDispatch } from "react-redux";
+import { setUser } from "../features/user/userSlice";
 
 export default function Register() {
+  const [register, { isLoading }] = useRegisterMutation();
+  const dispatch = useDispatch();
+
   const handleRegister = (e) => {
     e.preventDefault();
     const name = e.target.name.value;
     const email = e.target.email.value;
     const password = e.target.password.value;
-    console.log(name, email, password);
+
+    register({ data: { name, email, password } })
+      .unwrap()
+      .then((res) => {
+        dispatch(setUser(res?.data));
+      })
+      .catch((err) => {});
+
     e.target.email.value = "";
     e.target.password.value = "";
     e.target.name.value = "";
@@ -52,6 +66,8 @@ export default function Register() {
           </Typography>
         </form>
       </Card>
+
+      {isLoading && <LoaderBig />}
     </div>
   );
 }

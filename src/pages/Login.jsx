@@ -6,19 +6,30 @@ import {
   // Spinner,
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
+import { useLoginMutation } from "../features/user/userApi";
+import { LoaderBig } from "../utils/Loader";
 
 export default function Login() {
+  const [login, { isLoading }] = useLoginMutation();
+
   const handleLogin = (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
-    console.log(email, password);
-    e.target.email.value = "";
-    e.target.password.value = "";
+    login({ data: { email, password } })
+      .unwrap()
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => console.log(err.message));
+    // e.target.email.value = "";
+    // e.target.password.value = "";
   };
 
   return (
     <div className="w-full mt-10 grid place-items-center">
+      {isLoading && <LoaderBig />}
+
       <Card className="shadow-lg p-10 bg-gray-100">
         <Typography variant="h4" color="blue-gray">
           Sign In
