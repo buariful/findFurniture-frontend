@@ -1,0 +1,10 @@
+.toast_container button {
+  color: white;
+}
+
+.progress_success {
+  background: #088308 !important;
+}
+.progress_error {
+  background: #970000 !important;
+}
