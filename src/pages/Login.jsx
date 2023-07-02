@@ -8,9 +8,14 @@ import {
 import { Link } from "react-router-dom";
 import { useLoginMutation } from "../features/user/userApi";
 import { LoaderBig } from "../utils/Loader";
+import { useDispatch } from "react-redux";
+import { setUser } from "../features/user/userSlice";
+import { ToastError, ToastSuccess } from "../utils/Toast";
+import { AlertError } from "../utils/Alert";
 
 export default function Login() {
-  const [login, { isLoading }] = useLoginMutation();
+  const [login, { isLoading, error }] = useLoginMutation();
+  const dispatch = useDispatch();
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -19,17 +24,18 @@ export default function Login() {
     login({ data: { email, password } })
       .unwrap()
       .then((res) => {
-        console.log(res.data);
+        dispatch(setUser(res?.data));
+        ToastSuccess(res?.message);
+        e.target.email.value = "";
+        e.target.password.value = "";
       })
-      .catch((err) => console.log(err.message));
-    // e.target.email.value = "";
-    // e.target.password.value = "";
+      .catch((err) => {
+        ToastError("Login failed");
+      });
   };
 
   return (
     <div className="w-full mt-10 grid place-items-center">
-      {isLoading && <LoaderBig />}
-
       <Card className="shadow-lg p-10 bg-gray-100">
         <Typography variant="h4" color="blue-gray">
           Sign In
@@ -53,7 +59,6 @@ export default function Login() {
           </div>
 
           <Button type="submit" className="mt-6" fullWidth>
-            {/* <Spinner className="text-white inline-block mr-1 h-4 w-4" /> */}
             Login
           </Button>
           <Typography color="gray" className="mt-4 text-center font-normal">
@@ -67,6 +72,9 @@ export default function Login() {
           </Typography>
         </form>
       </Card>
+
+      {error && <AlertError text={error?.data?.message} />}
+      {isLoading && <LoaderBig />}
     </div>
   );
 }

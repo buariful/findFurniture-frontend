@@ -4,9 +4,11 @@ import { useRegisterMutation } from "../features/user/userApi";
 import { LoaderBig } from "../utils/Loader";
 import { useDispatch } from "react-redux";
 import { setUser } from "../features/user/userSlice";
+import { AlertError } from "../utils/Alert";
+import { ToastError, ToastSuccess } from "../utils/Toast";
 
 export default function Register() {
-  const [register, { isLoading }] = useRegisterMutation();
+  const [register, { isLoading, error }] = useRegisterMutation();
   const dispatch = useDispatch();
 
   const handleRegister = (e) => {
@@ -19,12 +21,14 @@ export default function Register() {
       .unwrap()
       .then((res) => {
         dispatch(setUser(res?.data));
+        ToastSuccess(res?.message);
+        e.target.email.value = "";
+        e.target.password.value = "";
+        e.target.name.value = "";
       })
-      .catch((err) => {});
-
-    e.target.email.value = "";
-    e.target.password.value = "";
-    e.target.name.value = "";
+      .catch((err) => {
+        ToastError("Registration failed");
+      });
   };
   return (
     <div className="w-full mt-10 grid place-items-center">
@@ -67,6 +71,7 @@ export default function Register() {
         </form>
       </Card>
 
+      {error && <AlertError text={error?.data?.message} />}
       {isLoading && <LoaderBig />}
     </div>
   );
