@@ -21,10 +21,10 @@ const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
-    <>
+    <header>
       {/* header Top */}
       <div className="bg-[#F5F6F8] py-2">
-        <div className="w-11/12 mx-auto flex justify-between items-center">
+        <div className="w-11/12 max-w-7xl mx-auto flex justify-between items-center">
           <p className="text-sm text-gray-700">Welcome to Find-Furniture</p>
 
           <div className="text-sm text-gray-700 flex gap-2 font-semibold">
@@ -41,7 +41,7 @@ const Navbar = () => {
 
       {/* header */}
       <div className="bg-white shadow-md sticky top-0 z-50">
-        <div className="w-11/12 mx-auto flex justify-between items-center">
+        <div className="w-11/12 max-w-7xl mx-auto flex justify-between items-center">
           <Link to="/home">
             <img
               src={require("../../images/logo.png")}
@@ -194,7 +194,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-    </>
+    </header>
   );
 };
 

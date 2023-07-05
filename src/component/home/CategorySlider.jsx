@@ -6,7 +6,7 @@ import { Autoplay } from "swiper";
 
 const CategorySlider = () => {
   return (
-    <div className="pt-3 pb-4 border-b border-b-gray-200">
+    <div className="pt-3 pb-4 border-b border-b-gray-200 w-11/12 max-w-7xl mx-auto">
       <Swiper
         className="category_slider"
         autoplay={{

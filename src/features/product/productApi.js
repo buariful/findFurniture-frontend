@@ -1,12 +1,12 @@
 // product
 
-import api from "../api/api";
+import apiSlice from "../api/apiSlice";
 
-const productApi = api.injectEndpoints({
+const productApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllProducts: builder.mutation({
-      query: () => ({
-        url: "/product",
+      query: (queryParams) => ({
+        url: `/product${queryParams}`,
         method: "GET",
       }),
     }),
