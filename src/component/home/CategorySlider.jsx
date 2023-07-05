@@ -157,6 +157,36 @@ const CategorySlider = () => {
             </p>
           </div>
         </SwiperSlide>
+        <SwiperSlide>
+          <div className="group cursor-pointer">
+            <div className="grid place-items-center w-[110px] h-[110px] mx-auto rounded-full bg-[#E9E9E9]  ">
+              <img
+                src="https://res.cloudinary.com/dygolqxi7/image/upload/v1688135012/FindFurniture/shelf_ixv0qw.jpg"
+                alt=""
+                className="max-w-full rounded-full"
+              />
+            </div>
+
+            <p className="font-semibold text-sm child group-hover:text-blue-500">
+              Shelf
+            </p>
+          </div>
+        </SwiperSlide>
+        <SwiperSlide>
+          <div className="group cursor-pointer">
+            <div className="grid place-items-center w-[110px] h-[110px] mx-auto rounded-full bg-[#E9E9E9]  ">
+              <img
+                src="https://res.cloudinary.com/dygolqxi7/image/upload/v1688135012/FindFurniture/shelf_ixv0qw.jpg"
+                alt=""
+                className="max-w-full rounded-full"
+              />
+            </div>
+
+            <p className="font-semibold text-sm child group-hover:text-blue-500">
+              Shelf
+            </p>
+          </div>
+        </SwiperSlide>
       </Swiper>
     </div>
   );
