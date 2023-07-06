@@ -36,6 +36,9 @@ const FilterTitle = ({ text }) => {
 };
 
 const ProdFilter = () => {
+  const { isLoading: categoryLoading, data: categoryData } =
+    useGetAllCategoriesQuery();
+  const { isLoading: brandLoading, data: brandsData } = useGetAllBrandsQuery();
   const [filterOptionsToggle, setFilterOptionToggle] = useState({
     category: true,
     color: true,
@@ -44,9 +47,6 @@ const ProdFilter = () => {
   });
   const [filterOpen, setFilterOpen] = useState(false);
   const dispatch = useDispatch();
-  const { isLoading: categoryLoading, data: categoryData } =
-    useGetAllCategoriesQuery();
-  const { isLoading: brandLoading, data: brandsData } = useGetAllBrandsQuery();
 
   const filterOptionsToggleHandler = (title) => {
     setFilterOptionToggle({
@@ -61,7 +61,7 @@ const ProdFilter = () => {
   }
   if (categoryData) {
     categories = categoryData?.data?.map((d) => (
-      <div>
+      <div key={d._id}>
         <Checkbox
           label={<span className="capitalize">{d?.name}</span>}
           id={d?.name}
@@ -77,7 +77,7 @@ const ProdFilter = () => {
   }
   if (brandsData) {
     brands = brandsData?.data?.map((d) => (
-      <div>
+      <div key={d._id}>
         <Checkbox
           label={<span className="capitalize">{d?.name}</span>}
           id={d?.name}
@@ -116,23 +116,30 @@ const ProdFilter = () => {
           </div>
 
           <div className="relative flex mb-6 mx-auto max-w-[24rem] ">
-            <Input
-              type="text"
-              label="Search"
-              onChange={(e) => dispatch(setKeyword(e.target.value))}
-              className="pr-20"
-              containerProps={{
-                className: "min-w-0",
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                dispatch(setKeyword(e.target.search.value));
+                // console.log(e.target.search.value);
               }}
-            />
-            <Button
-              size="sm"
-              // color={email ? "blue" : "blue-gray"}
-              // disabled={!email}
-              className="!absolute right-1 top-1 rounded"
             >
-              <MagnifyingGlassIcon className="w-4 h-4" />
-            </Button>
+              <Input
+                type="text"
+                label="Search"
+                name="search"
+                className="pr-20"
+                containerProps={{
+                  className: "min-w-0",
+                }}
+              />
+              <Button
+                size="sm"
+                type="submit"
+                className="!absolute right-1 top-1 rounded"
+              >
+                <MagnifyingGlassIcon className="w-4 h-4" />
+              </Button>
+            </form>
           </div>
 
           <Accordion

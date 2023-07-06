@@ -1,49 +1,13 @@
 import { Card, CardBody, CardHeader, Rating } from "@material-tailwind/react";
-import React, { useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import {
   HeartIcon,
   StarIcon as UnratedIcon,
 } from "@heroicons/react/24/outline";
 import { StarIcon as RatedIcon } from "@heroicons/react/24/solid";
-import { useGetAllProductsMutation } from "../../features/product/productApi";
-import { useSelector } from "react-redux";
 
 const ProdAllProducts = () => {
-  const [getAllProducts] = useGetAllProductsMutation();
-  const filterData = useSelector((state) => state.filter);
-  const { brands, categories, colors, discount, keyword } = filterData;
-
-  useEffect(() => {
-    const params = new URLSearchParams();
-    if (colors.length > 0) {
-      params.set("colors", colors.join(","));
-    }
-    if (categories.length > 0) {
-      params.set("categories", categories.join(","));
-    }
-    if (brands.length > 0) {
-      params.set("brands", brands.join(","));
-    }
-    if (discount !== null) {
-      params.set("discount", discount);
-    }
-    if (keyword) {
-      params.set("keyword", keyword);
-    }
-    let queryParams;
-    if (params.size > 0) {
-      queryParams = `/?${decodeURIComponent(params.toString())}`;
-    } else {
-      queryParams = "/";
-    }
-
-    getAllProducts(queryParams)
-      .unwrap()
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
-  }, [brands, categories, colors, discount, keyword, getAllProducts]);
-
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 mb-5">
       <Card className="border border-[#eee] shadow-none hover:shadow-md hover:border-gray-300 duration-300">

@@ -16,9 +16,12 @@ import {
   Input,
   Tooltip,
 } from "@material-tailwind/react";
+import { useDispatch } from "react-redux";
+import { setKeyword } from "../../features/searchFilter/searchFilterSlice";
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const dispatch = useDispatch();
 
   return (
     <header>
@@ -49,27 +52,28 @@ const Navbar = () => {
               className="max-w-[160px] w-[120px] md:w-[160px]"
             />
           </Link>
-
-          <div className="relative hidden md:flex w-3/6 mx-auto max-w-[24rem] ">
-            <Input
-              type="text"
-              label="Search"
-              // value={email}
-              // onChange={onChange}
-              className="pr-20"
-              containerProps={{
-                className: "min-w-0",
-              }}
-            />
-            <Button
-              size="sm"
-              // color={email ? "blue" : "blue-gray"}
-              // disabled={!email}
-              className="!absolute right-1 top-1 rounded"
-            >
-              <MagnifyingGlassIcon className="w-4 h-4" />
-            </Button>
-          </div>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              dispatch(setKeyword(e.target.search.value));
+            }}
+          >
+            <div className="relative hidden md:flex mx-auto w-[20rem] max-w-[24rem] ">
+              <Input
+                type="text"
+                label="Search"
+                name="search"
+                className="pr-20"
+              />
+              <Button
+                size="sm"
+                type="submit"
+                className="!absolute right-1 top-1 rounded"
+              >
+                <MagnifyingGlassIcon className="w-4 h-4" />
+              </Button>
+            </div>
+          </form>
 
           <div className="hidden md:flex items-center justify-end gap-2">
             <div className="flex items-center">

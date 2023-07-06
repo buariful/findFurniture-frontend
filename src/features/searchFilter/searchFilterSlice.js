@@ -6,6 +6,7 @@ let initialState = {
   categories: [],
   colors: [],
   discount: null,
+  selectedPage: 1,
 };
 
 function toggleValueOfArray(array, value) {
@@ -39,9 +40,18 @@ const searchFilterSlice = createSlice({
     setDiscount: (state, action) => {
       state.discount = action.payload;
     },
+    setPage: (state, action) => {
+      state.selectedPage = action.payload;
+    },
   },
 });
 
-export const { setKeyword, setBrands, setCategories, setColors, setDiscount } =
-  searchFilterSlice.actions;
+export const {
+  setKeyword,
+  setBrands,
+  setCategories,
+  setColors,
+  setDiscount,
+  setPage,
+} = searchFilterSlice.actions;
 export default searchFilterSlice.reducer;
