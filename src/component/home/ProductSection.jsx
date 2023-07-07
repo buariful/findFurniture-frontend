@@ -2,15 +2,19 @@ import React, { useEffect, useState } from "react";
 import ProdFilter from "./ProdFilter";
 import ProdAllProducts from "./ProdAllProducts";
 import Pagination from "./Pagination";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useGetAllProductsMutation } from "../../features/product/productApi";
 import { LoaderBig } from "../../utils/Loader";
+import { AlertError } from "../../utils/Alert";
+// import { setPage } from "../../features/searchFilter/searchFilterSlice";
 const ProductSection = () => {
   const [getAllProducts, { isLoading, error, data }] =
     useGetAllProductsMutation();
   const filterData = useSelector((state) => state.filter);
-  const { brands, categories, colors, discount, keyword } = filterData;
+  const { brands, categories, colors, discount, keyword, selectedPage } =
+    filterData;
   const [totalProducts, setTotalProducts] = useState("");
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -29,6 +33,10 @@ const ProductSection = () => {
     if (keyword) {
       params.set("keyword", keyword);
     }
+    if (selectedPage !== 1) {
+      params.set("page", selectedPage);
+    }
+
     let queryParams;
     if (params.size > 0) {
       queryParams = `/?${decodeURIComponent(params.toString())}`;
@@ -42,7 +50,16 @@ const ProductSection = () => {
         setTotalProducts(res?.totalResults);
       })
       .catch((err) => {});
-  }, [brands, categories, colors, discount, keyword, getAllProducts]);
+  }, [
+    brands,
+    categories,
+    colors,
+    discount,
+    keyword,
+    selectedPage,
+    dispatch,
+    getAllProducts,
+  ]);
 
   return (
     <div className="py-5 w-11/12 max-w-7xl mx-auto grid grid-cols-12 gap-8 relative">
@@ -50,7 +67,8 @@ const ProductSection = () => {
         <ProdFilter />
       </div>
       <div className="col-span-12 xl:col-span-9 ">
-        <ProdAllProducts />
+        {data && <ProdAllProducts data={data?.data} />}
+        {error && <AlertError text={error?.data?.message} />}
 
         {data?.totalResults && data?.totalResults > 4 && (
           <Pagination totalProducts={totalProducts} />

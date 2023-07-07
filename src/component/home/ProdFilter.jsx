@@ -22,6 +22,7 @@ import {
   setColors,
   setDiscount,
   setKeyword,
+  setPage,
 } from "../../features/searchFilter/searchFilterSlice";
 import { useGetAllCategoriesQuery } from "../../features/category/categoryApi";
 import { LoaderSmall } from "../../utils/Loader";
@@ -55,6 +56,16 @@ const ProdFilter = () => {
     });
   };
 
+  const handleColorToggle = (color) => {
+    dispatch(setPage(1));
+    dispatch(setColors(color));
+  };
+
+  const handleDiscount = (value) => {
+    dispatch(setPage(1));
+    dispatch(setDiscount(value));
+  };
+
   let categories;
   if (categoryLoading) {
     categories = <LoaderSmall />;
@@ -65,7 +76,10 @@ const ProdFilter = () => {
         <Checkbox
           label={<span className="capitalize">{d?.name}</span>}
           id={d?.name}
-          onChange={() => dispatch(setCategories(d?.name))}
+          onClick={() => {
+            dispatch(setPage(1));
+            dispatch(setCategories(d?.name));
+          }}
         />
       </div>
     ));
@@ -81,7 +95,10 @@ const ProdFilter = () => {
         <Checkbox
           label={<span className="capitalize">{d?.name}</span>}
           id={d?.name}
-          onChange={() => dispatch(setBrands(d?.name))}
+          onClick={() => {
+            dispatch(setPage(1));
+            dispatch(setBrands(d?.name));
+          }}
         />
       </div>
     ));
@@ -289,28 +306,29 @@ const ProdFilter = () => {
               <Checkbox
                 label={<span className="capitalize">black</span>}
                 id="black"
-                onChange={() => dispatch(setColors("black"))}
+                onClick={() => handleColorToggle("black")}
               />
             </div>
             <div>
               <Checkbox
                 label={<span className="capitalize">white</span>}
                 id="white"
-                onChange={() => dispatch(setColors("white"))}
+                // onClick={() => dispatch(setColors("white"))}
+                onClick={() => handleColorToggle("white")}
               />
             </div>
             <div>
               <Checkbox
                 label={<span className="capitalize">red</span>}
                 id="red"
-                onChange={() => dispatch(setColors("red"))}
+                onClick={() => handleColorToggle("red")}
               />
             </div>
             <div>
               <Checkbox
                 label={<span className="capitalize">pink</span>}
                 id="pink"
-                onChange={() => dispatch(setColors("pink"))}
+                onClick={() => handleColorToggle("pink")}
               />
             </div>
           </AccordionBody>
@@ -377,7 +395,7 @@ const ProdFilter = () => {
                 id="discountProducts"
                 name="discount"
                 label="Discount Products"
-                onClick={() => dispatch(setDiscount(true))}
+                onClick={() => handleDiscount(true)}
               />
             </div>
             <div className="capitalize block">
@@ -385,7 +403,7 @@ const ProdFilter = () => {
                 id="withoutDiscountProducts"
                 name="discount"
                 label="without discount"
-                onClick={() => dispatch(setDiscount(false))}
+                onClick={() => handleDiscount(false)}
               />
             </div>
             <div className="capitalize block">
@@ -394,7 +412,7 @@ const ProdFilter = () => {
                 name="discount"
                 label="All products"
                 defaultChecked
-                onClick={() => dispatch(setDiscount(null))}
+                onClick={() => handleDiscount(null)}
               />
             </div>
           </AccordionBody>

@@ -17,7 +17,10 @@ import {
   Tooltip,
 } from "@material-tailwind/react";
 import { useDispatch } from "react-redux";
-import { setKeyword } from "../../features/searchFilter/searchFilterSlice";
+import {
+  setKeyword,
+  setPage,
+} from "../../features/searchFilter/searchFilterSlice";
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -55,6 +58,7 @@ const Navbar = () => {
           <form
             onSubmit={(e) => {
               e.preventDefault();
+              dispatch(setPage(1));
               dispatch(setKeyword(e.target.search.value));
             }}
           >
