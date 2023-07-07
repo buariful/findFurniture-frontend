@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useGetAllProductsMutation } from "../../features/product/productApi";
 import { LoaderBig } from "../../utils/Loader";
 import { AlertError } from "../../utils/Alert";
-// import { setPage } from "../../features/searchFilter/searchFilterSlice";
 const ProductSection = () => {
   const [getAllProducts, { isLoading, error, data }] =
     useGetAllProductsMutation();

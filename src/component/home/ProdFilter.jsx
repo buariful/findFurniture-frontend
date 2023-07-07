@@ -106,6 +106,148 @@ const ProdFilter = () => {
 
   return (
     <>
+      {/* ---- filter options ---- */}
+      <div className="hidden xl:block ">
+        <Accordion
+          open={filterOptionsToggle.category}
+          icon={
+            <ChevronDownIcon
+              className={`${
+                filterOptionsToggle.category ? "rotate-180" : "rotate-0"
+              } duration-300 w-4`}
+            />
+          }
+          className="text-start mb-6"
+        >
+          <AccordionHeader
+            onClick={() => filterOptionsToggleHandler("category")}
+            className="p-0 border-b-0 text-sm"
+          >
+            <FilterTitle text="categories" />
+          </AccordionHeader>
+
+          <AccordionBody className="pt-2 pb-0">{categories}</AccordionBody>
+        </Accordion>
+
+        <Accordion
+          open={filterOptionsToggle.color}
+          icon={
+            <ChevronDownIcon
+              className={`${
+                filterOptionsToggle.color ? "rotate-180" : "rotate-0"
+              } duration-300 w-4`}
+            />
+          }
+          className="text-start mb-6 "
+        >
+          <AccordionHeader
+            onClick={() => filterOptionsToggleHandler("color")}
+            className="p-0 border-b-0 text-sm"
+          >
+            <FilterTitle text="color" />
+          </AccordionHeader>
+
+          <AccordionBody className="pt-2 pb-0">
+            <div>
+              <Checkbox
+                label={<span className="capitalize">black</span>}
+                id="black"
+                onClick={() => handleColorToggle("black")}
+              />
+            </div>
+            <div>
+              <Checkbox
+                label={<span className="capitalize">white</span>}
+                id="white"
+                // onClick={() => dispatch(setColors("white"))}
+                onClick={() => handleColorToggle("white")}
+              />
+            </div>
+            <div>
+              <Checkbox
+                label={<span className="capitalize">red</span>}
+                id="red"
+                onClick={() => handleColorToggle("red")}
+              />
+            </div>
+            <div>
+              <Checkbox
+                label={<span className="capitalize">pink</span>}
+                id="pink"
+                onClick={() => handleColorToggle("pink")}
+              />
+            </div>
+          </AccordionBody>
+        </Accordion>
+
+        <Accordion
+          open={filterOptionsToggle.brand}
+          icon={
+            <ChevronDownIcon
+              className={`${
+                filterOptionsToggle.brand ? "rotate-180" : "rotate-0"
+              } duration-300 w-4`}
+            />
+          }
+          className="text-start mb-6 "
+        >
+          <AccordionHeader
+            onClick={() => filterOptionsToggleHandler("brand")}
+            className="p-0 border-b-0 text-sm"
+          >
+            <FilterTitle text="brand" />
+          </AccordionHeader>
+
+          <AccordionBody className="pt-2 pb-0">{brands}</AccordionBody>
+        </Accordion>
+
+        <Accordion
+          open={filterOptionsToggle.discount}
+          icon={
+            <ChevronDownIcon
+              className={`${
+                filterOptionsToggle.discount ? "rotate-180" : "rotate-0"
+              } duration-300 w-4`}
+            />
+          }
+          className="text-start mb-6 "
+        >
+          <AccordionHeader
+            onClick={() => filterOptionsToggleHandler("discount")}
+            className="p-0 border-b-0 text-sm"
+          >
+            <FilterTitle text="discount" />
+          </AccordionHeader>
+
+          <AccordionBody className="pt-2 pb-0">
+            <div className="capitalize block">
+              <Radio
+                id="discountProducts"
+                name="discount"
+                label="Discount Products"
+                onClick={() => handleDiscount(true)}
+              />
+            </div>
+            <div className="capitalize block">
+              <Radio
+                id="withoutDiscountProducts"
+                name="discount"
+                label="without discount"
+                onClick={() => handleDiscount(false)}
+              />
+            </div>
+            <div className="capitalize block">
+              <Radio
+                id="allProductradio"
+                name="discount"
+                label="All products"
+                defaultChecked
+                onClick={() => handleDiscount(null)}
+              />
+            </div>
+          </AccordionBody>
+        </Accordion>
+      </div>
       {/* --- filter drawer for small screens ----- */}
       <div className="block xl:hidden ">
         <button
@@ -260,164 +402,6 @@ const ProdFilter = () => {
           </Accordion>
         </Drawer>
       </div>{" "}
-      {/* ---- filter options ---- */}
-      <div className="hidden xl:block ">
-        <Accordion
-          open={filterOptionsToggle.category}
-          icon={
-            <ChevronDownIcon
-              className={`${
-                filterOptionsToggle.category ? "rotate-180" : "rotate-0"
-              } duration-300 w-4`}
-            />
-          }
-          className="text-start mb-6"
-        >
-          <AccordionHeader
-            onClick={() => filterOptionsToggleHandler("category")}
-            className="p-0 border-b-0 text-sm"
-          >
-            <FilterTitle text="categories" />
-          </AccordionHeader>
-
-          <AccordionBody className="pt-2 pb-0">{categories}</AccordionBody>
-        </Accordion>
-
-        <Accordion
-          open={filterOptionsToggle.color}
-          icon={
-            <ChevronDownIcon
-              className={`${
-                filterOptionsToggle.color ? "rotate-180" : "rotate-0"
-              } duration-300 w-4`}
-            />
-          }
-          className="text-start mb-6 "
-        >
-          <AccordionHeader
-            onClick={() => filterOptionsToggleHandler("color")}
-            className="p-0 border-b-0 text-sm"
-          >
-            <FilterTitle text="color" />
-          </AccordionHeader>
-
-          <AccordionBody className="pt-2 pb-0">
-            <div>
-              <Checkbox
-                label={<span className="capitalize">black</span>}
-                id="black"
-                onClick={() => handleColorToggle("black")}
-              />
-            </div>
-            <div>
-              <Checkbox
-                label={<span className="capitalize">white</span>}
-                id="white"
-                // onClick={() => dispatch(setColors("white"))}
-                onClick={() => handleColorToggle("white")}
-              />
-            </div>
-            <div>
-              <Checkbox
-                label={<span className="capitalize">red</span>}
-                id="red"
-                onClick={() => handleColorToggle("red")}
-              />
-            </div>
-            <div>
-              <Checkbox
-                label={<span className="capitalize">pink</span>}
-                id="pink"
-                onClick={() => handleColorToggle("pink")}
-              />
-            </div>
-          </AccordionBody>
-        </Accordion>
-
-        <Accordion
-          open={filterOptionsToggle.brand}
-          icon={
-            <ChevronDownIcon
-              className={`${
-                filterOptionsToggle.brand ? "rotate-180" : "rotate-0"
-              } duration-300 w-4`}
-            />
-          }
-          className="text-start mb-6 "
-        >
-          <AccordionHeader
-            onClick={() => filterOptionsToggleHandler("brand")}
-            className="p-0 border-b-0 text-sm"
-          >
-            <FilterTitle text="brand" />
-          </AccordionHeader>
-
-          <AccordionBody className="pt-2 pb-0">
-            {brands}
-            {/* <div>
-              <Checkbox
-                label={<span className="capitalize">RFL</span>}
-                id="RFL"
-                onChange={() => dispatch(setBrands("rfl"))}
-              />
-            </div>
-            <div>
-              <Checkbox
-                label={<span className="capitalize">Pran</span>}
-                id="Pran"
-                onChange={() => dispatch(setBrands("pran"))}
-              />
-            </div> */}
-          </AccordionBody>
-        </Accordion>
-
-        <Accordion
-          open={filterOptionsToggle.discount}
-          icon={
-            <ChevronDownIcon
-              className={`${
-                filterOptionsToggle.discount ? "rotate-180" : "rotate-0"
-              } duration-300 w-4`}
-            />
-          }
-          className="text-start mb-6 "
-        >
-          <AccordionHeader
-            onClick={() => filterOptionsToggleHandler("discount")}
-            className="p-0 border-b-0 text-sm"
-          >
-            <FilterTitle text="discount" />
-          </AccordionHeader>
-
-          <AccordionBody className="pt-2 pb-0">
-            <div className="capitalize block">
-              <Radio
-                id="discountProducts"
-                name="discount"
-                label="Discount Products"
-                onClick={() => handleDiscount(true)}
-              />
-            </div>
-            <div className="capitalize block">
-              <Radio
-                id="withoutDiscountProducts"
-                name="discount"
-                label="without discount"
-                onClick={() => handleDiscount(false)}
-              />
-            </div>
-            <div className="capitalize block">
-              <Radio
-                id="allProductradio"
-                name="discount"
-                label="All products"
-                defaultChecked
-                onClick={() => handleDiscount(null)}
-              />
-            </div>
-          </AccordionBody>
-        </Accordion>
-      </div>
     </>
   );
 };
