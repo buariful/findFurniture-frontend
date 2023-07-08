@@ -68,7 +68,11 @@ const ProdFilter = () => {
 
   let categories;
   if (categoryLoading) {
-    categories = <LoaderSmall />;
+    categories = (
+      <div className="w-full grid place-items-center">
+        <LoaderSmall />
+      </div>
+    );
   }
   if (categoryData) {
     categories = categoryData?.data?.map((d) => (
@@ -87,7 +91,11 @@ const ProdFilter = () => {
 
   let brands;
   if (brandLoading) {
-    brands = <LoaderSmall />;
+    brands = (
+      <div className="w-full grid place-items-center">
+        <LoaderSmall />
+      </div>
+    );
   }
   if (brandsData) {
     brands = brandsData?.data?.map((d) => (

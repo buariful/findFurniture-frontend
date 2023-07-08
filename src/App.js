@@ -9,6 +9,7 @@ import Navbar from "./component/shared/Navbar";
 import Footer from "./component/shared/Footer";
 import ProductDetails from "./pages/ProductDetails";
 import Wishlist from "./pages/Wishlist";
+import Checkout from "./pages/Checkout";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Routes>
         <Footer />
       </Router>

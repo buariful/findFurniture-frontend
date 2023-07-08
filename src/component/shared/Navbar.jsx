@@ -21,14 +21,16 @@ import {
   setKeyword,
   setPage,
 } from "../../features/searchFilter/searchFilterSlice";
+import CartDrawer from "./Navbar/CartDrawer";
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [isCartDrawerOpen, setCartDrawer] = useState(false);
   const dispatch = useDispatch();
 
   return (
     <header>
-      {/* header Top */}
+      {/* ------------------- header Top ------------------- */}
       <div className="bg-[#F5F6F8] py-2">
         <div className="w-11/12 max-w-7xl mx-auto flex justify-between items-center">
           <p className="text-sm text-gray-700">Welcome to Find-Furniture</p>
@@ -45,7 +47,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* header */}
+      {/* ------------------- Nav bar ------------------- */}
       <div className="bg-white shadow-md sticky top-0 z-50">
         <div className="w-11/12 max-w-7xl mx-auto flex justify-between items-center">
           <Link to="/home">
@@ -107,12 +109,37 @@ const Navbar = () => {
                   <HeartIcon className="w-5 h-5" />
                 </Tooltip>
               </Link>
-              <Link to="/home" className="hover:text-blue-500">
+              <button
+                onClick={() => setCartDrawer(true)}
+                className="hover:text-blue-500"
+              >
                 {" "}
                 <Tooltip content="Cart">
                   <ShoppingCartIcon className="w-5 h-5" />
                 </Tooltip>
+              </button>
+            </div>
+          </div>
+
+          {/* small screen */}
+          <div className="md:hidden">
+            <div className="flex items-center gap-3">
+              <Link
+                to="/wishlist"
+                className="hover:text-blue-500 flex items-center gap-1"
+              >
+                {" "}
+                <HeartIcon className="w-5 h-5" />
+                <span>Wishlist</span>
               </Link>
+              <button
+                className="hover:text-blue-500 flex items-center gap-1 pl-2 border-l border-l-gray-500"
+                onClick={() => setCartDrawer(true)}
+              >
+                {" "}
+                <ShoppingCartIcon className="w-5 h-5" />
+                <span>Cart</span>
+              </button>
             </div>
           </div>
 
@@ -126,7 +153,7 @@ const Navbar = () => {
               onClose={() => setDrawerOpen(false)}
               className="p-4 shadow-lg"
             >
-              <div className="mb-2 flex items-center justify-between">
+              <div className="mb-2 flex items-center justify-between border-b border-b-blue-gray">
                 <Link to="/home">
                   <img
                     src={require("../../images/logo.png")}
@@ -143,25 +170,7 @@ const Navbar = () => {
                 </IconButton>
               </div>
 
-              <div className="relative flex w-11/12 mx-auto mb-3 max-w-[24rem] ">
-                <Input
-                  type="text"
-                  label="Search"
-                  // value={email}
-                  // onChange={onChange}
-                  className="pr-20"
-                />
-                <Button
-                  size="sm"
-                  // color={email ? "blue" : "blue-gray"}
-                  // disabled={!email}
-                  className="!absolute right-1 top-1 rounded"
-                >
-                  <MagnifyingGlassIcon className="w-4 h-4" />
-                </Button>
-              </div>
-
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-center mb-8">
                 <DevicePhoneMobileIcon className="w-5 h-5" />
                 <div>
                   <a
@@ -180,26 +189,33 @@ const Navbar = () => {
                 </div>
               </div>
 
-              <div className="flex justify-center items-center gap-4 mt-2">
-                <Link
-                  to="/home"
-                  className="hover:text-blue-500 flex items-center gap-1 text-sm"
-                >
-                  {" "}
-                  <HeartIcon className="w-5 h-5" />
-                  Wishlist
-                </Link>
-                <Link
-                  to="/home"
-                  className="hover:text-blue-500 flex items-center gap-1 text-sm"
-                >
-                  {" "}
-                  <ShoppingCartIcon className="w-5 h-5" />
-                  Cart
-                </Link>
-              </div>
+              <ul className="text-start px-6">
+                <li className="mb-4 border-b border-b-blue-gray">
+                  <Link to="/" onClick={() => setDrawerOpen(false)}>
+                    Home
+                  </Link>
+                </li>
+                <li className="mb-4 border-b border-b-blue-gray">
+                  <Link to="/wishlist" onClick={() => setDrawerOpen(false)}>
+                    Wishlist
+                  </Link>
+                </li>
+                <li className="mb-4 border-b border-b-blue-gray">
+                  <Link to="/login" onClick={() => setDrawerOpen(false)}>
+                    Sign In
+                  </Link>
+                </li>
+                <li className="mb-4 border-b border-b-blue-gray">
+                  <Link to="/register" onClick={() => setDrawerOpen(false)}>
+                    Sign Up
+                  </Link>
+                </li>
+              </ul>
             </Drawer>
           </div>
+
+          {/* cartDrawer */}
+          <CartDrawer setState={setCartDrawer} state={isCartDrawerOpen} />
         </div>
       </div>
     </header>

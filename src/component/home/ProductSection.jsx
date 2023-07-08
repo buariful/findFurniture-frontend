@@ -68,13 +68,14 @@ const ProductSection = () => {
       <div className="col-span-12 xl:col-span-9 ">
         {data && <ProdAllProducts data={data?.data} />}
         {error && <AlertError text={error?.data?.message} />}
+        {data?.totalResults > 4 && <Pagination totalProducts={totalProducts} />}
 
-        {data?.totalResults && data?.totalResults > 4 && (
-          <Pagination totalProducts={totalProducts} />
+        {isLoading && (
+          <div className="w-full h-full grid place-items-center">
+            <LoaderBig />
+          </div>
         )}
       </div>
-
-      {isLoading && <LoaderBig />}
     </div>
   );
 };
