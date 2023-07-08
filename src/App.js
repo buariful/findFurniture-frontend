@@ -5,11 +5,11 @@ import "react-toastify/dist/ReactToastify.css";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
-import Navbar from "./component/shared/Navbar";
 import Footer from "./component/shared/Footer";
 import ProductDetails from "./pages/ProductDetails";
 import Wishlist from "./pages/Wishlist";
 import Checkout from "./pages/Checkout";
+import Navbar from "./component/shared/header/Navbar";
 
 function App() {
   return (

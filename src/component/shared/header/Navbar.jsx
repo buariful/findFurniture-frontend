@@ -20,8 +20,8 @@ import { useDispatch } from "react-redux";
 import {
   setKeyword,
   setPage,
-} from "../../features/searchFilter/searchFilterSlice";
-import CartDrawer from "./Navbar/CartDrawer";
+} from "../../../features/searchFilter/searchFilterSlice";
+import CartDrawer from "./CartDrawer";
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -52,7 +52,7 @@ const Navbar = () => {
         <div className="w-11/12 max-w-7xl mx-auto flex justify-between items-center">
           <Link to="/home">
             <img
-              src={require("../../images/logo.png")}
+              src={require("../../../images/logo.png")}
               alt=""
               className="max-w-[160px] w-[120px] md:w-[160px]"
             />
@@ -156,7 +156,7 @@ const Navbar = () => {
               <div className="mb-2 flex items-center justify-between border-b border-b-blue-gray">
                 <Link to="/home">
                   <img
-                    src={require("../../images/logo.png")}
+                    src={require("../../../images/logo.png")}
                     alt=""
                     className="max-w-[160px] w-[120px] md:w-[160px]"
                   />
