@@ -12,48 +12,48 @@ const CheckoutLft = () => {
   return (
     <>
       {/* selected products */}
-      <h2 className="font-semibold mt-10 mb-8 text-xl border-b-2 border-b-blue-500 inline-block">
+      <h2 className="font-semibold my-10 text-3xl border-b-2 border-b-blue-500 inline-block">
         Your Selected Products
       </h2>
-      <div class="relative overflow-x-auto mb-12">
-        <table class="w-full text-sm text-left ">
-          <thead class="text-xs uppercase bg-gray-50 ">
+      <div className="relative overflow-x-auto mb-16">
+        <table className="w-full text-sm text-left ">
+          <thead className="text-xs uppercase bg-gray-50 ">
             <tr>
-              <th scope="col" class="p-2 whitespace-nowrap text-sm"></th>
-              <th scope="col" class="p-2 whitespace-nowrap text-sm">
+              <th scope="col" className="p-2 whitespace-nowrap text-sm"></th>
+              <th scope="col" className="p-2 whitespace-nowrap text-sm">
                 Product name
               </th>
-              <th scope="col" class="p-2 whitespace-nowrap text-sm">
+              <th scope="col" className="p-2 whitespace-nowrap text-sm">
                 Stock Status
               </th>
-              <th scope="col" class="p-2 whitespace-nowrap text-sm">
+              <th scope="col" className="p-2 whitespace-nowrap text-sm">
                 Quantity
               </th>
-              <th scope="col" class="p-2 whitespace-nowrap text-sm">
+              <th scope="col" className="p-2 whitespace-nowrap text-sm">
                 Price
               </th>
-              <th scope="col" class="p-2 whitespace-nowrap text-sm"></th>
+              <th scope="col" className="p-2 whitespace-nowrap text-sm"></th>
             </tr>
           </thead>
 
           <tbody>
-            <tr class="bg-white border-b ">
-              <td class="p-2 font-medium text-gray-900 whitespace-nowrap">
+            <tr className="bg-white border-b ">
+              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
                 <img
                   src={require("../../images/logo.png")}
                   alt=""
                   className="w-[50px] rounded"
                 />
               </td>
-              <td class="p-2 font-medium text-gray-900 whitespace-nowrap">
+              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
                 Apple MacBook Pro 17"
               </td>
-              <td class="p-2 font-medium text-gray-900 whitespace-nowrap">
+              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
                 <span className="text-green-600 font-semibold text-cetner bg-green-50 py-1 px-3 rounded-full">
                   In Stock
                 </span>
               </td>
-              <td class="p-2 font-medium text-gray-900 whitespace-nowrap">
+              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
                 <ButtonGroup size="sm">
                   <Button className="text-sm font-normal px-3 py-1">-</Button>
                   <Button
@@ -65,30 +65,30 @@ const CheckoutLft = () => {
                   <Button className="text-sm font-normal px-3 py-1">+</Button>
                 </ButtonGroup>
               </td>
-              <td class="p-2 text-gray-900 font-semibold">10000</td>
+              <td className="p-2 text-gray-900 font-semibold">10000</td>
               <td className="p-2">
                 <IconButton variant="text">
                   <TrashIcon className="w-4 text-red-500" />
                 </IconButton>
               </td>
             </tr>
-            <tr class="bg-white border-b ">
-              <td class="p-2 font-medium text-gray-900 whitespace-nowrap">
+            <tr className="bg-white border-b ">
+              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
                 <img
                   src={require("../../images/logo.png")}
                   alt=""
                   className="w-[50px] rounded"
                 />
               </td>
-              <td class="p-2 font-medium text-gray-900 whitespace-nowrap">
+              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
                 Apple MacBook Pro 17"
               </td>
-              <td class="p-2 font-medium text-gray-900 whitespace-nowrap">
+              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
                 <span className="text-green-600 font-semibold text-cetner bg-green-50 py-1 px-3 rounded-full">
                   In Stock
                 </span>
               </td>
-              <td class="p-2 font-medium text-gray-900 whitespace-nowrap">
+              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
                 <ButtonGroup size="sm">
                   <Button className="text-sm font-normal px-3 py-1">-</Button>
                   <Button
@@ -100,30 +100,30 @@ const CheckoutLft = () => {
                   <Button className="text-sm font-normal px-3 py-1">+</Button>
                 </ButtonGroup>
               </td>
-              <td class="p-2 text-gray-900 font-semibold">10000</td>
+              <td className="p-2 text-gray-900 font-semibold">10000</td>
               <td className="p-2">
                 <IconButton variant="text">
                   <TrashIcon className="w-4 text-red-500" />
                 </IconButton>
               </td>
             </tr>
-            <tr class="bg-white border-b ">
-              <td class="p-2 font-medium text-gray-900 whitespace-nowrap">
+            <tr className="bg-white border-b ">
+              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
                 <img
                   src={require("../../images/logo.png")}
                   alt=""
                   className="w-[50px] rounded"
                 />
               </td>
-              <td class="p-2 font-medium text-gray-900 whitespace-nowrap">
+              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
                 Apple MacBook Pro 17"
               </td>
-              <td class="p-2 font-medium text-gray-900 whitespace-nowrap">
+              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
                 <span className="text-green-600 font-semibold text-cetner bg-green-50 py-1 px-3 rounded-full">
                   In Stock
                 </span>
               </td>
-              <td class="p-2 font-medium text-gray-900 whitespace-nowrap">
+              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
                 <ButtonGroup size="sm">
                   <Button className="text-sm font-normal px-3 py-1">-</Button>
                   <Button
@@ -135,7 +135,7 @@ const CheckoutLft = () => {
                   <Button className="text-sm font-normal px-3 py-1">+</Button>
                 </ButtonGroup>
               </td>
-              <td class="p-2 text-gray-900 font-semibold">10000</td>
+              <td className="p-2 text-gray-900 font-semibold">10000</td>
               <td className="p-2">
                 <IconButton variant="text">
                   <TrashIcon className="w-4 text-red-500" />
@@ -147,7 +147,7 @@ const CheckoutLft = () => {
       </div>
 
       {/* Shipping address */}
-      <h2 className="font-semibold mb-8 text-xl border-b-2 border-b-blue-500 inline-block">
+      <h2 className="font-semibold mb-10 text-3xl border-b-2 border-b-blue-500 inline-block">
         Shipping Address
       </h2>
 

@@ -5,27 +5,83 @@ import "react-toastify/dist/ReactToastify.css";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
-import Footer from "./component/shared/Footer";
 import ProductDetails from "./pages/ProductDetails";
 import Wishlist from "./pages/Wishlist";
 import Checkout from "./pages/Checkout";
-import Navbar from "./component/shared/header/Navbar";
+import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
+import Order from "./pages/Order";
+import { Layout } from "./Layout";
+import Review from "./pages/Review";
 
 function App() {
   return (
     <div className="App">
       <Router>
-        <Navbar />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/product/:id" element={<ProductDetails />} />
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/checkout" element={<Checkout />} />
+          <Route
+            path="/"
+            element={
+              <Layout>
+                <Home />
+              </Layout>
+            }
+          />
+          <Route
+            path="/home"
+            element={
+              <Layout>
+                <Home />
+              </Layout>
+            }
+          />
+          <Route
+            path="/product/:id"
+            element={
+              <Layout>
+                <ProductDetails />{" "}
+              </Layout>
+            }
+          />
+          <Route
+            path="/wishlist"
+            element={
+              <Layout>
+                <Wishlist />
+              </Layout>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <Layout>
+                <Login />
+              </Layout>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <Layout>
+                <Register />
+              </Layout>
+            }
+          />
+          <Route
+            path="/checkout"
+            element={
+              <Layout>
+                <Checkout />
+              </Layout>
+            }
+          />
+
+          <Route path="/dashboard/" element={<Dashboard />}>
+            <Route index element={<Order />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="review" element={<Review />} />
+          </Route>
         </Routes>
-        <Footer />
       </Router>
 
       <ToastContainer />
