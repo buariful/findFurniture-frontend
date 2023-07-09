@@ -5,9 +5,11 @@ import "react-toastify/dist/ReactToastify.css";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
-import ProductDetails from "./pages/ProductDetails";
-import Navbar from "./component/shared/Navbar";
 import Footer from "./component/shared/Footer";
+import ProductDetails from "./pages/ProductDetails";
+import Wishlist from "./pages/Wishlist";
+import Checkout from "./pages/Checkout";
+import Navbar from "./component/shared/header/Navbar";
 
 function App() {
   return (
@@ -17,9 +19,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/product-details/:id" element={<ProductDetails />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Routes>
         <Footer />
       </Router>

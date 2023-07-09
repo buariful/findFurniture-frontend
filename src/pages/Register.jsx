@@ -1,7 +1,7 @@
 import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import { useRegisterMutation } from "../features/user/userApi";
-import { LoaderBig } from "../utils/Loader";
+import { LoaderFullScreen } from "../utils/Loader";
 import { useDispatch } from "react-redux";
 import { setUser } from "../features/user/userSlice";
 import { AlertError } from "../utils/Alert";
@@ -31,7 +31,7 @@ export default function Register() {
       });
   };
   return (
-    <div className="w-full mt-10 mb-16  grid place-items-center">
+    <div className="w-full mt-10 grid place-items-center mb-20">
       <Card className="shadow-md p-10 bg-gray-100">
         <Typography variant="h4" color="blue-gray">
           Sign Up
@@ -72,7 +72,7 @@ export default function Register() {
       </Card>
 
       {error && <AlertError text={error?.data?.message} />}
-      {isLoading && <LoaderBig />}
+      {isLoading && <LoaderFullScreen />}
     </div>
   );
 }
