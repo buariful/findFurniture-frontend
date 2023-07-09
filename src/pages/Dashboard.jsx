@@ -13,7 +13,7 @@ const Dashboard = () => {
     // #333A48 menu hover color
     <div className="grid grid-cols-12 w-full mx-auto min-h-screen">
       <div className="col-span-2 bg-[#1C2434] text-white p-5 text-start">
-        <div className="bg-[#737b8b] p-2 rounded mb-8">
+        <div className="bg-[#c0c9dd] p-2 rounded mb-8">
           <Link to="/home">
             <img
               src={require("../images/logo.png")}
