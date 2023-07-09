@@ -35,7 +35,7 @@ export default function Login() {
   };
 
   return (
-    <div className="w-full mt-10 grid place-items-center">
+    <div className="w-full mt-10 mb-16 grid place-items-center">
       <Card className="shadow-lg p-10 bg-gray-100">
         <Typography variant="h4" color="blue-gray">
           Sign In
