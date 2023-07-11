@@ -8,15 +8,16 @@ import {
 import { Button } from "@material-tailwind/react";
 import ReviewModal from "../component/review/ReviewModal";
 import ReviewCard from "../component/review/ReviewCard";
+import DashboardTitle from "../component/shared/DashboardTitle";
 
 const Review = () => {
   const [reviewModal, setReviewModal] = useState(false);
   const handleOpen = () => setReviewModal(!reviewModal);
   return (
     <div className="w-11/12 mx-auto">
-      <h2 className="inline-block text-3xl mt-12 mb-8 border-b-2 border-b-blue-500 font-bold pb-2 capitalize">
-        Products I've purchased
-      </h2>
+      <div className="mt-16 mb-8">
+        <DashboardTitle text="product I've purchased" />
+      </div>
       <div className="relative overflow-x-auto w-10/12 mx-auto">
         <table className="w-full text-sm  border">
           <thead className="text-xs uppercase bg-gray-50 ">
@@ -99,9 +100,9 @@ const Review = () => {
       </div>
       <ReviewModal handleOpen={handleOpen} isModalOpen={reviewModal} />
 
-      <h2 className="inline-block text-3xl mt-12 mb-8 border-b-2 border-b-blue-500 font-bold pb-2 capitalize">
-        My All Reviews
-      </h2>
+      <div className="mt-16 mb-8">
+        <DashboardTitle text="my all reviews" />
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 mb-16 gap-5">
         <ReviewCard />

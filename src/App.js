@@ -13,6 +13,8 @@ import Profile from "./pages/Profile";
 import Order from "./pages/Order";
 import { Layout } from "./Layout";
 import Review from "./pages/Review";
+import AdminAllProducts from "./pages/AdminAllProducts";
+import AdminSingleProduct from "./pages/AdminSingleProduct";
 
 function App() {
   return (
@@ -80,6 +82,8 @@ function App() {
             <Route index element={<Order />} />
             <Route path="profile" element={<Profile />} />
             <Route path="review" element={<Review />} />
+            <Route path="admin/all-products" element={<AdminAllProducts />} />
+            <Route path="admin/product/:id" element={<AdminSingleProduct />} />
           </Route>
         </Routes>
       </Router>

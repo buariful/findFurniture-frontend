@@ -5,8 +5,9 @@ import {
   UserCircleIcon,
   CurrencyDollarIcon,
   ChatBubbleLeftIcon,
+  Bars3Icon,
 } from "@heroicons/react/24/outline";
-import { Button } from "@material-tailwind/react";
+import { Button, IconButton } from "@material-tailwind/react";
 
 const Dashboard = () => {
   return (
@@ -59,8 +60,8 @@ const Dashboard = () => {
         </ul>
 
         <div className="text-center mt-6">
-          <Button variant="gradient">
-            <Link to="/" className="flex items-center gap-1 rounded">
+          <Button variant="gradient" className="p-0">
+            <Link to="/" className="flex items-center gap-1 rounded px-6 py-3">
               <HomeIcon className="w-5" />
               <span>Go to Home</span>
             </Link>
@@ -76,6 +77,9 @@ const Dashboard = () => {
             className="w-16 rounded-full"
           />
           <span className="capitalize">Person name</span>
+          <IconButton variant="text" className="text-black">
+            <Bars3Icon className="w-6" strokeWidth={2} />
+          </IconButton>
         </div>
         <Outlet />
       </div>

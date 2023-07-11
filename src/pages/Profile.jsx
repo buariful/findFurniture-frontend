@@ -1,5 +1,6 @@
 import { Button, Card, Input } from "@material-tailwind/react";
 import React from "react";
+import DashboardTitle from "../component/shared/DashboardTitle";
 
 const Profile = () => {
   return (
@@ -20,9 +21,9 @@ const Profile = () => {
         </div>
       </div>
 
-      <h2 className="inline-block text-3xl mt-12 mb-8 border-b-2 border-b-blue-500 font-bold pb-2">
-        Update My informations.
-      </h2>
+      <div className="my-8">
+        <DashboardTitle text="Profile informations" />
+      </div>
 
       <div className="w-11/12 max-w-2xl mx-auto text-center mb-16">
         <Card className="shadow-md px-6 pb-10 bg-gray-100">
@@ -91,9 +92,6 @@ const Profile = () => {
                   type="file"
                   accept="image/*"
                 />
-                <p className="mt-1 text-sm text-gray-500 " id="file_input_help">
-                  SVG, PNG, JPG or GIF (MAX. 800x400px).
-                </p>
               </div>
             </div>
 
