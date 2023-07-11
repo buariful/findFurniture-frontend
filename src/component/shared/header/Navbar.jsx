@@ -31,7 +31,7 @@ const Navbar = () => {
   return (
     <header>
       {/* ------------------- header Top ------------------- */}
-      <div className="bg-[#F5F6F8] py-2">
+      <div className="bg-[#F5F6F8] py-2 hidden md:block">
         <div className="w-11/12 max-w-7xl mx-auto flex justify-between items-center">
           <p className="text-sm text-gray-700">Welcome to Find-Furniture</p>
 

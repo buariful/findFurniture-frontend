@@ -6,7 +6,7 @@ const Order = () => {
     <>
       {" "}
       <h2 className="inline-block text-3xl mt-16 mb-8 border-b-2 border-b-blue-500 font-bold">
-        Your Orders
+        My Orders
       </h2>
       <div className="relative overflow-x-auto w-10/12 mx-auto">
         <table className="w-full text-sm  border">
@@ -37,11 +37,11 @@ const Order = () => {
 
           <tbody>
             <tr className="bg-white border-b ">
-              <td className="px-2 py-4 font-medium text-gray-900 whitespace-nowrap">
+              <td className="px-2 py-1">
                 <img
                   src={require("../images/logo.png")}
                   alt=""
-                  className="w-[50px] rounded"
+                  className="!w-[50px] block rounded"
                 />
               </td>
               <td className="px-2 py-4 font-medium text-gray-900 whitespace-nowrap">

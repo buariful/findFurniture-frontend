@@ -69,6 +69,14 @@ const Dashboard = () => {
       </div>
 
       <div className="col-span-10">
+        <div className="bg-[#eee] flex justify-center items-center gap-2 py-3">
+          <img
+            src={require("../images/logo.png")}
+            alt=""
+            className="w-16 rounded-full"
+          />
+          <span className="capitalize">Person name</span>
+        </div>
         <Outlet />
       </div>
     </div>
