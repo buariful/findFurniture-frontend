@@ -15,6 +15,7 @@ import { Layout } from "./Layout";
 import Review from "./pages/Review";
 import AdminAllProducts from "./pages/AdminAllProducts";
 import AdminSingleProduct from "./pages/AdminSingleProduct";
+import AdminCreateProduct from "./pages/AdminCreateProduct";
 
 function App() {
   return (
@@ -84,6 +85,7 @@ function App() {
             <Route path="review" element={<Review />} />
             <Route path="admin/all-products" element={<AdminAllProducts />} />
             <Route path="admin/product/:id" element={<AdminSingleProduct />} />
+            <Route path="admin/product/new" element={<AdminCreateProduct />} />
           </Route>
         </Routes>
       </Router>
