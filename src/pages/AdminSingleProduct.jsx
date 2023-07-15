@@ -4,9 +4,16 @@ import { Button, Card, CardBody } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import DashboardTitle from "../component/shared/DashboardTitle";
 import ProductFormInfo from "../component/adminSingleProduct/ProductFormInfo";
+import Select from "react-select";
 
 const AdminSingleProduct = () => {
   const navigate = useNavigate();
+
+  const options = [
+    { value: "chocolate", label: "Chocolate" },
+    { value: "strawberry", label: "Strawberry" },
+    { value: "vanilla", label: "Vanilla" },
+  ];
   return (
     <>
       <div className="bg-blue-50 py-2">
@@ -20,7 +27,7 @@ const AdminSingleProduct = () => {
         </Button>
       </div>
 
-      <div className="mt-10 mb-5">
+      {/* <div className="mt-10 mb-5">
         <DashboardTitle
           text={
             <>
@@ -113,6 +120,10 @@ const AdminSingleProduct = () => {
             </form>
           </CardBody>
         </Card>
+      </div> */}
+
+      <div>
+        <Select options={options} isMulti />
       </div>
     </>
   );
