@@ -1,33 +1,34 @@
 import React, { useEffect } from "react";
 import { Button, IconButton } from "@material-tailwind/react";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
-import { useDispatch, useSelector } from "react-redux";
-import { setPage } from "../../features/searchFilter/searchFilterSlice";
+import { useState } from "react";
 
-export default function Pagination({ totalProducts }) {
-  const activePage = useSelector((state) => state.filter.selectedPage);
-  const [totalPage, setTotalPage] = React.useState(1);
-  const dispatch = useDispatch();
+export default function Pagination({
+  handlePaginationAction,
+  activePageNumber,
+  totalProducts,
+}) {
+  const [totalPage, setTotalPage] = useState(1);
 
   const getItemProps = (index) => ({
-    variant: activePage === index ? "filled" : "text",
-    color: activePage === index ? "blue" : "blue-gray",
-    onClick: () => dispatch(setPage(index)),
+    variant: activePageNumber === index ? "filled" : "text",
+    color: activePageNumber === index ? "blue" : "blue-gray",
+    onClick: () => handlePaginationAction(index),
     className: "rounded-full",
   });
 
   const next = () => {
-    if (activePage === 5) return;
-    dispatch(setPage(activePage + 1));
+    if (activePageNumber === totalPage) return;
+    handlePaginationAction(activePageNumber + 1);
   };
 
   const prev = () => {
-    if (activePage === 1) return;
-    dispatch(setPage(activePage - 1));
+    if (activePageNumber === 1) return;
+    handlePaginationAction(activePageNumber - 1);
   };
 
   useEffect(() => {
-    const pages = Math.ceil(totalProducts / 4);
+    const pages = Math.ceil(totalProducts / 10);
     setTotalPage(pages);
   }, [totalProducts]);
 
@@ -39,7 +40,7 @@ export default function Pagination({ totalProducts }) {
         color="blue-gray"
         className="flex items-center gap-2 rounded-full"
         onClick={prev}
-        disabled={activePage === 1}
+        disabled={activePageNumber === 1}
       >
         <ArrowLeftIcon strokeWidth={2} className="h-4 w-4" /> Previous
       </Button>
@@ -49,7 +50,7 @@ export default function Pagination({ totalProducts }) {
             {...getItemProps(index + 1)}
             key={index}
             onClick={() => {
-              dispatch(setPage(index + 1));
+              handlePaginationAction(index + 1);
             }}
           >
             {index + 1}
@@ -61,7 +62,7 @@ export default function Pagination({ totalProducts }) {
         color="blue-gray"
         className="flex items-center gap-2 rounded-full"
         onClick={next}
-        disabled={activePage === totalPage}
+        disabled={activePageNumber === totalPage}
       >
         Next
         <ArrowRightIcon strokeWidth={2} className="h-4 w-4" />

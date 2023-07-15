@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useGetAllProductsMutation } from "../../features/product/productApi";
 import { LoaderBig } from "../../utils/Loader";
 import { AlertError } from "../../utils/Alert";
+import { setPage } from "../../features/searchFilter/searchFilterSlice";
+
 const ProductSection = () => {
   const [getAllProducts, { isLoading, error, data }] =
     useGetAllProductsMutation();
@@ -13,7 +15,13 @@ const ProductSection = () => {
   const { brands, categories, colors, discount, keyword, selectedPage } =
     filterData;
   const [totalProducts, setTotalProducts] = useState("");
+  const [activePageNumber, setActivePageNumber] = useState(1);
   const dispatch = useDispatch();
+
+  const handlePaginationAction = (pageNumber) => {
+    dispatch(setPage(pageNumber));
+    setActivePageNumber(pageNumber);
+  };
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -68,7 +76,13 @@ const ProductSection = () => {
       <div className="col-span-12 xl:col-span-9 ">
         {data && <ProdAllProducts data={data?.data} />}
         {error && <AlertError text={error?.data?.message} />}
-        {data?.totalResults > 4 && <Pagination totalProducts={totalProducts} />}
+        {data?.totalResults > 4 && (
+          <Pagination
+            handlePaginationAction={handlePaginationAction}
+            totalProducts={totalProducts}
+            activePageNumber={activePageNumber}
+          />
+        )}
 
         {isLoading && (
           <div className="w-full h-full grid place-items-center">

@@ -126,7 +126,7 @@ const AdminCreateProduct = () => {
     e.preventDefault();
     const { name, price, sellPrice } = e.target;
 
-    if (price < sellPrice) {
+    if (parseInt(price.value) < parseInt(sellPrice.value)) {
       console.log(price, sellPrice);
       return ToastError("Sell price should be smaller than product price");
     }
@@ -173,6 +173,12 @@ const AdminCreateProduct = () => {
       colors: [],
     });
     setSelectedImages([]);
+    setShippingInfo({
+      freeShipping: { area: [], time: "" },
+      lowShipping: { area: [], time: "", price: "" },
+      highShipping: { time: "", price: "" },
+    });
+    setContent("");
   };
   const freeShipUpazilas =
     shipAreas.freeShipAreas.length > 0 &&

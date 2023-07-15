@@ -17,8 +17,16 @@ const productApi = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    getSingleProduct: builder.mutation({
+      query: (id) => ({
+        url: `/product/${id}`,
+      }),
+    }),
   }),
 });
 
-export const { useGetAllProductsMutation, useCreateProductMutation } =
-  productApi;
+export const {
+  useGetAllProductsMutation,
+  useCreateProductMutation,
+  useGetSingleProductMutation,
+} = productApi;

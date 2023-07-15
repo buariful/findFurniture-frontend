@@ -1,19 +1,33 @@
 import React from "react";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
-import { Button, Card, CardBody } from "@material-tailwind/react";
-import { useNavigate } from "react-router-dom";
+import { Button } from "@material-tailwind/react";
+import { useNavigate, useParams } from "react-router-dom";
 import DashboardTitle from "../component/shared/DashboardTitle";
 import ProductFormInfo from "../component/adminSingleProduct/ProductFormInfo";
-import Select from "react-select";
+import { useGetSingleProductMutation } from "../features/product/productApi";
+import { useEffect } from "react";
+import { useState } from "react";
+import { LoaderFullScreen } from "../utils/Loader";
 
 const AdminSingleProduct = () => {
   const navigate = useNavigate();
+  const [getSingleProduct, { isLoading }] = useGetSingleProductMutation();
 
-  const options = [
-    { value: "chocolate", label: "Chocolate" },
-    { value: "strawberry", label: "Strawberry" },
-    { value: "vanilla", label: "Vanilla" },
-  ];
+  const [error, setError] = useState("");
+  const [product, setProduct] = useState("");
+  const { id } = useParams();
+
+  console.log(product);
+
+  useEffect(() => {
+    getSingleProduct(id)
+      .unwrap()
+      .then((res) => setProduct(res?.data))
+      .catch(() => {
+        setError("Product not found");
+      });
+  }, [id, getSingleProduct, setProduct]);
+
   return (
     <>
       <div className="bg-blue-50 py-2">
@@ -27,76 +41,58 @@ const AdminSingleProduct = () => {
         </Button>
       </div>
 
-      {/* <div className="mt-10 mb-5">
-        <DashboardTitle
-          text={
-            <>
-              <span>Product name</span>
-              <span className="text-sm text-gray-700 font-medium inline-block ml-3 ">
-                (product code)
-              </span>
-            </>
-          }
-        />
+      <div className="mt-10 mb-5">
+        <DashboardTitle text="Product details" />
       </div>
 
-      <div className="max-w-[350px] w-11/12 mx-auto text-start ">
-        <div>
-          <p>
-            <span className="font-semibold">Category:</span> Table
+      <div className="max-w-3xl w-11/12 mx-auto text-start grid grid-cols-2 gap-5 border-b border-b-blue-gray pb-5">
+        <div className="mx-auto">
+          <p className="capitalize">
+            <span className="font-semibold">Name: </span> {product.name}
           </p>
-          <p>
-            <span className="font-semibold">Brand:</span> RFL
+          <p className="capitalize">
+            <span className="font-semibold ">Product code: </span>{" "}
+            {product.productCode}
           </p>
-          <p>
-            <span className="font-semibold">Price:</span> 5000
+          <p className="capitalize">
+            <span className="font-semibold"> Price: </span> {product.price}
           </p>
-          <p>
-            <span className="font-semibold">Sell Price:</span> 5000
+          <p className="capitalize">
+            <span className="font-semibold">Sell Price: </span>
+            {product.sellPrice}
+          </p>
+          <p className="capitalize">
+            <span className="font-semibold">Discount: </span>
+            {product.discount ? product.discount : 0} %
+          </p>
+        </div>
+
+        <div className="mx-auto">
+          <p className="capitalize">
+            <span className="font-semibold">Brand:</span>
+            {product.brand}
+          </p>
+          <p className="capitalize">
+            <span className="font-semibold">Category:</span>
+            {product.category}
+          </p>
+          <p className="capitalize">
+            <span className="font-semibold">Avalable Colors: </span>
+            {product.colors.map((c) => c)}
           </p>
         </div>
       </div>
 
       <div className="w-11/12 mx-auto mt-6 mb-3">
         <h3 className="font-semibold text-xl text-start">Product Images</h3>
-      </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+          {product.images?.map((img) => (
+            <div className="grid place-items-center">
+              <img src={img.url} alt="" className="mb-2" />
 
-      <div className="w-11/12 mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        <div className="grid place-items-center">
-          <img
-            src="https://images.othoba.com/images/thumbs/0473357_regal-5-star-wooden-king-bed_300.jpeg"
-            alt=""
-            className=""
-          />
-
-          <Button className="capitalize">Set Thumbnail</Button>
-        </div>
-        <div className="grid place-items-center">
-          <img
-            src="https://images.othoba.com/images/thumbs/0473357_regal-5-star-wooden-king-bed_300.jpeg"
-            alt=""
-            className=""
-          />
-
-          <Button className="capitalize">Set Thumbnail</Button>
-        </div>
-        <div className="grid place-items-center">
-          <img
-            src="https://images.othoba.com/images/thumbs/0473357_regal-5-star-wooden-king-bed_300.jpeg"
-            alt=""
-            className=""
-          />
-
-          <Button className="capitalize">Set Thumbnail</Button>
-        </div>
-        <div className="grid place-items-center">
-          <img
-            src="https://images.othoba.com/images/thumbs/0473357_regal-5-star-wooden-king-bed_300.jpeg"
-            alt=""
-            className=""
-          />
-
-          <Button className="capitalize">Set Thumbnail</Button>
+              <Button className="capitalize">Set Thumbnail</Button>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -104,26 +100,7 @@ const AdminSingleProduct = () => {
         <h3 className="font-semibold text-xl text-start">
           Change Product Information
         </h3>
-      </div>
-
-      <div className="w-11/12 mx-auto mb-16">
-        <Card className=" max-w-4xl">
-          <CardBody>
-            <form>
-              <ProductFormInfo />
-
-              <div className="mt-10 ">
-                <Button variant="gradient" type="submit">
-                  Update
-                </Button>
-              </div>
-            </form>
-          </CardBody>
-        </Card>
-      </div> */}
-
-      <div>
-        <Select options={options} isMulti />
+        <ProductFormInfo product={product} />
       </div>
     </>
   );
