@@ -9,13 +9,13 @@ import {
   XMarkIcon,
   ListBulletIcon,
   SquaresPlusIcon,
+  ChartPieIcon,
 } from "@heroicons/react/24/outline";
 import { Button, Drawer, IconButton } from "@material-tailwind/react";
 
 const Dashboard = () => {
-  const [isSideBarOpen, setSiteBarOpen] = useState(true);
+  const [isSideBarOpen, setSiteBarOpen] = useState(false);
   const location = useLocation();
-  console.log(location.pathname);
   return (
     <div className="grid grid-cols-12 w-full mx-auto min-h-screen">
       {/* ============ sidbar============ */}
@@ -72,6 +72,19 @@ const Dashboard = () => {
           </div>
           {/* admin menu */}
           <div>
+            <li>
+              <Link
+                to="/dashboard/admin/overview"
+                className={`px-2 py-3 hover:bg-[#333a48] duration-300 flex items-center gap-1 rounded ${
+                  location.pathname === "/dashboard/admin/overview" &&
+                  "bg-[#333a48]"
+                }`}
+              >
+                <ChartPieIcon className="w-5" />
+                <span>Overview</span>
+              </Link>
+            </li>
+
             <li>
               <Link
                 to="/dashboard/admin/all-products"
@@ -174,6 +187,19 @@ const Dashboard = () => {
           </div>
           {/* admin menu */}
           <div>
+            <li>
+              <Link
+                onClick={() => setSiteBarOpen(false)}
+                to="/dashboard/admin/overview"
+                className={`px-2 py-3 hover:bg-[#333a48] duration-300 flex items-center gap-1 rounded ${
+                  location.pathname === "/dashboard/admin/overview" &&
+                  "bg-[#333a48]"
+                }`}
+              >
+                <ChartPieIcon className="w-5" />
+                <span>Overview</span>
+              </Link>
+            </li>
             <li>
               <Link
                 onClick={() => setSiteBarOpen(false)}

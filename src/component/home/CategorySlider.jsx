@@ -1,8 +1,7 @@
 import React from "react";
+import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/swiper-bundle.css";
-
-import { Autoplay } from "swiper";
+import "swiper/css/bundle";
 
 const CategorySlider = () => {
   return (
@@ -14,7 +13,8 @@ const CategorySlider = () => {
           disableOnInteraction: false,
         }}
         speed={1500}
-        rewind={true}
+        // rewind={true}
+        loop={true}
         slidesPerView="auto"
         spaceBetween={30}
         breakpoints={{
