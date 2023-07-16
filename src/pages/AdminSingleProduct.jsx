@@ -78,7 +78,7 @@ const AdminSingleProduct = () => {
           </p>
           <p className="capitalize">
             <span className="font-semibold">Avalable Colors: </span>
-            {product.colors.map((c) => c)}
+            {product?.colors?.map((c) => c)}
           </p>
         </div>
       </div>
@@ -94,13 +94,12 @@ const AdminSingleProduct = () => {
             </div>
           ))}
         </div>
-      </div>
-
-      <div className="w-11/12 mx-auto mt-6 mb-3">
-        <h3 className="font-semibold text-xl text-start">
-          Change Product Information
-        </h3>
-        <ProductFormInfo product={product} />
+        <div className=" mt-6 mb-3">
+          <h3 className="font-semibold text-xl text-start">
+            Change Product Information
+          </h3>
+          <ProductFormInfo product={product} />
+        </div>
       </div>
     </>
   );
