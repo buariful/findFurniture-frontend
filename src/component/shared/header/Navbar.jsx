@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   UserIcon,
   DevicePhoneMobileIcon,
@@ -28,6 +28,7 @@ const Navbar = () => {
   const [isCartDrawerOpen, setCartDrawer] = useState(false);
   const dispatch = useDispatch();
   const naviagate = useNavigate();
+  const location = useLocation();
 
   return (
     <header>
@@ -72,6 +73,15 @@ const Navbar = () => {
                 label="Search"
                 name="search"
                 className="pr-20"
+                onChange={(e) => {
+                  if (
+                    location.pathname === "/" ||
+                    location.pathname === "/home"
+                  ) {
+                    dispatch(setPage(1));
+                    dispatch(setKeyword(e.target.value));
+                  }
+                }}
               />
               <Button
                 size="sm"

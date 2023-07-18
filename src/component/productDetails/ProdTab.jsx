@@ -8,8 +8,10 @@ import {
 } from "@material-tailwind/react";
 import { useState } from "react";
 import ReactStars from "react-rating-stars-component";
+import parse from "html-react-parser";
 
-const ProdTab = () => {
+const ProdTab = ({ data }) => {
+  console.log(data);
   const [activeTab, setActiveTab] = useState("Description");
   return (
     <div>
@@ -44,20 +46,7 @@ const ProdTab = () => {
         </TabsHeader>
         <TabsBody>
           <TabPanel key={"Description"} value={"Description"}>
-            <div className="text-start">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Consectetur nam natus perferendis esse officiis accusamus quos
-              suscipit optio omnis ab. Incidunt eligendi quibusdam consequatur
-              enim, sed ea cum nam debitis nisi dolorum minus dolor, blanditiis
-              esse nostrum placeat asperiores, quod expedita officiis
-              repudiandae quis harum at deserunt. Commodi, officia cum! Lorem
-              ipsum dolor sit amet consectetur, adipisicing elit. Quas, aperiam
-              corporis esse consectetur nostrum dolores vitae fugiat cum commodi
-              soluta excepturi cupiditate praesentium sed ut alias obcaecati
-              architecto tenetur? Doloribus, suscipit facilis ratione ipsa
-              delectus illum ut dolorem magni nemo inventore accusamus maiores
-              facere at sunt neque autem possimus cumque.
-            </div>
+            <div className="text-start">{parse(data.description)}</div>
           </TabPanel>
           <TabPanel key={"Review"} value={"Review"}>
             <div className="md:pr-4">

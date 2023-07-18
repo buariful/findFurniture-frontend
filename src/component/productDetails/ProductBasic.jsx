@@ -112,7 +112,8 @@ export default function ProductBasics({ data }) {
               <span className="font-semibold">Code:</span> {data?.productCode}
             </p>
             <p className="capitalize text-sm">
-              <span className="font-semibold">Brand:</span> RFL
+              <span className="font-semibold">Brand:</span>{" "}
+              <span className="uppercase">{data?.brand}</span>
             </p>
           </div>
 
@@ -132,21 +133,25 @@ export default function ProductBasics({ data }) {
                 </>
               )}
             </div>
-            <p className="text-blue-500 font-bold block md:hidden">
-              {data?.discount}% OFF
-            </p>
+            {data?.discount && (
+              <p className="text-blue-500 font-bold block md:hidden">
+                {data?.discount}% OFF
+              </p>
+            )}
 
             <div className="flex flex-col md:flex-row mb-2 items-start md:items-end md:gap-3">
               <ReactStars
                 count={5}
-                onChange={(e) => console.log(e)}
                 size={25}
                 activeColor="#ffd700"
                 edit={false}
                 isHalf={true}
                 value={data?.avg_rating}
               />
-              <p className="text-gray-500">(15 Reviews)</p>
+              <p className="text-gray-500">
+                {data?.totalReviews}{" "}
+                {data.totalReviews > 1 ? "Reviews" : "Review"}
+              </p>
             </div>
 
             <ButtonGroup size="sm" className="mt-2">

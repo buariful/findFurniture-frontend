@@ -19,7 +19,7 @@ const ProductDetails = () => {
       </div>
       <div className="grid grid-cols-12 gap-10">
         <div className="col-span-12 md:col-span-8 lg:col-span-9">
-          <ProdTab />
+          <ProdTab data={data?.data} />
         </div>
 
         <div className="col-span-12 md:col-span-4 lg:col-span-3">

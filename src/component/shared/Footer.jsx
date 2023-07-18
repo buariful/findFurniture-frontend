@@ -1,7 +1,39 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  resetFilter,
+  setCategories,
+} from "../../features/searchFilter/searchFilterSlice";
 
 const Footer = () => {
+  const { isLoading, data, error } = useSelector((state) => state.categories);
+  console.log(data);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  let categories;
+  if (data) {
+    categories = (
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-5 ">
+        {data.map((d) => (
+          <div
+            key={d._id}
+            className="flex items-center gap-2 hover:text-gray-300 duration-300 text-start cursor-pointer"
+            onClick={() => {
+              dispatch(resetFilter());
+              dispatch(setCategories(d?.name));
+              navigate("/category-product");
+            }}
+          >
+            <img src={d?.picture[0]?.url} alt="" className="w-8 rounded-full" />
+            <span className="capitalize">{d?.name}</span>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <footer className="bg-gradient-to-t from-[#0e94ff] to-[#004a85] py-10 ">
       <div className="w-11/12 max-w-7xl mx-auto mb-6">
@@ -24,96 +56,7 @@ const Footer = () => {
             <h4 className="font-semibold text-xl border-b border-b-white text-gray-100 mb-5 inline-block">
               Categories
             </h4>
-            <div className="grid grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-5 place-items-center">
-              <Link
-                className="flex items-center gap-2 hover:text-gray-300"
-                to="/"
-              >
-                <img
-                  src="https://res.cloudinary.com/dygolqxi7/image/upload/v1688135012/FindFurniture/shelf_ixv0qw.jpg"
-                  alt=""
-                  className="w-8 rounded-full"
-                />
-                <span className="">Shelf</span>
-              </Link>
-              <Link
-                className="flex items-center gap-2 hover:text-gray-300"
-                to="/"
-              >
-                <img
-                  src="https://res.cloudinary.com/dygolqxi7/image/upload/v1688135012/FindFurniture/shelf_ixv0qw.jpg"
-                  alt=""
-                  className="w-8 rounded-full"
-                />
-                <span className="">Shelf</span>
-              </Link>
-              <Link
-                className="flex items-center gap-2 hover:text-gray-300"
-                to="/"
-              >
-                <img
-                  src="https://res.cloudinary.com/dygolqxi7/image/upload/v1688135012/FindFurniture/shelf_ixv0qw.jpg"
-                  alt=""
-                  className="w-8 rounded-full"
-                />
-                <span className="">Shelf</span>
-              </Link>
-              <Link
-                className="flex items-center gap-2 hover:text-gray-300"
-                to="/"
-              >
-                <img
-                  src="https://res.cloudinary.com/dygolqxi7/image/upload/v1688135012/FindFurniture/shelf_ixv0qw.jpg"
-                  alt=""
-                  className="w-8 rounded-full"
-                />
-                <span className="">Shelf</span>
-              </Link>
-              <Link
-                className="flex items-center gap-2 hover:text-gray-300"
-                to="/"
-              >
-                <img
-                  src="https://res.cloudinary.com/dygolqxi7/image/upload/v1688135012/FindFurniture/shelf_ixv0qw.jpg"
-                  alt=""
-                  className="w-8 rounded-full"
-                />
-                <span className="">Shelf</span>
-              </Link>
-              <Link
-                className="flex items-center gap-2 hover:text-gray-300"
-                to="/"
-              >
-                <img
-                  src="https://res.cloudinary.com/dygolqxi7/image/upload/v1688135012/FindFurniture/shelf_ixv0qw.jpg"
-                  alt=""
-                  className="w-8 rounded-full"
-                />
-                <span className="">Shelf</span>
-              </Link>
-              <Link
-                className="flex items-center gap-2 hover:text-gray-300"
-                to="/"
-              >
-                <img
-                  src="https://res.cloudinary.com/dygolqxi7/image/upload/v1688135012/FindFurniture/shelf_ixv0qw.jpg"
-                  alt=""
-                  className="w-8 rounded-full"
-                />
-                <span className="">Shelf</span>
-              </Link>
-              <Link
-                className="flex items-center gap-2 hover:text-gray-300"
-                to="/"
-              >
-                <img
-                  src="https://res.cloudinary.com/dygolqxi7/image/upload/v1688135012/FindFurniture/shelf_ixv0qw.jpg"
-                  alt=""
-                  className="w-8 rounded-full"
-                />
-                <span className="">Shelf</span>
-              </Link>
-            </div>
+            {categories}
           </div>
         </div>
 

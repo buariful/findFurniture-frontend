@@ -44,14 +44,12 @@ const searchFilterSlice = createSlice({
       state.selectedPage = action.payload;
     },
     resetFilter: (state) => {
-      state = {
-        keyword: "",
-        brands: [],
-        categories: [],
-        colors: [],
-        discount: null,
-        selectedPage: 1,
-      };
+      state.keyword = "";
+      state.brands = [];
+      state.categories = [];
+      state.colors = [];
+      state.discount = null;
+      state.selectedPage = 1;
     },
   },
 });

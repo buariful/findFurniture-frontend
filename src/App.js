@@ -17,6 +17,7 @@ import AdminAllProducts from "./pages/AdminAllProducts";
 import AdminSingleProduct from "./pages/AdminSingleProduct";
 import AdminCreateProduct from "./pages/AdminCreateProduct";
 import Overview from "./pages/Overview";
+import CategoryProduct from "./pages/CategoryProduct";
 
 function App() {
   return (
@@ -36,6 +37,14 @@ function App() {
             element={
               <Layout>
                 <Home />
+              </Layout>
+            }
+          />
+          <Route
+            path="/category-product"
+            element={
+              <Layout>
+                <CategoryProduct />
               </Layout>
             }
           />

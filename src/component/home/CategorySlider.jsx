@@ -2,12 +2,25 @@ import React from "react";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css/bundle";
-import { useGetAllCategoriesQuery } from "../../features/category/categoryApi";
 import { LoaderBig } from "../../utils/Loader";
 import { AlertError } from "../../utils/Alert";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  resetFilter,
+  setCategories,
+} from "../../features/searchFilter/searchFilterSlice";
 
 const CategorySlider = () => {
-  const { isLoading, data, error } = useGetAllCategoriesQuery();
+  const { isLoading, data, error } = useSelector((state) => state.categories);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLocation = (name) => {
+    dispatch(resetFilter());
+    dispatch(setCategories(name));
+    navigate("/category-product");
+  };
 
   let categorySlides;
   if (isLoading) {
@@ -18,10 +31,13 @@ const CategorySlider = () => {
     );
   }
   if (data) {
-    categorySlides = data?.data?.map((d) => {
+    categorySlides = data?.map((d) => {
       return (
         <SwiperSlide key={d._id}>
-          <div className="group ">
+          <div
+            className="group cursor-pointer"
+            onClick={() => handleLocation(d.name)}
+          >
             <div className="grid place-items-center w-[110px] h-[110px] mx-auto rounded-full bg-[#E9E9E9]  ">
               <img
                 src={d.picture[0].url}
@@ -42,7 +58,7 @@ const CategorySlider = () => {
   if (error) {
     categorySlides = (
       <div className="py-2">
-        <AlertError text={error.data.message} />
+        <AlertError text={error} />
       </div>
     );
   }

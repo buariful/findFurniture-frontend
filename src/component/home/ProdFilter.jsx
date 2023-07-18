@@ -24,20 +24,24 @@ import {
   setKeyword,
   setPage,
 } from "../../features/searchFilter/searchFilterSlice";
-import { useGetAllCategoriesQuery } from "../../features/category/categoryApi";
 import { LoaderSmall } from "../../utils/Loader";
 import { useGetAllBrandsQuery } from "../../features/brand/brandApi";
 import colors from "../../app/colors.json";
+import { useLocation } from "react-router-dom";
+import { AlertError } from "../../utils/Alert";
 
 const ProdFilter = () => {
-  const { isLoading: categoryLoading, data: categoryData } =
-    useGetAllCategoriesQuery();
+  const {
+    isLoading: categoryLoading,
+    data: categoryData,
+    error: categoryError,
+  } = useSelector((state) => state.categories);
   const { isLoading: brandLoading, data: brandsData } = useGetAllBrandsQuery();
   const [filterOptionsToggle, setFilterOptionToggle] = useState({
-    category: false,
-    color: false,
-    brand: false,
-    discount: false,
+    category: true,
+    color: true,
+    brand: true,
+    discount: true,
   });
   const [filterOpen, setFilterOpen] = useState(false);
   const dispatch = useDispatch();
@@ -47,6 +51,7 @@ const ProdFilter = () => {
     colors: selectedColors,
     discount: selectedWithDiscount,
   } = useSelector((state) => state.filter);
+  const location = useLocation().pathname;
 
   const filterOptionsToggleHandler = (title) => {
     setFilterOptionToggle({
@@ -74,20 +79,27 @@ const ProdFilter = () => {
     );
   }
   if (categoryData) {
-    categories = categoryData?.data?.map((d) => (
+    categories = categoryData?.map((d) => (
       <div key={d._id}>
         <Checkbox
           label={<span className="capitalize">{d?.name}</span>}
           id={d?.name}
           key={d?.name}
-          defaultChecked={selectedCategories.includes(d.name)}
-          onClick={() => {
+          checked={selectedCategories.includes(d.name)}
+          onChange={() => {
             dispatch(setPage(1));
             dispatch(setCategories(d?.name));
           }}
         />
       </div>
     ));
+  }
+  if (categoryError) {
+    categories = (
+      <div className="py-2">
+        <AlertError text={categoryError} />
+      </div>
+    );
   }
 
   let brands;
@@ -103,9 +115,9 @@ const ProdFilter = () => {
       <div key={d._id}>
         <Checkbox
           label={<span className="capitalize">{d?.name}</span>}
-          defaultChecked={selectedBrands.includes(d.name)}
           id={d?.name}
-          onClick={() => {
+          checked={selectedBrands.includes(d.name)}
+          onChange={() => {
             dispatch(setPage(1));
             dispatch(setBrands(d?.name));
           }}
@@ -121,26 +133,30 @@ const ProdFilter = () => {
         Filter
       </h3>
       <div className="hidden xl:block ">
-        <Accordion
-          open={filterOptionsToggle.category}
-          icon={
-            <ChevronDownIcon
-              className={`${
-                filterOptionsToggle.category ? "rotate-180" : "rotate-0"
-              } duration-300 w-4`}
-            />
-          }
-          className="text-start mb-6"
-        >
-          <AccordionHeader
-            onClick={() => filterOptionsToggleHandler("category")}
-            className="p-0 border-b-0 text-sm"
+        {location === "/category-product" ? (
+          ""
+        ) : (
+          <Accordion
+            open={filterOptionsToggle.category}
+            icon={
+              <ChevronDownIcon
+                className={`${
+                  filterOptionsToggle.category ? "rotate-180" : "rotate-0"
+                } duration-300 w-4`}
+              />
+            }
+            className="text-start mb-6"
           >
-            <FilterTitle text="categories" />
-          </AccordionHeader>
+            <AccordionHeader
+              onClick={() => filterOptionsToggleHandler("category")}
+              className="p-0 border-b-0 text-sm"
+            >
+              <FilterTitle text="categories" />
+            </AccordionHeader>
 
-          <AccordionBody className="pt-2 pb-0">{categories}</AccordionBody>
-        </Accordion>
+            <AccordionBody className="pt-2 pb-0">{categories}</AccordionBody>
+          </Accordion>
+        )}
 
         <Accordion
           open={filterOptionsToggle.color}
@@ -166,8 +182,8 @@ const ProdFilter = () => {
                 <Checkbox
                   label={<span className="capitalize">{color}</span>}
                   id={color}
-                  defaultChecked={selectedColors.includes(color)}
-                  onClick={() => handleColorToggle(color)}
+                  checked={selectedColors.includes(color)}
+                  onChange={() => handleColorToggle(color)}
                 />
               </div>
             ))}
@@ -218,8 +234,8 @@ const ProdFilter = () => {
               <Radio
                 id="discountProducts"
                 name="discount"
-                checked={selectedWithDiscount === true}
                 label="Discount Products"
+                checked={selectedWithDiscount === true}
                 onChange={() => handleDiscount(true)}
               />
             </div>
@@ -227,8 +243,8 @@ const ProdFilter = () => {
               <Radio
                 id="withoutDiscountProducts"
                 name="discount"
-                checked={selectedWithDiscount === false}
                 label="without discount"
+                checked={selectedWithDiscount === false}
                 onChange={() => handleDiscount(false)}
               />
             </div>
@@ -336,7 +352,17 @@ const ProdFilter = () => {
             </AccordionHeader>
 
             <AccordionBody className="pt-2 pb-0">
-              <div>
+              {colors.colors.map((color, i) => (
+                <div key={color + i}>
+                  <Checkbox
+                    label={<span className="capitalize">{color}</span>}
+                    id={color}
+                    checked={selectedColors.includes(color)}
+                    onChange={() => handleColorToggle(color)}
+                  />
+                </div>
+              ))}
+              {/* <div>
                 <Checkbox
                   label={<span className="capitalize">black</span>}
                   id="black"
@@ -364,7 +390,7 @@ const ProdFilter = () => {
                   id="pink"
                   onClick={() => handleColorToggle("pink")}
                 />
-              </div>
+              </div> */}
             </AccordionBody>
           </Accordion>
 
@@ -413,7 +439,8 @@ const ProdFilter = () => {
                   id="discountProducts"
                   name="discount"
                   label="Discount Products"
-                  onClick={() => handleDiscount(true)}
+                  checked={selectedWithDiscount === true}
+                  onChange={() => handleDiscount(true)}
                 />
               </div>
               <div className="capitalize block">
@@ -421,16 +448,17 @@ const ProdFilter = () => {
                   id="withoutDiscountProducts"
                   name="discount"
                   label="without discount"
-                  onClick={() => handleDiscount(false)}
+                  checked={selectedWithDiscount === false}
+                  onChange={() => handleDiscount(false)}
                 />
               </div>
               <div className="capitalize block">
                 <Radio
-                  id="allProductradio"
+                  id="allProduct"
                   name="discount"
                   label="All products"
-                  defaultChecked
-                  onClick={() => handleDiscount(null)}
+                  checked={selectedWithDiscount === null}
+                  onChange={() => handleDiscount(null)}
                 />
               </div>
             </AccordionBody>
@@ -450,3 +478,461 @@ const FilterTitle = ({ text }) => {
 };
 
 export default ProdFilter;
+// import {
+//   Accordion,
+//   AccordionBody,
+//   AccordionHeader,
+//   Button,
+//   Checkbox,
+//   Input,
+//   Radio,
+// } from "@material-tailwind/react";
+// import React, { useState } from "react";
+// import {
+//   ChevronDownIcon,
+//   XMarkIcon,
+//   AdjustmentsHorizontalIcon,
+//   MagnifyingGlassIcon,
+// } from "@heroicons/react/24/outline";
+// import { Drawer, IconButton } from "@material-tailwind/react";
+// import { useDispatch, useSelector } from "react-redux";
+// import {
+//   setBrands,
+//   setCategories,
+//   setColors,
+//   setDiscount,
+//   setKeyword,
+//   setPage,
+// } from "../../features/searchFilter/searchFilterSlice";
+// import { useGetAllCategoriesQuery } from "../../features/category/categoryApi";
+// import { LoaderSmall } from "../../utils/Loader";
+// import { useGetAllBrandsQuery } from "../../features/brand/brandApi";
+// import colors from "../../app/colors.json";
+// import { useLocation } from "react-router-dom";
+
+// const ProdFilter = () => {
+//   const { isLoading: categoryLoading, data: categoryData } =
+//     useGetAllCategoriesQuery();
+//   const { isLoading: brandLoading, data: brandsData } = useGetAllBrandsQuery();
+//   const [filterOptionsToggle, setFilterOptionToggle] = useState({
+//     category: false,
+//     color: false,
+//     brand: false,
+//     discount: false,
+//   });
+//   const [filterOpen, setFilterOpen] = useState(false);
+//   const dispatch = useDispatch();
+//   const {
+//     categories: selectedCategories,
+//     brands: selectedBrands,
+//     colors: selectedColors,
+//     discount: selectedWithDiscount,
+//   } = useSelector((state) => state.filter);
+//   const location = useLocation().pathname;
+
+//   const filterOptionsToggleHandler = (title) => {
+//     setFilterOptionToggle({
+//       ...filterOptionsToggle,
+//       [title]: !filterOptionsToggle[title],
+//     });
+//   };
+
+//   const handleColorToggle = (color) => {
+//     dispatch(setPage(1));
+//     dispatch(setColors(color));
+//   };
+
+//   const handleDiscount = (value) => {
+//     dispatch(setPage(1));
+//     dispatch(setDiscount(value));
+//   };
+
+//   let categories;
+//   if (categoryLoading) {
+//     categories = (
+//       <div className="w-full grid place-items-center">
+//         <LoaderSmall />
+//       </div>
+//     );
+//   }
+//   if (categoryData) {
+//     categories = categoryData?.data?.map((d) => (
+//       <div key={d._id}>
+//         <Checkbox
+//           label={<span className="capitalize">{d?.name}</span>}
+//           id={d?.name}
+//           key={d?.name}
+//           defaultChecked={selectedCategories.includes(d.name)}
+//           onClick={() => {
+//             dispatch(setPage(1));
+//             dispatch(setCategories(d?.name));
+//           }}
+//         />
+//       </div>
+//     ));
+//   }
+
+//   let brands;
+//   if (brandLoading) {
+//     brands = (
+//       <div className="w-full grid place-items-center">
+//         <LoaderSmall />
+//       </div>
+//     );
+//   }
+//   if (brandsData) {
+//     brands = brandsData?.data?.map((d) => (
+//       <div key={d._id}>
+//         <Checkbox
+//           label={<span className="capitalize">{d?.name}</span>}
+//           defaultChecked={selectedBrands.includes(d.name)}
+//           id={d?.name}
+//           onClick={() => {
+//             dispatch(setPage(1));
+//             dispatch(setBrands(d?.name));
+//           }}
+//         />
+//       </div>
+//     ));
+//   }
+
+//   return (
+//     <>
+//       {/* ---- filter options ---- */}
+//       <h3 className="border-b border-b-blue-500 pb-1 mb-3 font-bold text-lg hidden xl:block">
+//         Filter
+//       </h3>
+//       <div className="hidden xl:block ">
+//         {location === "/category-product" ? (
+//           ""
+//         ) : (
+//           <Accordion
+//             open={filterOptionsToggle.category}
+//             icon={
+//               <ChevronDownIcon
+//                 className={`${
+//                   filterOptionsToggle.category ? "rotate-180" : "rotate-0"
+//                 } duration-300 w-4`}
+//               />
+//             }
+//             className="text-start mb-6"
+//           >
+//             <AccordionHeader
+//               onClick={() => filterOptionsToggleHandler("category")}
+//               className="p-0 border-b-0 text-sm"
+//             >
+//               <FilterTitle text="categories" />
+//             </AccordionHeader>
+
+//             <AccordionBody className="pt-2 pb-0">{categories}</AccordionBody>
+//           </Accordion>
+//         )}
+
+//         <Accordion
+//           open={filterOptionsToggle.color}
+//           icon={
+//             <ChevronDownIcon
+//               className={`${
+//                 filterOptionsToggle.color ? "rotate-180" : "rotate-0"
+//               } duration-300 w-4`}
+//             />
+//           }
+//           className="text-start mb-6 "
+//         >
+//           <AccordionHeader
+//             onClick={() => filterOptionsToggleHandler("color")}
+//             className="p-0 border-b-0 text-sm"
+//           >
+//             <FilterTitle text="color" />
+//           </AccordionHeader>
+
+//           <AccordionBody className="pt-2 pb-0">
+//             {colors.colors.map((color, i) => (
+//               <div key={color + i}>
+//                 <Checkbox
+//                   label={<span className="capitalize">{color}</span>}
+//                   id={color}
+//                   defaultChecked={selectedColors.includes(color)}
+//                   onClick={() => handleColorToggle(color)}
+//                 />
+//               </div>
+//             ))}
+//           </AccordionBody>
+//         </Accordion>
+
+//         <Accordion
+//           open={filterOptionsToggle.brand}
+//           icon={
+//             <ChevronDownIcon
+//               className={`${
+//                 filterOptionsToggle.brand ? "rotate-180" : "rotate-0"
+//               } duration-300 w-4`}
+//             />
+//           }
+//           className="text-start mb-6 "
+//         >
+//           <AccordionHeader
+//             onClick={() => filterOptionsToggleHandler("brand")}
+//             className="p-0 border-b-0 text-sm"
+//           >
+//             <FilterTitle text="brand" />
+//           </AccordionHeader>
+
+//           <AccordionBody className="pt-2 pb-0">{brands}</AccordionBody>
+//         </Accordion>
+
+//         <Accordion
+//           open={filterOptionsToggle.discount}
+//           icon={
+//             <ChevronDownIcon
+//               className={`${
+//                 filterOptionsToggle.discount ? "rotate-180" : "rotate-0"
+//               } duration-300 w-4`}
+//             />
+//           }
+//           className="text-start mb-6 "
+//         >
+//           <AccordionHeader
+//             onClick={() => filterOptionsToggleHandler("discount")}
+//             className="p-0 border-b-0 text-sm"
+//           >
+//             <FilterTitle text="discount" />
+//           </AccordionHeader>
+
+//           <AccordionBody className="pt-2 pb-0">
+//             <div className="capitalize block">
+//               <Radio
+//                 id="discountProducts"
+//                 name="discount"
+//                 checked={selectedWithDiscount === true}
+//                 label="Discount Products"
+//                 onChange={() => handleDiscount(true)}
+//               />
+//             </div>
+//             <div className="capitalize block">
+//               <Radio
+//                 id="withoutDiscountProducts"
+//                 name="discount"
+//                 checked={selectedWithDiscount === false}
+//                 label="without discount"
+//                 onChange={() => handleDiscount(false)}
+//               />
+//             </div>
+//             <div className="capitalize block">
+//               <Radio
+//                 id="allProduct"
+//                 name="discount"
+//                 label="All products"
+//                 checked={selectedWithDiscount === null}
+//                 onChange={() => handleDiscount(null)}
+//               />
+//             </div>
+//           </AccordionBody>
+//         </Accordion>
+//       </div>
+//       {/* --- filter drawer for small screens ----- */}
+//       <div className="block xl:hidden ">
+//         <button
+//           className="border border-blue-500 text-blue-500 px-5 py-1 rounded flex items-center gap-1"
+//           onClick={() => setFilterOpen(true)}
+//         >
+//           <AdjustmentsHorizontalIcon className="w-5" />
+//           <span>Filter</span>
+//         </button>
+//         <Drawer
+//           open={filterOpen}
+//           onClose={() => setFilterOpen(false)}
+//           className="p-4"
+//         >
+//           <div className="mb-6 flex items-center justify-between pb-1 border-b border-blue-gray">
+//             <h2 className="font-semibold">Filter</h2>
+
+//             <IconButton
+//               variant="text"
+//               color="blue-gray"
+//               onClick={() => setFilterOpen(false)}
+//             >
+//               <XMarkIcon strokeWidth={2} className="h-5 w-5" />
+//             </IconButton>
+//           </div>
+
+//           <div className="relative flex mb-6 mx-auto max-w-[24rem] ">
+//             <form
+//               onSubmit={(e) => {
+//                 e.preventDefault();
+//                 dispatch(setKeyword(e.target.search.value));
+//               }}
+//             >
+//               <Input
+//                 type="text"
+//                 label="Search"
+//                 name="search"
+//                 className="pr-20"
+//                 containerProps={{
+//                   className: "min-w-0",
+//                 }}
+//               />
+//               <Button
+//                 size="sm"
+//                 type="submit"
+//                 className="!absolute right-1 top-1 rounded"
+//               >
+//                 <MagnifyingGlassIcon className="w-4 h-4" />
+//               </Button>
+//             </form>
+//           </div>
+
+//           <Accordion
+//             open={filterOptionsToggle.category}
+//             icon={
+//               <ChevronDownIcon
+//                 className={`${
+//                   filterOptionsToggle.category ? "rotate-180" : "rotate-0"
+//                 } duration-300 w-4`}
+//               />
+//             }
+//             className="text-start mb-6"
+//           >
+//             <AccordionHeader
+//               onClick={() => filterOptionsToggleHandler("category")}
+//               className="p-0 border-b-0 text-sm"
+//             >
+//               <FilterTitle text="categories" />
+//             </AccordionHeader>
+
+//             <AccordionBody className="pt-2 pb-0">{categories}</AccordionBody>
+//           </Accordion>
+
+//           <Accordion
+//             open={filterOptionsToggle.color}
+//             icon={
+//               <ChevronDownIcon
+//                 className={`${
+//                   filterOptionsToggle.color ? "rotate-180" : "rotate-0"
+//                 } duration-300 w-4`}
+//               />
+//             }
+//             className="text-start mb-6 "
+//           >
+//             <AccordionHeader
+//               onClick={() => filterOptionsToggleHandler("color")}
+//               className="p-0 border-b-0 text-sm"
+//             >
+//               <FilterTitle text="color" />
+//             </AccordionHeader>
+
+//             <AccordionBody className="pt-2 pb-0">
+//               <div>
+//                 <Checkbox
+//                   label={<span className="capitalize">black</span>}
+//                   id="black"
+//                   onClick={() => handleColorToggle("black")}
+//                 />
+//               </div>
+//               <div>
+//                 <Checkbox
+//                   label={<span className="capitalize">white</span>}
+//                   id="white"
+//                   // onClick={() => dispatch(setColors("white"))}
+//                   onClick={() => handleColorToggle("white")}
+//                 />
+//               </div>
+//               <div>
+//                 <Checkbox
+//                   label={<span className="capitalize">red</span>}
+//                   id="red"
+//                   onClick={() => handleColorToggle("red")}
+//                 />
+//               </div>
+//               <div>
+//                 <Checkbox
+//                   label={<span className="capitalize">pink</span>}
+//                   id="pink"
+//                   onClick={() => handleColorToggle("pink")}
+//                 />
+//               </div>
+//             </AccordionBody>
+//           </Accordion>
+
+//           <Accordion
+//             open={filterOptionsToggle.brand}
+//             icon={
+//               <ChevronDownIcon
+//                 className={`${
+//                   filterOptionsToggle.brand ? "rotate-180" : "rotate-0"
+//                 } duration-300 w-4`}
+//               />
+//             }
+//             className="text-start mb-6 "
+//           >
+//             <AccordionHeader
+//               onClick={() => filterOptionsToggleHandler("brand")}
+//               className="p-0 border-b-0 text-sm"
+//             >
+//               <FilterTitle text="brand" />
+//             </AccordionHeader>
+
+//             <AccordionBody className="pt-2 pb-0">{brands}</AccordionBody>
+//           </Accordion>
+
+//           <Accordion
+//             open={filterOptionsToggle.discount}
+//             icon={
+//               <ChevronDownIcon
+//                 className={`${
+//                   filterOptionsToggle.discount ? "rotate-180" : "rotate-0"
+//                 } duration-300 w-4`}
+//               />
+//             }
+//             className="text-start mb-6 "
+//           >
+//             <AccordionHeader
+//               onClick={() => filterOptionsToggleHandler("discount")}
+//               className="p-0 border-b-0 text-sm"
+//             >
+//               <FilterTitle text="discount" />
+//             </AccordionHeader>
+
+//             <AccordionBody className="pt-2 pb-0">
+//               <div className="capitalize block">
+//                 <Radio
+//                   id="discountProducts"
+//                   name="discount"
+//                   label="Discount Products"
+//                   onClick={() => handleDiscount(true)}
+//                 />
+//               </div>
+//               <div className="capitalize block">
+//                 <Radio
+//                   id="withoutDiscountProducts"
+//                   name="discount"
+//                   label="without discount"
+//                   onClick={() => handleDiscount(false)}
+//                 />
+//               </div>
+//               <div className="capitalize block">
+//                 <Radio
+//                   id="allProductradio"
+//                   name="discount"
+//                   label="All products"
+//                   defaultChecked
+//                   onClick={() => handleDiscount(null)}
+//                 />
+//               </div>
+//             </AccordionBody>
+//           </Accordion>
+//         </Drawer>
+//       </div>{" "}
+//     </>
+//   );
+// };
+
+// const FilterTitle = ({ text }) => {
+//   return (
+//     <h5 className="text-black font-semibold pb-1 border-b border-b-black capitalize">
+//       {text}
+//     </h5>
+//   );
+// };
+
+// export default ProdFilter;
