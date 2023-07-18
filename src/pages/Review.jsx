@@ -4,11 +4,13 @@ import {
   PencilSquareIcon,
   ChatBubbleOvalLeftEllipsisIcon,
 } from "@heroicons/react/24/outline";
+import ReactStars from "react-rating-stars-component";
 
-import { Button } from "@material-tailwind/react";
+import { Button, Textarea } from "@material-tailwind/react";
 import ReviewModal from "../component/review/ReviewModal";
 import ReviewCard from "../component/review/ReviewCard";
 import DashboardTitle from "../component/shared/DashboardTitle";
+import Modal from "../utils/Modal";
 
 const Review = () => {
   const [reviewModal, setReviewModal] = useState(false);
@@ -98,7 +100,40 @@ const Review = () => {
           </tbody>
         </table>
       </div>
-      <ReviewModal handleOpen={handleOpen} isModalOpen={reviewModal} />
+      <Modal isModalOpen={reviewModal} setModal={setReviewModal}>
+        <div className="flex justify-center items-center gap-5 border-b border-b-blue-gray px-6 pb-2 text-gray-700 w-[380px] mx-auto">
+          <img
+            src={require("../images/logo.png")}
+            alt=""
+            className="w-[100px]"
+          />
+          <div>
+            <p className="text-base font-semibold">Product Name</p>
+            <p>5000 tk</p>
+          </div>
+        </div>
+
+        <div className="max-w-lg mx-auto">
+          <div className="flex items-center gap-3">
+            <ReactStars
+              count={5}
+              onChange={(e) => console.log(e)}
+              size={30}
+              activeColor="#ffd700"
+              isHalf={true}
+            />
+            <span className=" bg-blue-500 text-white py-1 px-3 inline-block rounded text-[12px]">
+              5
+            </span>
+          </div>
+
+          <Textarea label="Review" />
+        </div>
+        <div className="flex justify-center">
+          <Button>Submit</Button>
+          <Button>Update</Button>
+        </div>
+      </Modal>
 
       <div className="mt-16 mb-8">
         <DashboardTitle text="my all reviews" />

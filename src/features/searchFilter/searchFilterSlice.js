@@ -43,6 +43,16 @@ const searchFilterSlice = createSlice({
     setPage: (state, action) => {
       state.selectedPage = action.payload;
     },
+    resetFilter: (state) => {
+      state = {
+        keyword: "",
+        brands: [],
+        categories: [],
+        colors: [],
+        discount: null,
+        selectedPage: 1,
+      };
+    },
   },
 });
 
@@ -53,5 +63,6 @@ export const {
   setColors,
   setDiscount,
   setPage,
+  resetFilter,
 } = searchFilterSlice.actions;
 export default searchFilterSlice.reducer;

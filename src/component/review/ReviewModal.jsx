@@ -14,7 +14,7 @@ import ReactStars from "react-rating-stars-component";
 const ReviewModal = ({ handleOpen, isModalOpen }) => {
   return (
     <>
-      <Dialog open={isModalOpen} handler={handleOpen}>
+      <Dialog open={isModalOpen}>
         <DialogHeader className="justify-end">
           <IconButton
             variant="text"

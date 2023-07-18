@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { IconButton } from "@material-tailwind/react";
-import DeleteProdModal from "./DeleteProdModal";
+import { Button, IconButton } from "@material-tailwind/react";
+// import DeleteProdModal from "./DeleteProdModal";
 import { Link } from "react-router-dom";
+import Modal from "../../utils/Modal.js";
 
 const ProductsTable = ({ data }) => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -93,11 +94,54 @@ const ProductsTable = ({ data }) => {
         </table>
       </div>
 
-      <DeleteProdModal
+      {/* <DeleteProdModal
         product={singleProduct}
         handleModalOpen={handleModalOpen}
         isModalOpen={isModalOpen}
-      />
+      /> */}
+
+      <Modal
+        key="DeleteProdModal"
+        isModalOpen={isModalOpen}
+        setModal={setModalOpen}
+      >
+        <div className="flex justify-center items-center mb-3 font-bold text-xl">
+          <span className="font-normal">Are you sure want to delete </span>{" "}
+          <span className="text-red-500 capitalize ml-2">
+            {singleProduct?.name}?
+          </span>
+        </div>
+
+        <div className="flex items-center justify-center gap-5">
+          <img
+            src={singleProduct?.thumbImg?.url}
+            alt={singleProduct?.name}
+            className="w-[200px] rounded"
+          />
+          <div>
+            <p className="text-sm capitalize">
+              Stock: <span className="font-semibold"> 22</span>
+            </p>
+            <p className="text-sm capitalize">
+              Code:
+              <span className="font-semibold">
+                {singleProduct?.productCode}
+              </span>
+            </p>
+            <p className="text-sm capitalize">
+              price:{" "}
+              <span className="font-semibold">{singleProduct?.price}</span>
+            </p>
+          </div>
+        </div>
+
+        <div className="flex justify-center items-center gap-2 mt-5">
+          <Button onClick={handleModalOpen}>Cancel</Button>
+          <Button color="red" onClick={handleModalOpen} className="mr-1">
+            Delete
+          </Button>
+        </div>
+      </Modal>
     </>
   );
 };

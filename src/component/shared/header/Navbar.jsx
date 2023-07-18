@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   UserIcon,
   DevicePhoneMobileIcon,
@@ -27,6 +27,7 @@ const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isCartDrawerOpen, setCartDrawer] = useState(false);
   const dispatch = useDispatch();
+  const naviagate = useNavigate();
 
   return (
     <header>
@@ -62,6 +63,7 @@ const Navbar = () => {
               e.preventDefault();
               dispatch(setPage(1));
               dispatch(setKeyword(e.target.search.value));
+              naviagate("/home");
             }}
           >
             <div className="relative hidden md:flex mx-auto w-[20rem] max-w-[24rem] ">
@@ -76,7 +78,7 @@ const Navbar = () => {
                 type="submit"
                 className="!absolute right-1 top-1 rounded"
               >
-                <MagnifyingGlassIcon className="w-4 h-4" />
+                <MagnifyingGlassIcon className="w-4 h-4 " />
               </Button>
             </div>
           </form>

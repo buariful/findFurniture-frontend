@@ -15,7 +15,7 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import { Drawer, IconButton } from "@material-tailwind/react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setBrands,
   setCategories,
@@ -27,27 +27,26 @@ import {
 import { useGetAllCategoriesQuery } from "../../features/category/categoryApi";
 import { LoaderSmall } from "../../utils/Loader";
 import { useGetAllBrandsQuery } from "../../features/brand/brandApi";
-
-const FilterTitle = ({ text }) => {
-  return (
-    <h5 className="text-black font-semibold pb-1 border-b border-b-black capitalize">
-      {text}
-    </h5>
-  );
-};
+import colors from "../../app/colors.json";
 
 const ProdFilter = () => {
   const { isLoading: categoryLoading, data: categoryData } =
     useGetAllCategoriesQuery();
   const { isLoading: brandLoading, data: brandsData } = useGetAllBrandsQuery();
   const [filterOptionsToggle, setFilterOptionToggle] = useState({
-    category: true,
-    color: true,
-    brand: true,
-    discount: true,
+    category: false,
+    color: false,
+    brand: false,
+    discount: false,
   });
   const [filterOpen, setFilterOpen] = useState(false);
   const dispatch = useDispatch();
+  const {
+    categories: selectedCategories,
+    brands: selectedBrands,
+    colors: selectedColors,
+    discount: selectedWithDiscount,
+  } = useSelector((state) => state.filter);
 
   const filterOptionsToggleHandler = (title) => {
     setFilterOptionToggle({
@@ -80,6 +79,8 @@ const ProdFilter = () => {
         <Checkbox
           label={<span className="capitalize">{d?.name}</span>}
           id={d?.name}
+          key={d?.name}
+          defaultChecked={selectedCategories.includes(d.name)}
           onClick={() => {
             dispatch(setPage(1));
             dispatch(setCategories(d?.name));
@@ -102,6 +103,7 @@ const ProdFilter = () => {
       <div key={d._id}>
         <Checkbox
           label={<span className="capitalize">{d?.name}</span>}
+          defaultChecked={selectedBrands.includes(d.name)}
           id={d?.name}
           onClick={() => {
             dispatch(setPage(1));
@@ -115,6 +117,9 @@ const ProdFilter = () => {
   return (
     <>
       {/* ---- filter options ---- */}
+      <h3 className="border-b border-b-blue-500 pb-1 mb-3 font-bold text-lg hidden xl:block">
+        Filter
+      </h3>
       <div className="hidden xl:block ">
         <Accordion
           open={filterOptionsToggle.category}
@@ -156,35 +161,16 @@ const ProdFilter = () => {
           </AccordionHeader>
 
           <AccordionBody className="pt-2 pb-0">
-            <div>
-              <Checkbox
-                label={<span className="capitalize">black</span>}
-                id="black"
-                onClick={() => handleColorToggle("black")}
-              />
-            </div>
-            <div>
-              <Checkbox
-                label={<span className="capitalize">white</span>}
-                id="white"
-                // onClick={() => dispatch(setColors("white"))}
-                onClick={() => handleColorToggle("white")}
-              />
-            </div>
-            <div>
-              <Checkbox
-                label={<span className="capitalize">red</span>}
-                id="red"
-                onClick={() => handleColorToggle("red")}
-              />
-            </div>
-            <div>
-              <Checkbox
-                label={<span className="capitalize">pink</span>}
-                id="pink"
-                onClick={() => handleColorToggle("pink")}
-              />
-            </div>
+            {colors.colors.map((color, i) => (
+              <div key={color + i}>
+                <Checkbox
+                  label={<span className="capitalize">{color}</span>}
+                  id={color}
+                  defaultChecked={selectedColors.includes(color)}
+                  onClick={() => handleColorToggle(color)}
+                />
+              </div>
+            ))}
           </AccordionBody>
         </Accordion>
 
@@ -232,25 +218,27 @@ const ProdFilter = () => {
               <Radio
                 id="discountProducts"
                 name="discount"
+                checked={selectedWithDiscount === true}
                 label="Discount Products"
-                onClick={() => handleDiscount(true)}
+                onChange={() => handleDiscount(true)}
               />
             </div>
             <div className="capitalize block">
               <Radio
                 id="withoutDiscountProducts"
                 name="discount"
+                checked={selectedWithDiscount === false}
                 label="without discount"
-                onClick={() => handleDiscount(false)}
+                onChange={() => handleDiscount(false)}
               />
             </div>
             <div className="capitalize block">
               <Radio
-                id="allProductradio"
+                id="allProduct"
                 name="discount"
                 label="All products"
-                defaultChecked
-                onClick={() => handleDiscount(null)}
+                checked={selectedWithDiscount === null}
+                onChange={() => handleDiscount(null)}
               />
             </div>
           </AccordionBody>
@@ -287,7 +275,6 @@ const ProdFilter = () => {
               onSubmit={(e) => {
                 e.preventDefault();
                 dispatch(setKeyword(e.target.search.value));
-                // console.log(e.target.search.value);
               }}
             >
               <Input
@@ -451,6 +438,14 @@ const ProdFilter = () => {
         </Drawer>
       </div>{" "}
     </>
+  );
+};
+
+const FilterTitle = ({ text }) => {
+  return (
+    <h5 className="text-black font-semibold pb-1 border-b border-b-black capitalize">
+      {text}
+    </h5>
   );
 };
 

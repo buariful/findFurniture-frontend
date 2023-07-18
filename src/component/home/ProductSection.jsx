@@ -74,8 +74,21 @@ const ProductSection = () => {
         <ProdFilter />
       </div>
       <div className="col-span-12 xl:col-span-9 ">
+        {keyword && (
+          <div className="pb-1 inline-block border-b border-b-blue-500 mb-5">
+            <h4 className="font-bold">SEARCH "{keyword}"</h4>
+            <p className="text-sm">Total {data?.totalResults} products found</p>
+          </div>
+        )}
+
         {data && <ProdAllProducts data={data?.data} />}
-        {error && <AlertError text={error?.data?.message} />}
+        {error && (
+          <AlertError
+            text={
+              error?.data?.message ? error?.data?.message : "No product found"
+            }
+          />
+        )}
         {data?.totalResults > 4 && (
           <Pagination
             handlePaginationAction={handlePaginationAction}

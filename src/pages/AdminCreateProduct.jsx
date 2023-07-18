@@ -283,6 +283,15 @@ const AdminCreateProduct = () => {
                   </label>
                   <Input label="Sell Price" id="sellPrice" name="sellPrice" />
                 </div>
+                <div className="text-start">
+                  <label
+                    htmlFor="stock"
+                    className="flex items-center gap-1 mb-2"
+                  >
+                    Product In Stock
+                  </label>
+                  <Input label="Stock" id="stock" name="stock" type="number" />
+                </div>
               </div>
 
               {/* ----- product Category and brand ----- */}
