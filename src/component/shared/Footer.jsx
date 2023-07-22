@@ -5,10 +5,11 @@ import {
   resetFilter,
   setCategories,
 } from "../../features/searchFilter/searchFilterSlice";
+import { LoaderSmall } from "../../utils/Loader";
+import { AlertError } from "../../utils/Alert";
 
 const Footer = () => {
   const { isLoading, data, error } = useSelector((state) => state.categories);
-  console.log(data);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -32,6 +33,16 @@ const Footer = () => {
         ))}
       </div>
     );
+  }
+  if (isLoading) {
+    categories = (
+      <div className="grid place-items-center">
+        <LoaderSmall />
+      </div>
+    );
+  }
+  if (error) {
+    categories = <AlertError text={error?.data?.message} />;
   }
 
   return (

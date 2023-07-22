@@ -6,17 +6,62 @@ import {
   Option,
   Select,
 } from "@material-tailwind/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { TrashIcon } from "@heroicons/react/24/outline";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { AlertError } from "../../utils/Alert";
+import {
+  useDeleteProdFromCartMutation,
+  useUpdateProdOfCartMutation,
+} from "../../features/user/userApi";
+import {
+  deleteFromCart,
+  updateCartProdQuantity,
+} from "../../features/user/userSlice";
+
 const CheckoutLft = () => {
+  const cartItem = useSelector((state) => state.user?.data?.cartItem);
+  const [updateProdOfCart] = useUpdateProdOfCartMutation();
+  const [deleteProdFromCart] = useDeleteProdFromCartMutation();
+  const dispatch = useDispatch();
+  const [quantityError, setQuantityError] = useState("");
+
+  const updateCartProuctQuantity = (productId, quantity) => {
+    const data = { productId, quantity };
+    updateProdOfCart(data)
+      .unwrap()
+      .then(() => {
+        dispatch(updateCartProdQuantity(data));
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const deleteCartItem = (productId) => {
+    deleteProdFromCart(productId)
+      .unwrap()
+      .then((res) => dispatch(deleteFromCart(productId)))
+      .catch(() => {});
+  };
+  useEffect(() => {
+    cartItem?.map((cart) => {
+      if (cart.quantity > cart?.product?.stock) {
+        setQuantityError(`Please reduce the quantity of red mark products`);
+      } else {
+        setQuantityError("");
+      }
+      return "";
+    });
+  }, [cartItem]);
   return (
     <>
       {/* selected products */}
       <h2 className="font-semibold my-10 text-3xl border-b-2 border-b-blue-500 inline-block">
         Your Selected Products
       </h2>
+      {quantityError && <AlertError text={quantityError} />}
       <div className="relative overflow-x-auto mb-16">
-        <table className="w-full text-sm text-left ">
+        <table className="w-full text-sm text-center">
           <thead className="text-xs uppercase bg-gray-50 ">
             <tr>
               <th scope="col" className="p-2 whitespace-nowrap text-sm"></th>
@@ -30,118 +75,102 @@ const CheckoutLft = () => {
                 Quantity
               </th>
               <th scope="col" className="p-2 whitespace-nowrap text-sm">
-                Price
+                Total Price
               </th>
               <th scope="col" className="p-2 whitespace-nowrap text-sm"></th>
             </tr>
           </thead>
 
           <tbody>
-            <tr className="bg-white border-b ">
-              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
-                <img
-                  src={require("../../images/logo.png")}
-                  alt=""
-                  className="w-[50px] rounded"
-                />
-              </td>
-              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
-                Apple MacBook Pro 17"
-              </td>
-              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
-                <span className="text-green-600 font-semibold text-cetner bg-green-50 py-1 px-3 rounded-full">
-                  In Stock
-                </span>
-              </td>
-              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
-                <ButtonGroup size="sm">
-                  <Button className="text-sm font-normal px-3 py-1">-</Button>
-                  <Button
-                    className="text-[11px] font-normal px-3 py-1 text-black bg-white border cursor-default"
-                    variant="text"
+            {cartItem.length > 0 ? (
+              cartItem?.map((cart) => {
+                return (
+                  <tr
+                    className={`border-b ${
+                      cart?.quantity > cart?.product?.stock && "bg-red-50"
+                    }`}
+                    key={cart?._id}
                   >
-                    1
-                  </Button>
-                  <Button className="text-sm font-normal px-3 py-1">+</Button>
-                </ButtonGroup>
-              </td>
-              <td className="p-2 text-gray-900 font-semibold">10000</td>
-              <td className="p-2">
-                <IconButton variant="text">
-                  <TrashIcon className="w-4 text-red-500" />
-                </IconButton>
-              </td>
-            </tr>
-            <tr className="bg-white border-b ">
-              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
-                <img
-                  src={require("../../images/logo.png")}
-                  alt=""
-                  className="w-[50px] rounded"
-                />
-              </td>
-              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
-                Apple MacBook Pro 17"
-              </td>
-              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
-                <span className="text-green-600 font-semibold text-cetner bg-green-50 py-1 px-3 rounded-full">
-                  In Stock
-                </span>
-              </td>
-              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
-                <ButtonGroup size="sm">
-                  <Button className="text-sm font-normal px-3 py-1">-</Button>
-                  <Button
-                    className="text-[11px] font-normal px-3 py-1 text-black bg-white border cursor-default"
-                    variant="text"
-                  >
-                    1
-                  </Button>
-                  <Button className="text-sm font-normal px-3 py-1">+</Button>
-                </ButtonGroup>
-              </td>
-              <td className="p-2 text-gray-900 font-semibold">10000</td>
-              <td className="p-2">
-                <IconButton variant="text">
-                  <TrashIcon className="w-4 text-red-500" />
-                </IconButton>
-              </td>
-            </tr>
-            <tr className="bg-white border-b ">
-              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
-                <img
-                  src={require("../../images/logo.png")}
-                  alt=""
-                  className="w-[50px] rounded"
-                />
-              </td>
-              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
-                Apple MacBook Pro 17"
-              </td>
-              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
-                <span className="text-green-600 font-semibold text-cetner bg-green-50 py-1 px-3 rounded-full">
-                  In Stock
-                </span>
-              </td>
-              <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
-                <ButtonGroup size="sm">
-                  <Button className="text-sm font-normal px-3 py-1">-</Button>
-                  <Button
-                    className="text-[11px] font-normal px-3 py-1 text-black bg-white border cursor-default"
-                    variant="text"
-                  >
-                    1
-                  </Button>
-                  <Button className="text-sm font-normal px-3 py-1">+</Button>
-                </ButtonGroup>
-              </td>
-              <td className="p-2 text-gray-900 font-semibold">10000</td>
-              <td className="p-2">
-                <IconButton variant="text">
-                  <TrashIcon className="w-4 text-red-500" />
-                </IconButton>
-              </td>
-            </tr>
+                    <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
+                      <img
+                        src={cart?.product?.images[0]?.url}
+                        alt=""
+                        className="w-[50px] rounded"
+                      />
+                    </td>
+                    <td className="p-2 font-medium text-gray-900 whitespace-nowrap capitalize">
+                      {cart?.product?.name}
+                    </td>
+                    <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
+                      <span
+                        className={` font-semibold text-cetner py-1 px-3 rounded-full ${
+                          cart?.product?.stock === 0
+                            ? "bg-red-100 text-red-500"
+                            : "bg-green-50 text-green-500"
+                        }`}
+                      >
+                        {cart?.product?.stock}
+                      </span>
+                    </td>
+                    <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
+                      <ButtonGroup size="sm">
+                        <Button
+                          className="text-sm font-normal px-3 py-1"
+                          disabled={cart?.quantity === 1}
+                          onClick={() =>
+                            updateCartProuctQuantity(
+                              cart?.product?._id,
+                              cart?.quantity - 1
+                            )
+                          }
+                        >
+                          -
+                        </Button>
+                        <Button
+                          className="text-[11px] font-normal px-3 py-1 text-black bg-white border cursor-default"
+                          variant="text"
+                        >
+                          {cart?.quantity}
+                        </Button>
+                        <Button
+                          className="text-sm font-normal px-3 py-1"
+                          disabled={cart?.quantity >= cart?.product?.stock}
+                          onClick={() =>
+                            updateCartProuctQuantity(
+                              cart?.product?._id,
+                              cart?.quantity + 1
+                            )
+                          }
+                        >
+                          +
+                        </Button>
+                      </ButtonGroup>
+                    </td>
+                    <td className="p-2 text-gray-900 font-semibold">
+                      {cart?.product?.sellPrice
+                        ? cart?.quantity * cart?.product?.sellPrice
+                        : cart?.quantity * cart?.product?.price}
+                    </td>
+                    <td className="p-2">
+                      <IconButton
+                        variant="text"
+                        onClick={() => deleteCartItem(cart?.product?._id)}
+                      >
+                        <TrashIcon className="w-4 text-red-500" />
+                      </IconButton>
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td colSpan={5}>
+                  <AlertError
+                    text={"You haven't select any product to your cart"}
+                  />
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

@@ -18,9 +18,15 @@ import AdminSingleProduct from "./pages/AdminSingleProduct";
 import AdminCreateProduct from "./pages/AdminCreateProduct";
 import Overview from "./pages/Overview";
 import CategoryProduct from "./pages/CategoryProduct";
+import useAuthCheck from "./utils/useAuthCheck";
+import { LoaderFullScreen } from "./utils/Loader";
 
 function App() {
-  return (
+  const isAuthChecked = useAuthCheck();
+
+  return !isAuthChecked ? (
+    <LoaderFullScreen />
+  ) : (
     <div className="App">
       <Router>
         <Routes>

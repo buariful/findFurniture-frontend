@@ -9,10 +9,62 @@ import {
 import { useState } from "react";
 import ReactStars from "react-rating-stars-component";
 import parse from "html-react-parser";
+import { useGetProductReviewsQuery } from "../../features/review/reviewApi";
+import { LoaderSmall } from "../../utils/Loader";
+import { AlertError } from "../../utils/Alert";
 
 const ProdTab = ({ data }) => {
-  console.log(data);
+  const { isLoading, data: reviews } = useGetProductReviewsQuery(
+    data?.data?._id
+  );
+  // console.log(reviews);
   const [activeTab, setActiveTab] = useState("Description");
+
+  let productReveiws;
+  if (isLoading) {
+    productReveiws = <LoaderSmall />;
+  }
+  console.log(reviews?.data.length === 0);
+  if (reviews?.data.length === 0) {
+    productReveiws = <AlertError text="No reviews available" />;
+  }
+  if (reviews?.data.length > 0) {
+    productReveiws = reviews?.data.map((d) => {
+      return (
+        <div className="mb-8">
+          <div className="flex gap-2">
+            <img
+              src={
+                d?.user?.avatar?.url
+                  ? d?.user?.avatar?.url
+                  : d?.user?.avatar?.default
+              }
+              alt=""
+              className="w-[50px] rounded-full"
+            />
+
+            <div>
+              <ReactStars
+                count={5}
+                size={19}
+                activeColor="#FF9933"
+                edit={false}
+                isHalf={true}
+                value={d?.rating}
+              />
+              <p>
+                by <span className="capitalize">{d?.user?.name}</span>
+              </p>
+            </div>
+          </div>
+          <div>
+            <p className="text-sm text-start mt-2">{d?.comment}</p>
+          </div>
+        </div>
+      );
+    });
+  }
+
   return (
     <div>
       <Tabs value={activeTab}>
@@ -46,11 +98,12 @@ const ProdTab = ({ data }) => {
         </TabsHeader>
         <TabsBody>
           <TabPanel key={"Description"} value={"Description"}>
-            <div className="text-start">{parse(data.description)}</div>
+            <div className="text-start">{parse(data?.data?.description)}</div>
           </TabPanel>
           <TabPanel key={"Review"} value={"Review"}>
             <div className="md:pr-4">
-              <div className="mb-8">
+              {productReveiws}
+              {/* <div className="mb-8">
                 <div className="flex gap-2">
                   <img
                     src="https://res.cloudinary.com/dygolqxi7/image/upload/v1689409810/findFurniture/po3hmp17xxc90soep6lq.jpg"
@@ -61,7 +114,6 @@ const ProdTab = ({ data }) => {
                   <div>
                     <ReactStars
                       count={5}
-                      onChange={(e) => console.log(e)}
                       size={19}
                       activeColor="#FF9933"
                       edit={false}
@@ -82,7 +134,7 @@ const ProdTab = ({ data }) => {
                     nihil ut excepturi.
                   </p>
                 </div>
-              </div>
+              </div> */}
             </div>
           </TabPanel>
         </TabsBody>

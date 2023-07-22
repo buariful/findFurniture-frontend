@@ -641,6 +641,7 @@ const AdminCreateProduct = () => {
                   value={content}
                   onChange={(newContent) => {
                     setContent(newContent);
+                    // console.log(newContent);
                   }}
                 />
               </div>

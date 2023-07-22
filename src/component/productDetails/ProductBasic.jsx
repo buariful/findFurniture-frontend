@@ -21,7 +21,7 @@ export default function ProductBasics({ data }) {
   const productDetailsSlider = useRef();
   const prodDetailsModalSlider = useRef();
   const [isProdImgModalOpen, setProdImgModal] = useState(false);
-
+  const [prodQuantity, setProdQuantity] = useState(1);
   return (
     <>
       <div className="flex flex-col md:flex-row justify-center items-center gap-5 md:gap-10 ">
@@ -34,7 +34,7 @@ export default function ProductBasics({ data }) {
             onBeforeInit={(swiper) => (productDetailsSlider.current = swiper)}
             className="productSlider"
           >
-            {data?.images?.map((img) => {
+            {data?.data?.images?.map((img) => {
               return (
                 <SwiperSlide key={img.url}>
                   <img src={img.url} alt="" />
@@ -75,7 +75,7 @@ export default function ProductBasics({ data }) {
                 }
                 className="productSlider"
               >
-                {data?.images?.map((img) => {
+                {data?.data?.images?.map((img) => {
                   return (
                     <SwiperSlide key={img.url}>
                       <img
@@ -102,40 +102,54 @@ export default function ProductBasics({ data }) {
         <div className="text-start flex flex-row md:flex-col gap-8 ">
           <div className="border-0 md:border-b md:border-b-blue-gray pb-2">
             <h3 className="font-semibold mb-1 md:mb-3 text-xl text-gray-900 capitalize">
-              {data?.name}
+              {data?.data?.name}
             </h3>
             <p className="capitalize text-sm">
               <span className="font-semibold capitalize">Category:</span>{" "}
-              {data?.category}
+              {data?.data?.category}
             </p>
             <p className=" text-sm">
-              <span className="font-semibold">Code:</span> {data?.productCode}
+              <span className="font-semibold">Code:</span>{" "}
+              {data?.data?.productCode}
             </p>
             <p className="capitalize text-sm">
               <span className="font-semibold">Brand:</span>{" "}
-              <span className="uppercase">{data?.brand}</span>
+              <span className="uppercase">{data?.data?.brand}</span>
+            </p>
+            <p className="capitalize text-sm">
+              <span className="font-semibold">Stock:</span>
+              <span
+                className={`inline-block ml-1 rounded-md font-semibold ${
+                  data?.data?.stock === 0 ? "text-red-500" : "text-green-500"
+                }`}
+              >
+                {data?.data?.stock}
+              </span>
             </p>
           </div>
 
           <div className=" md:py-3">
             <div className="flex items-end gap-2 mb-1 md:mb-3">
               <h2 className="text-gray-900 font-bold text-xl md:text-3xl">
-                Tk {data?.discount ? data?.sellPrice : data?.price}
+                Tk{" "}
+                {data?.data?.discount
+                  ? data?.data?.sellPrice
+                  : data?.data?.price}
               </h2>
-              {data?.discount && (
+              {data?.data?.discount && (
                 <>
                   <h4 className="line-through text-gray-500">
-                    Tk {data?.price}
+                    Tk {data?.data?.price}
                   </h4>
                   <p className="text-blue-500 font-bold hidden md:inline-block">
-                    {data?.discount}% OFF
+                    {data?.data?.discount}% OFF
                   </p>
                 </>
               )}
             </div>
-            {data?.discount && (
+            {data?.data?.discount && (
               <p className="text-blue-500 font-bold block md:hidden">
-                {data?.discount}% OFF
+                {data?.data?.discount}% OFF
               </p>
             )}
 
@@ -146,23 +160,36 @@ export default function ProductBasics({ data }) {
                 activeColor="#ffd700"
                 edit={false}
                 isHalf={true}
-                value={data?.avg_rating}
+                value={data?.data?.avg_rating}
               />
               <p className="text-gray-500">
-                {data?.totalReviews}{" "}
-                {data.totalReviews > 1 ? "Reviews" : "Review"}
+                {data?.data?.totalReviews}{" "}
+                {data?.data?.totalReviews > 1 ? "Reviews" : "Review"}
               </p>
             </div>
 
             <ButtonGroup size="sm" className="mt-2">
-              <Button className="text-sm font-normal px-3 py-1">-</Button>
+              <Button
+                className="text-sm font-normal px-3 py-1"
+                disabled={prodQuantity === 1}
+                onClick={() => setProdQuantity(prodQuantity - 1)}
+              >
+                -
+              </Button>
               <Button
                 className="text-[11px] font-normal px-3 py-1 text-black bg-white border cursor-default"
                 variant="text"
               >
-                1
+                {" "}
+                {prodQuantity}
               </Button>
-              <Button className="text-sm font-normal px-3 py-1">+</Button>
+              <Button
+                className="text-sm font-normal px-3 py-1"
+                disabled={data?.data?.stock === prodQuantity}
+                onClick={() => setProdQuantity(prodQuantity + 1)}
+              >
+                +
+              </Button>
             </ButtonGroup>
 
             <Button className="mt-5">Add to cart</Button>

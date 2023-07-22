@@ -14,14 +14,22 @@ import {
   Drawer,
   IconButton,
   Input,
+  Menu,
+  MenuHandler,
+  MenuItem,
+  MenuList,
   Tooltip,
 } from "@material-tailwind/react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setKeyword,
   setPage,
 } from "../../../features/searchFilter/searchFilterSlice";
 import CartDrawer from "./CartDrawer";
+import { useLogOutMutation } from "../../../features/user/userApi";
+import { ToastError, ToastSuccess } from "../../../utils/Toast";
+import { resetUser } from "../../../features/user/userSlice";
+import { CustomBadge } from "../CustomBadge";
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -29,28 +37,71 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const naviagate = useNavigate();
   const location = useLocation();
+  const { data } = useSelector((state) => state.user);
+  const [logOut] = useLogOutMutation();
+  const user = useSelector((state) => state.user?.data);
+  const { cartItem, wishList } = user;
 
   return (
-    <header>
+    <header className="relative">
       {/* ------------------- header Top ------------------- */}
       <div className="bg-[#F5F6F8] py-2 hidden md:block">
         <div className="w-11/12 max-w-7xl mx-auto flex justify-between items-center">
           <p className="text-sm text-gray-700">Welcome to Find-Furniture</p>
-
           <div className="text-sm text-gray-700 flex gap-2 font-semibold">
-            <Link to="/register" className="flex hover:text-blue-500">
-              <UserIcon className="w-4 h-4" /> Sign up
-            </Link>
-            <span>|</span>
-            <Link to="/login" className="hover:text-blue-500">
-              Sign in
-            </Link>
+            {data?.name ? (
+              <Menu>
+                <MenuHandler>
+                  <div className="flex justify-end items-center gap-1 font-semibold capitalize text-sm cursor-pointer ">
+                    <img
+                      src={
+                        data?.avatar?.url
+                          ? data?.avatar?.url
+                          : data?.avatar?.default
+                      }
+                      className="w-7 rounded-full"
+                      alt=""
+                    />
+                    <span>{data?.name}</span>
+                  </div>
+                </MenuHandler>
+                <MenuList>
+                  <MenuItem>
+                    <Link to="/dashboard">Dashboard</Link>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      logOut()
+                        .unwrap()
+                        .then((res) => {
+                          ToastSuccess(res?.message);
+                          dispatch(resetUser());
+                        })
+                        .catch(() => {});
+                    }}
+                  >
+                    Log out
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            ) : (
+              <>
+                {" "}
+                <Link to="/register" className="flex hover:text-blue-500">
+                  <UserIcon className="w-4 h-4" /> Sign up
+                </Link>
+                <span>|</span>
+                <Link to="/login" className="hover:text-blue-500">
+                  Sign in
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
 
       {/* ------------------- Nav bar ------------------- */}
-      <div className="bg-white shadow-md sticky top-0 z-50">
+      <div className="bg-white shadow-md sticky left-0 w-full top-0 z-50">
         <div className="w-11/12 max-w-7xl mx-auto flex justify-between items-center">
           <Link to="/home">
             <img
@@ -114,43 +165,67 @@ const Navbar = () => {
             </div>
             <span className="text-gray-500 text-sm">|</span>
 
-            <div className="flex items-center gap-1">
-              <Link to="/home" className="hover:text-blue-500">
+            <div className="flex items-center gap-3">
+              <Link to="/wishlist" className="hover:text-blue-500 relative">
                 {" "}
                 <Tooltip content="Wishlist">
-                  <HeartIcon className="w-5 h-5" />
+                  <HeartIcon className="w-7 h-7" />
                 </Tooltip>
+                {wishList?.length > 0 && (
+                  <CustomBadge text={wishList?.length} />
+                )}
               </Link>
               <button
-                onClick={() => setCartDrawer(true)}
-                className="hover:text-blue-500"
+                onClick={() => {
+                  if (user.name) {
+                    setCartDrawer(true);
+                  } else {
+                    ToastError("Please Login First");
+                  }
+                }}
+                className="hover:text-blue-500 relative"
               >
                 {" "}
                 <Tooltip content="Cart">
-                  <ShoppingCartIcon className="w-5 h-5" />
+                  <ShoppingCartIcon className="w-7 h-7" />
                 </Tooltip>
+                {cartItem?.length > 0 && (
+                  <CustomBadge text={cartItem?.length} />
+                )}
               </button>
             </div>
           </div>
 
           {/* small screen */}
           <div className="md:hidden">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-5">
               <Link
                 to="/wishlist"
-                className="hover:text-blue-500 flex items-center gap-1"
+                className="hover:text-blue-500 flex items-center gap-1 relative"
               >
                 {" "}
                 <HeartIcon className="w-5 h-5" />
                 <span>Wishlist</span>
+                {wishList?.length > 0 && (
+                  <CustomBadge text={wishList?.length} />
+                )}
               </Link>
               <button
-                className="hover:text-blue-500 flex items-center gap-1 pl-2 border-l border-l-gray-500"
-                onClick={() => setCartDrawer(true)}
+                className="hover:text-blue-500 flex items-center gap-1 pl-2 border-l border-l-gray-500 relative"
+                onClick={() => {
+                  if (user.name) {
+                    setCartDrawer(true);
+                  } else {
+                    ToastError("Please Login First");
+                  }
+                }}
               >
                 {" "}
                 <ShoppingCartIcon className="w-5 h-5" />
                 <span>Cart</span>
+                {cartItem?.length > 0 && (
+                  <CustomBadge text={cartItem?.length} />
+                )}
               </button>
             </div>
           </div>
@@ -160,76 +235,137 @@ const Navbar = () => {
               onClick={() => setDrawerOpen(true)}
               className="w-5 cursor-pointer"
             />
-            <Drawer
-              open={drawerOpen}
-              onClose={() => setDrawerOpen(false)}
-              className="p-4 shadow-lg"
-            >
-              <div className="mb-2 flex items-center justify-between border-b border-b-blue-gray">
-                <Link to="/home">
-                  <img
-                    src={require("../../../images/logo.png")}
-                    alt=""
-                    className="max-w-[160px] w-[120px] md:w-[160px]"
-                  />
-                </Link>
-                <IconButton
-                  variant="text"
-                  color="blue-gray"
-                  onClick={() => setDrawerOpen(false)}
-                >
-                  <XMarkIcon strokeWidth={2} className="h-5 w-5" />
-                </IconButton>
-              </div>
-
-              <div className="flex items-center justify-center mb-8">
-                <DevicePhoneMobileIcon className="w-5 h-5" />
-                <div>
-                  <a
-                    href="mailto:example@email.com"
-                    className="text-gray-800 hover:text-blue-500 text-sm inline-block"
-                  >
-                    Email
-                  </a>{" "}
-                  <span className="text-gray-500 mx-1">or</span>
-                  <a
-                    href="tel:123456789"
-                    className="text-gray-800 hover:text-blue-500 text-sm inline-block"
-                  >
-                    Phone
-                  </a>
-                </div>
-              </div>
-
-              <ul className="text-start px-6">
-                <li className="mb-4 border-b border-b-blue-gray">
-                  <Link to="/" onClick={() => setDrawerOpen(false)}>
-                    Home
-                  </Link>
-                </li>
-                <li className="mb-4 border-b border-b-blue-gray">
-                  <Link to="/wishlist" onClick={() => setDrawerOpen(false)}>
-                    Wishlist
-                  </Link>
-                </li>
-                <li className="mb-4 border-b border-b-blue-gray">
-                  <Link to="/login" onClick={() => setDrawerOpen(false)}>
-                    Sign In
-                  </Link>
-                </li>
-                <li className="mb-4 border-b border-b-blue-gray">
-                  <Link to="/register" onClick={() => setDrawerOpen(false)}>
-                    Sign Up
-                  </Link>
-                </li>
-              </ul>
-            </Drawer>
           </div>
-
-          {/* cartDrawer */}
-          <CartDrawer setState={setCartDrawer} state={isCartDrawerOpen} />
         </div>
       </div>
+
+      {/* Menu Drawer */}
+      <Drawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        className="p-4 shadow-lg"
+      >
+        <div className="mb-2 flex items-center justify-between border-b border-b-blue-gray">
+          <Link to="/home">
+            <img
+              src={require("../../../images/logo.png")}
+              alt=""
+              className="max-w-[160px] w-[120px] md:w-[160px]"
+            />
+          </Link>
+          <IconButton
+            variant="text"
+            color="blue-gray"
+            onClick={() => setDrawerOpen(false)}
+          >
+            <XMarkIcon strokeWidth={2} className="h-5 w-5" />
+          </IconButton>
+        </div>
+
+        {data.name && (
+          <div className="flex items-center justify-center mb-1">
+            <Menu>
+              <MenuHandler>
+                <div className="flex justify-end items-center gap-1 font-semibold capitalize text-sm cursor-pointer ">
+                  <img
+                    src={
+                      data?.avatar?.url
+                        ? data?.avatar?.url
+                        : data?.avatar?.default
+                    }
+                    className="w-7 rounded-full"
+                    alt=""
+                  />
+                  <span>{data?.name}</span>
+                </div>
+              </MenuHandler>
+              <MenuList>
+                <MenuItem>
+                  <Link to="/dashboard">Dashboard</Link>
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    logOut()
+                      .unwrap()
+                      .then((res) => {
+                        ToastSuccess(res?.message);
+                        dispatch(resetUser());
+                      })
+                      .catch(() => {});
+                  }}
+                >
+                  Log out
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </div>
+        )}
+        <div className="flex items-center justify-center mb-8">
+          <DevicePhoneMobileIcon className="w-5 h-5" />
+          <div>
+            <a
+              href="mailto:example@email.com"
+              className="text-gray-800 hover:text-blue-500 text-sm inline-block"
+            >
+              Email
+            </a>{" "}
+            <span className="text-gray-500 mx-1">or</span>
+            <a
+              href="tel:123456789"
+              className="text-gray-800 hover:text-blue-500 text-sm inline-block"
+            >
+              Phone
+            </a>
+          </div>
+        </div>
+
+        <ul className="text-start px-6">
+          <li className="mb-4 border-b border-b-blue-gray">
+            <Link to="/" onClick={() => setDrawerOpen(false)}>
+              Home
+            </Link>
+          </li>
+          <li className="mb-4 border-b border-b-blue-gray">
+            <Link to="/wishlist" onClick={() => setDrawerOpen(false)}>
+              Wishlist
+            </Link>
+          </li>
+          {data.name ? (
+            <li className="mb-4 border-b border-b-blue-gray cursor-pointer">
+              <span
+                onClick={() => {
+                  setDrawerOpen(false);
+                  logOut()
+                    .unwrap()
+                    .then((res) => {
+                      ToastSuccess(res?.message);
+                      dispatch(resetUser());
+                    })
+                    .catch(() => {});
+                }}
+              >
+                Logout
+              </span>
+            </li>
+          ) : (
+            <>
+              <li className="mb-4 border-b border-b-blue-gray">
+                <Link to="/login" onClick={() => setDrawerOpen(false)}>
+                  Sign In
+                </Link>
+              </li>
+              <li className="mb-4 border-b border-b-blue-gray">
+                <Link to="/register" onClick={() => setDrawerOpen(false)}>
+                  Sign Up
+                </Link>
+              </li>
+            </>
+          )}
+        </ul>
+      </Drawer>
+
+      {/* cartDrawer */}
+      <CartDrawer setState={setCartDrawer} state={isCartDrawerOpen} />
     </header>
   );
 };

@@ -4,7 +4,6 @@ import "./toast.css";
 export const ToastSuccess = (text) => {
   return toast(text, {
     position: "top-center",
-    autoClose: 4000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
@@ -17,12 +16,12 @@ export const ToastSuccess = (text) => {
       background: "#069506",
       color: "white",
     },
+    bodyClassName: "text-[13px] !p-0 m-0",
   });
 };
 export const ToastError = (text) => {
   return toast(text, {
     position: "top-center",
-    autoClose: 4000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
@@ -35,5 +34,6 @@ export const ToastError = (text) => {
       background: "#d71f1f",
       color: "white",
     },
+    bodyClassName: "text-[13px] !p-0 m-0",
   });
 };

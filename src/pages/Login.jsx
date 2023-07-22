@@ -5,7 +5,7 @@ import {
   Typography,
   // Spinner,
 } from "@material-tailwind/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../features/user/userApi";
 import { LoaderFullScreen } from "../utils/Loader";
 import { useDispatch } from "react-redux";
@@ -16,6 +16,7 @@ import { AlertError } from "../utils/Alert";
 export default function Login() {
   const [login, { isLoading, error }] = useLoginMutation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -28,6 +29,7 @@ export default function Login() {
         ToastSuccess(res?.message);
         e.target.email.value = "";
         e.target.password.value = "";
+        navigate("/");
       })
       .catch((err) => {
         ToastError("Login failed");

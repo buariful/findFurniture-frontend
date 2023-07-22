@@ -25,7 +25,7 @@ export const Layout = ({ children }) => {
       dispatch(setCategoryError(""));
     }
     if (error) {
-      dispatch(setCategoryError(error.data.message));
+      dispatch(setCategoryError(error?.data?.message));
       dispatch(setAllCategories([]));
       dispatch(setCategoryLoading(false));
     }

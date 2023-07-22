@@ -16,7 +16,64 @@ const userApi = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    getUserByCookie: builder.mutation({
+      query: () => ({
+        url: "/getuserby-cookie",
+      }),
+    }),
+    logOut: builder.mutation({
+      query: () => ({
+        url: "/logout",
+        method: "POST",
+      }),
+    }),
+
+    addProdToCart: builder.mutation({
+      query: (data) => ({
+        url: "/cart/new",
+        method: "PUT",
+        body: data,
+      }),
+    }),
+    updateProdOfCart: builder.mutation({
+      query: (data) => ({
+        url: "/cart/update",
+        method: "PUT",
+        body: data,
+      }),
+    }),
+    deleteProdFromCart: builder.mutation({
+      query: (productId) => ({
+        url: "/cart/delete",
+        method: "PUT",
+        body: { productId },
+      }),
+    }),
+    addProdToWishlist: builder.mutation({
+      query: (productId) => ({
+        url: "/wishlist/new",
+        method: "PUT",
+        body: { productId },
+      }),
+    }),
+    deleteProdFromWishlist: builder.mutation({
+      query: (productId) => ({
+        url: "/wishlist/delete",
+        method: "PUT",
+        body: { productId },
+      }),
+    }),
   }),
 });
 
-export const { useRegisterMutation, useLoginMutation } = userApi;
+export const {
+  useRegisterMutation,
+  useLoginMutation,
+  useGetUserByCookieMutation,
+  useLogOutMutation,
+  useAddProdToCartMutation,
+  useUpdateProdOfCartMutation,
+  useDeleteProdFromCartMutation,
+  useAddProdToWishlistMutation,
+  useDeleteProdFromWishlistMutation,
+} = userApi;
