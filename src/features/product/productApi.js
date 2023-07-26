@@ -1,5 +1,3 @@
-// product
-
 import apiSlice from "../api/apiSlice";
 
 const productApi = apiSlice.injectEndpoints({
@@ -17,11 +15,6 @@ const productApi = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    // getSingleProduct: builder.mutation({
-    //   query: (id) => ({
-    //     url: `/product/${id}`,
-    //   }),
-    // }),
     getSingleProduct: builder.query({
       query: (id) => ({
         url: `/product/${id}`,
@@ -33,6 +26,5 @@ const productApi = apiSlice.injectEndpoints({
 export const {
   useGetAllProductsMutation,
   useCreateProductMutation,
-  // useGetSingleProductMutation,
   useGetSingleProductQuery,
 } = productApi;
