@@ -3,8 +3,6 @@ import {
   ButtonGroup,
   IconButton,
   Input,
-  Option,
-  Select,
 } from "@material-tailwind/react";
 import React, { useEffect } from "react";
 import { TrashIcon } from "@heroicons/react/24/outline";
@@ -19,14 +17,29 @@ import {
   deleteFromCart,
   updateCartProdQuantity,
 } from "../../features/user/userSlice";
+import {
+  useGetDistrictMutation,
+  useGetLocationQuery,
+  useGetUpazilasMutation,
+} from "../../features/locations/locationApi";
+import ReactSelect from "react-select";
 
-const CheckoutLft = () => {
+const CheckoutLft = ({ props }) => {
+  const {
+    personalInfo,
+    setPersonalInfo,
+    address,
+    setAddress,
+    setShippingInfo,
+  } = props;
   const cartItem = useSelector((state) => state.user?.data?.cartItem);
   const [updateProdOfCart] = useUpdateProdOfCartMutation();
   const [deleteProdFromCart] = useDeleteProdFromCartMutation();
+  const { data } = useGetLocationQuery("division");
+  const [getDistrict, { data: districts }] = useGetDistrictMutation();
+  const [getUpazilas, { data: upazilas }] = useGetUpazilasMutation();
   const dispatch = useDispatch();
   const [quantityError, setQuantityError] = useState("");
-
   const updateCartProuctQuantity = (productId, quantity) => {
     const data = { productId, quantity };
     updateProdOfCart(data)
@@ -43,6 +56,50 @@ const CheckoutLft = () => {
       .then((res) => dispatch(deleteFromCart(productId)))
       .catch(() => {});
   };
+
+  const handleDivision = (division) => {
+    getDistrict(division.value)
+      .unwrap()
+      .catch(() => {});
+    setAddress({ division: division, district: "", upazila: "", area: "" });
+  };
+  const handleDistrict = (district) => {
+    getUpazilas(district.value)
+      .unwrap()
+      .catch(() => {});
+    setAddress({ ...address, district: district, upazila: "", area: "" });
+  };
+  const handleUpazila = (upazila) => {
+    setAddress({ ...address, upazila: upazila, area: "" });
+
+    let matchedShippingCost = 0;
+    let shippingTime = 0;
+    // Iterate through each cart item to find the matching shipping cost
+    cartItem.forEach((item) => {
+      const { freeShipping, lowShipping, highShipping } =
+        item.product.shippingCost;
+
+      if (freeShipping?.area.includes(upazila?.value)) {
+        matchedShippingCost += 0;
+        if (freeShipping?.time > shippingTime) {
+          shippingTime = freeShipping?.time;
+        }
+      } else if (lowShipping?.area.includes(upazila?.value)) {
+        matchedShippingCost += lowShipping.price;
+        if (lowShipping?.time > shippingTime) {
+          shippingTime = lowShipping?.time;
+        }
+      } else {
+        matchedShippingCost += highShipping.price;
+        if (highShipping?.time > shippingTime) {
+          shippingTime = highShipping?.time;
+        }
+      }
+    });
+
+    setShippingInfo({ cost: matchedShippingCost, time: shippingTime });
+  };
+
   useEffect(() => {
     cartItem?.map((cart) => {
       if (cart.quantity > cart?.product?.stock) {
@@ -53,6 +110,7 @@ const CheckoutLft = () => {
       return "";
     });
   }, [cartItem]);
+
   return (
     <>
       {/* selected products */}
@@ -60,7 +118,7 @@ const CheckoutLft = () => {
         Your Selected Products
       </h2>
       {quantityError && <AlertError text={quantityError} />}
-      <div className="relative overflow-x-auto mb-16">
+      <div className="relative overflow-x-auto mb-6 md:mb-16">
         <table className="w-full text-sm text-center">
           <thead className="text-xs uppercase bg-gray-50 ">
             <tr>
@@ -82,7 +140,7 @@ const CheckoutLft = () => {
           </thead>
 
           <tbody>
-            {cartItem.length > 0 ? (
+            {cartItem?.length > 0 ? (
               cartItem?.map((cart) => {
                 return (
                   <tr
@@ -180,13 +238,7 @@ const CheckoutLft = () => {
         Shipping Address
       </h2>
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          console.log(e.target);
-        }}
-        className="p-5 border rounded-md mb-16 shadow-md text-start "
-      >
+      <form className="p-5 border rounded-md md:mb-16 shadow-md text-start ">
         <div className="text-center mb-3">
           {" "}
           <h3 className="font-semibold text-gray-600 text-lg">
@@ -198,7 +250,15 @@ const CheckoutLft = () => {
             <label htmlFor="name" className="text-sm mb-1 inline-block">
               Enter your full Name
             </label>
-            <Input label="Full Name" id="name" name="name" required />
+            <Input
+              label="Full Name"
+              id="name"
+              name="name"
+              value={personalInfo?.name}
+              onChange={(e) =>
+                setPersonalInfo({ ...personalInfo, name: e.target.value })
+              }
+            />
           </div>
           <div>
             <label htmlFor="email" className="text-sm mb-1 inline-block">
@@ -209,7 +269,10 @@ const CheckoutLft = () => {
               id="email"
               type="email"
               name="email"
-              required
+              value={personalInfo?.email}
+              onChange={(e) =>
+                setPersonalInfo({ ...personalInfo, email: e.target.value })
+              }
             />
           </div>
           <div>
@@ -220,8 +283,11 @@ const CheckoutLft = () => {
               label="Phone"
               id="phone"
               name="phone"
+              value={personalInfo?.mblNumber}
+              onChange={(e) =>
+                setPersonalInfo({ ...personalInfo, mblNumber: e.target.value })
+              }
               type="tel"
-              required
               pattern="^\d{1,15}$"
             />
           </div>
@@ -236,39 +302,65 @@ const CheckoutLft = () => {
             <label htmlFor="division" className="text-sm mb-1 inline-block">
               Select Your Division
             </label>
-            <Select
-              id="division"
-              label="Select Disvision"
-              onChange={(e) => console.log(e)}
-            >
-              <Option value="bangladesh">bangladesh</Option>
-              <Option value="afganistan">afganistan</Option>
-            </Select>
+            <ReactSelect
+              label="Select Colors"
+              closeMenuOnSelect={true}
+              className="text-[13px]"
+              value={address?.division}
+              onChange={(e) => handleDivision(e)}
+              options={
+                data?.data ? data?.data : [{ label: "No data", value: null }]
+              }
+            />
           </div>
           <div>
             <label htmlFor="district" className="text-sm mb-1 inline-block">
               Select Your District
             </label>
-            <Select id="district" label="Select District">
-              <Option value="bangladesh">bangladesh</Option>
-              <Option value="afganistan">afganistan</Option>
-            </Select>
+            <ReactSelect
+              label="Select Colors"
+              closeMenuOnSelect={true}
+              className="text-[13px]"
+              value={address?.district}
+              isDisabled={!address?.division}
+              onChange={(e) => handleDistrict(e)}
+              options={
+                districts?.data
+                  ? districts?.data
+                  : [{ label: "No data", value: null }]
+              }
+            />
           </div>
           <div>
             <label htmlFor="upazila" className="text-sm mb-1 inline-block">
               Select Your Upazila
             </label>
-            <Select id="upazila" label="Select Upazila" name="upazilla">
-              <Option value="bangladesh">bangladesh</Option>
-              <Option value="afganistan">afganistan</Option>
-            </Select>
+            <ReactSelect
+              label="Select Colors"
+              closeMenuOnSelect={true}
+              className="text-[13px]"
+              isDisabled={!address?.district}
+              value={address?.upazila}
+              onChange={(e) => handleUpazila(e)}
+              options={
+                upazilas?.data
+                  ? upazilas?.data
+                  : [{ label: "No data", value: null }]
+              }
+            />
           </div>
 
           <div>
             <label htmlFor="area" className="text-sm mb-1 inline-block">
               Area/Village
             </label>
-            <Input label="Area/Village" required name="area" id="area" />
+            <Input
+              label="Area/Village"
+              name="area"
+              id="area"
+              value={address?.area}
+              onChange={(e) => setAddress({ ...address, area: e.target.value })}
+            />
           </div>
         </div>
       </form>

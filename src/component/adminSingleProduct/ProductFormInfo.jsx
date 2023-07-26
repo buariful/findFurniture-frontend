@@ -108,7 +108,6 @@ const ProductFormInfo = ({ product }) => {
 
                   <ReactSelect
                     label="Select Colors"
-                    id="relted_category"
                     closeMenuOnSelect={false}
                     isMulti
                     options={colors}

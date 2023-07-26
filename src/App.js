@@ -20,6 +20,7 @@ import Overview from "./pages/Overview";
 import CategoryProduct from "./pages/CategoryProduct";
 import useAuthCheck from "./utils/useAuthCheck";
 import { LoaderFullScreen } from "./utils/Loader";
+import OrderSuccess from "./pages/OrderSuccess";
 
 function App() {
   const isAuthChecked = useAuthCheck();
@@ -91,6 +92,14 @@ function App() {
             element={
               <Layout>
                 <Checkout />
+              </Layout>
+            }
+          />
+          <Route
+            path="/order/success/:trans_id"
+            element={
+              <Layout>
+                <OrderSuccess />
               </Layout>
             }
           />

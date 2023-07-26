@@ -53,6 +53,7 @@ const ProdAllProducts = ({ data }) => {
               price: prod?.price,
               sellPrice: prod?.sellPrice,
               stock: prod?.stock,
+              shippingCost: prod?.shippingCost,
             },
           })
         );

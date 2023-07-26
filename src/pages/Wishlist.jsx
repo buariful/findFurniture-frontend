@@ -39,6 +39,7 @@ const Cart = () => {
               price: prod?.price,
               sellPrice: prod?.sellPrice,
               stock: prod?.stock,
+              shippingCost: prod?.shippingCost,
             },
           })
         );

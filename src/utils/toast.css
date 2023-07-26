@@ -1,7 +1,11 @@
 .toast_container button {
-  color: white;
+  align-self: normal;
 }
 
+.toast_container {
+  min-height: 50px;
+  padding: 10px;
+}
 .progress_success {
   background: #088308 !important;
 }

@@ -8,12 +8,22 @@ const locationApi = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    getDistrict: builder.mutation({
+      query: (divsion_id) => ({
+        url: `/district/${divsion_id}`,
+        method: "GET",
+      }),
+    }),
     getUpazilas: builder.mutation({
-      query: (id) => ({
-        url: `/upazila/${id}`,
+      query: (district_id) => ({
+        url: `/upazila/${district_id}`,
         method: "GET",
       }),
     }),
   }),
 });
-export const { useGetLocationQuery, useGetUpazilasMutation } = locationApi;
+export const {
+  useGetLocationQuery,
+  useGetUpazilasMutation,
+  useGetDistrictMutation,
+} = locationApi;
