@@ -8,7 +8,32 @@ const reviewApi = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    addReview: builder.mutation({
+      query: (data) => ({
+        url: `/review/new`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateReview: builder.mutation({
+      query: ({ reviewId, data }) => ({
+        url: `/review/${reviewId}`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
+    usersReview: builder.query({
+      query: () => ({
+        url: `/user-reviews`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useGetProductReviewsQuery } = reviewApi;
+export const {
+  useGetProductReviewsQuery,
+  useAddReviewMutation,
+  useUpdateReviewMutation,
+  useUsersReviewQuery,
+} = reviewApi;

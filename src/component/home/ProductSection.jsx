@@ -25,13 +25,13 @@ const ProductSection = () => {
 
   useEffect(() => {
     const params = new URLSearchParams();
-    if (colors.length > 0) {
+    if (colors?.length > 0) {
       params.set("colors", colors.join(","));
     }
-    if (categories.length > 0) {
+    if (categories?.length > 0) {
       params.set("categories", categories.join(","));
     }
-    if (brands.length > 0) {
+    if (brands?.length > 0) {
       params.set("brands", brands.join(","));
     }
     if (discount !== null) {

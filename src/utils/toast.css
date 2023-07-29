@@ -6,9 +6,3 @@
   min-height: 50px;
   padding: 10px;
 }
-.progress_success {
-  background: #088308 !important;
-}
-.progress_error {
-  background: #970000 !important;
-}

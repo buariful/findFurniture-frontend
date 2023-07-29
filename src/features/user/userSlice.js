@@ -28,6 +28,7 @@ export const userSlice = createSlice({
       const prodIndex = state?.data?.cartItem.findIndex(
         (cart) => cart?.product?._id === productId
       );
+
       let product = state?.data?.cartItem.find(
         (cart) => cart?.product?._id === productId
       );

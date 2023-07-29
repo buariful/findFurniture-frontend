@@ -63,6 +63,12 @@ const userApi = apiSlice.injectEndpoints({
         body: { productId },
       }),
     }),
+    userOrders: builder.query({
+      query: () => ({
+        url: "/order/myorders",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -76,4 +82,5 @@ export const {
   useDeleteProdFromCartMutation,
   useAddProdToWishlistMutation,
   useDeleteProdFromWishlistMutation,
+  useUserOrdersQuery,
 } = userApi;

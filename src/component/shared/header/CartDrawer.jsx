@@ -34,6 +34,15 @@ const CartDrawer = ({ state, setState }) => {
       })
       .catch((err) => console.log(err));
   };
+  // const updateCartProuctQuantity = (productId, quantity) => {
+  //   const data = { productId, quantity };
+  //   updateProdOfCart(data)
+  //     .unwrap()
+  //     .then(() => {
+  //       dispatch(updateCartProdQuantity(data));
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
 
   const deleteCartItem = (productId) => {
     deleteProdFromCart(productId)

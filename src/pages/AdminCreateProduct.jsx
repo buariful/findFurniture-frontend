@@ -181,8 +181,8 @@ const AdminCreateProduct = () => {
     setContent("");
   };
   const freeShipUpazilas =
-    shipAreas.freeShipAreas.length > 0 &&
-    shipAreas.freeShipAreas.map((area) => {
+    shipAreas?.freeShipAreas?.length > 0 &&
+    shipAreas?.freeShipAreas?.map((area) => {
       const isSelected = shipAreas.selectedLowShipAreas.some(
         (item) => item.id === area.id
       );
@@ -210,8 +210,8 @@ const AdminCreateProduct = () => {
       }
     });
   const lowShipUpazilas =
-    shipAreas.lowShipAreas.length > 0 &&
-    shipAreas.lowShipAreas.map((area) => {
+    shipAreas?.lowShipAreas?.length > 0 &&
+    shipAreas?.lowShipAreas?.map((area) => {
       const isSelected = shipAreas.selectedFreeShipAreas.some(
         (item) => item.id === area.id
       );
@@ -395,8 +395,8 @@ const AdminCreateProduct = () => {
                 </p>
                 <div className="pb-3 grid grid-cols-12 gap-5">
                   <div className="col-span-12 flex flex-wrap justify-center gap-2">
-                    {shipAreas.selectedFreeShipAreas.length > 0 &&
-                      shipAreas.selectedFreeShipAreas.map((area, i) => (
+                    {shipAreas?.selectedFreeShipAreas?.length > 0 &&
+                      shipAreas?.selectedFreeShipAreas?.map((area, i) => (
                         <p
                           className="bg-[#eee] p-1 rounded flex items-center gap-1 text-sm"
                           key={i}
@@ -463,8 +463,8 @@ const AdminCreateProduct = () => {
                 </p>
                 <div className="pb-3 grid grid-cols-12 gap-5">
                   <div className="col-span-12 flex flex-wrap justify-center gap-2">
-                    {shipAreas.selectedLowShipAreas.length > 0 &&
-                      shipAreas.selectedLowShipAreas.map((area, i) => (
+                    {shipAreas?.selectedLowShipAreas?.length > 0 &&
+                      shipAreas?.selectedLowShipAreas?.map((area, i) => (
                         <p
                           className="bg-[#eee] p-1 rounded flex items-center gap-1 text-sm"
                           key={i}

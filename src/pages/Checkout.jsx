@@ -29,7 +29,6 @@ const Checkout = () => {
     setShippingInfo,
   };
 
-  console.log(shippingInfo);
   return (
     <>
       <div className="grid grid-cols-12 gap-6 w-11/12 mx-auto">
