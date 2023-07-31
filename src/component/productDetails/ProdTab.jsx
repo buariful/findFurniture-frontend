@@ -7,11 +7,11 @@ import {
   TabsHeader,
 } from "@material-tailwind/react";
 import { useState } from "react";
-import ReactStars from "react-rating-stars-component";
 import parse from "html-react-parser";
 import { useGetProductReviewsQuery } from "../../features/review/reviewApi";
 import { LoaderSmall } from "../../utils/Loader";
 import { AlertError } from "../../utils/Alert";
+import ReactStars from "react-stars";
 
 const ProdTab = ({ data }) => {
   const { isLoading, data: reviews } = useGetProductReviewsQuery(
@@ -44,12 +44,13 @@ const ProdTab = ({ data }) => {
             <div>
               <ReactStars
                 count={5}
-                size={19}
-                activeColor="#FF9933"
-                edit={false}
-                isHalf={true}
+                size={24}
                 value={d?.rating}
+                color2={"#FF9933"}
+                half={true}
+                edit={false}
               />
+
               <p>
                 by <span className="capitalize">{d?.user?.name}</span>
               </p>

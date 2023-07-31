@@ -13,9 +13,9 @@ import {
   ArrowRightCircleIcon as ArrowRight,
 } from "@heroicons/react/24/outline";
 import { Button, ButtonGroup } from "@material-tailwind/react";
-import ReactStars from "react-rating-stars-component";
 import { useState } from "react";
 import Modal from "../../utils/Modal";
+import ReactStars from "react-stars";
 
 export default function ProductBasics({ data }) {
   const productDetailsSlider = useRef();
@@ -153,15 +153,21 @@ export default function ProductBasics({ data }) {
               </p>
             )}
 
-            <div className="flex flex-col md:flex-row mb-2 items-start md:items-end md:gap-3">
-              <ReactStars
-                count={5}
-                size={25}
-                activeColor="#ffd700"
-                edit={false}
-                isHalf={true}
-                value={data?.data?.avg_rating}
-              />
+            <div className="flex flex-col md:flex-row mb-2 items-cemter md:items-end md:gap-3">
+              <div className="flex items-center gap-2">
+                <ReactStars
+                  count={5}
+                  size={20}
+                  value={data?.data?.avg_rating}
+                  color2={"#FF9933"}
+                  half={true}
+                  edit={false}
+                />
+                <span className="text-sm text-blue-gray-500">
+                  ({data?.data?.avg_rating.toFixed(1)})
+                </span>
+              </div>
+
               <p className="text-gray-500">
                 {data?.data?.totalReviews}{" "}
                 {data?.data?.totalReviews > 1 ? "Reviews" : "Review"}

@@ -2,7 +2,6 @@ import React from "react";
 import { Button, Textarea } from "@material-tailwind/react";
 import { LoaderSmall } from "../../utils/Loader";
 import { useState } from "react";
-import ReactStars from "react-rating-stars-component";
 import {
   PencilSquareIcon,
   ChatBubbleOvalLeftEllipsisIcon,
@@ -14,6 +13,7 @@ import {
   useUpdateReviewMutation,
 } from "../../features/review/reviewApi";
 import { ToastError, ToastSuccess } from "../../utils/Toast";
+import ReactStars from "react-stars";
 
 const PurchasedProducts = ({ orderData, reviewedProducts, refetchReview }) => {
   const { isLoading, error, data } = orderData;
@@ -222,14 +222,15 @@ const PurchasedProducts = ({ orderData, reviewedProducts, refetchReview }) => {
           <div className="flex items-center gap-3">
             <ReactStars
               count={5}
+              size={34}
               value={review?.rating}
+              color2={"#FF9933"}
+              half={true}
               onChange={(e) =>
                 setReview((prevReview) => ({ ...prevReview, rating: e }))
               }
-              size={30}
-              activeColor="#ffd700"
-              isHalf={true}
             />
+
             {review?.rating && (
               <span className=" bg-blue-500 text-white py-1 px-3 inline-block rounded text-[12px]">
                 {review?.rating}

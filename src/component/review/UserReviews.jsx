@@ -3,7 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { LoaderBig } from "../../utils/Loader";
 import { AlertError } from "../../utils/Alert";
-import ReactStars from "react-rating-stars-component";
+import ReactStars from "react-stars";
 
 const UserReviews = ({ reviewData }) => {
   const { isLoading, error, data } = reviewData;
@@ -39,11 +39,11 @@ const UserReviews = ({ reviewData }) => {
                 <div>
                   <ReactStars
                     count={5}
-                    size={22}
-                    activeColor="#FF9933"
                     edit={false}
-                    isHalf={true}
+                    size={24}
                     value={Math.round(rev?.rating * 2) / 2}
+                    color2={"#FF9933"}
+                    half={true}
                   />
                 </div>
               </div>

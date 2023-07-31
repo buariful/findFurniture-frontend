@@ -3,19 +3,12 @@ import {
   Card,
   CardBody,
   CardHeader,
-  Rating,
   Spinner,
 } from "@material-tailwind/react";
 import React from "react";
 import { Link } from "react-router-dom";
-import {
-  HeartIcon,
-  StarIcon as UnratedIcon,
-} from "@heroicons/react/24/outline";
-import {
-  StarIcon as RatedIcon,
-  HeartIcon as HeartIconFill,
-} from "@heroicons/react/24/solid";
+import { HeartIcon } from "@heroicons/react/24/outline";
+import { HeartIcon as HeartIconFill } from "@heroicons/react/24/solid";
 import {
   useAddProdToCartMutation,
   useAddProdToWishlistMutation,
@@ -29,6 +22,7 @@ import {
 } from "../../features/user/userSlice";
 import { ToastError, ToastSuccess } from "../../utils/Toast";
 import { useState } from "react";
+import ReactStars from "react-stars";
 
 const ProdAllProducts = ({ data }) => {
   const [addProdToCart, { isLoading }] = useAddProdToCartMutation();
@@ -130,11 +124,13 @@ const ProdAllProducts = ({ data }) => {
           </div>
 
           <div className="text-start">
-            <Rating
-              value={Math.ceil(d?.avg_rating)}
-              readonly
-              ratedIcon={<RatedIcon className="h-4 w-4" />}
-              unratedIcon={<UnratedIcon className="h-4 w-4" />}
+            <ReactStars
+              count={5}
+              size={19}
+              value={d?.avg_rating}
+              color2={"#FF9933"}
+              half={true}
+              edit={false}
             />
 
             <h3 className="font-semibold text-blue-400 text-lg">
