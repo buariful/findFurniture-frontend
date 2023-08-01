@@ -3,10 +3,19 @@ import { useSelector } from "react-redux";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { ToastError } from "./Toast";
 
-const PrivateRoute = ({ children }) => {
-  const user = useSelector((state) => state.user.data.role);
+const PrivateRoute = ({ admin }) => {
+  const userRole = useSelector((state) => state.user.data.role);
   const location = useLocation().pathname;
-  if (user) {
+
+  if (userRole) {
+    if (admin && userRole.toLowerCase() === "admin") {
+      return <Outlet />;
+    }
+    if (admin && userRole.toLowerCase() !== "admin") {
+      localStorage.setItem("path", location);
+      ToastError("You are not the admin");
+      return <Navigate to="/login" />;
+    }
     return <Outlet />;
   } else {
     localStorage.setItem("path", location);

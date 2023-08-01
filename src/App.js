@@ -82,7 +82,7 @@ function App() {
             }
           />
           {/* ---------- private routes --------- */}
-          <Route element={<PrivateRoute />}>
+          <Route element={<PrivateRoute admin={false} />}>
             <Route
               path="/wishlist"
               element={
@@ -116,16 +116,27 @@ function App() {
                 </Layout>
               }
             />
+            <Route path="/dashboard/" element={<Dashboard />}>
+              <Route index element={<Order />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="review" element={<Review />} />
+            </Route>
           </Route>
 
-          <Route path="/dashboard/" element={<Dashboard />}>
-            <Route index element={<Order />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="review" element={<Review />} />
-            <Route path="admin/overview" element={<Overview />} />
-            <Route path="admin/all-products" element={<AdminAllProducts />} />
-            <Route path="admin/product/:id" element={<AdminSingleProduct />} />
-            <Route path="admin/product/new" element={<AdminCreateProduct />} />
+          {/* --------- private route for admins ------ */}
+          <Route element={<PrivateRoute admin={true} />}>
+            <Route path="/dashboard/" element={<Dashboard />}>
+              <Route path="admin/overview" element={<Overview />} />
+              <Route path="admin/all-products" element={<AdminAllProducts />} />
+              <Route
+                path="admin/product/:id"
+                element={<AdminSingleProduct />}
+              />
+              <Route
+                path="admin/product/new"
+                element={<AdminCreateProduct />}
+              />
+            </Route>
           </Route>
         </Routes>
       </Router>
