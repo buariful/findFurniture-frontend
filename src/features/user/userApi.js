@@ -69,6 +69,20 @@ const userApi = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    userProfileUpdate: builder.mutation({
+      query: (data) => ({
+        url: "/user/profile",
+        method: "PUT",
+        body: data,
+      }),
+    }),
+    // userProfileUpdate: builder.mutation({
+    //   query: (data) => ({
+    //     url: "/user/profile",
+    //     method: "PUT",
+    //     body: data,
+    //   }),
+    // }),
   }),
 });
 
@@ -83,4 +97,5 @@ export const {
   useAddProdToWishlistMutation,
   useDeleteProdFromWishlistMutation,
   useUserOrdersQuery,
+  useUserProfileUpdateMutation,
 } = userApi;

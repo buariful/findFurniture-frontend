@@ -16,7 +16,11 @@ const UserReviews = ({ reviewData }) => {
     );
   }
   if (error) {
-    reviewCards = <AlertError text={error?.data?.message} />;
+    reviewCards = (
+      <div className="col-span-1 md:col-span-2 xl:col-span-3">
+        <AlertError text={error?.data?.message} />
+      </div>
+    );
   }
   if (data?.data) {
     reviewCards = data?.data?.map((rev) => {

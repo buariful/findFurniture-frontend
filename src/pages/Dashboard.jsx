@@ -12,10 +12,12 @@ import {
   ChartPieIcon,
 } from "@heroicons/react/24/outline";
 import { Button, Drawer, IconButton } from "@material-tailwind/react";
+import { useSelector } from "react-redux";
 
 const Dashboard = () => {
   const [isSideBarOpen, setSiteBarOpen] = useState(false);
   const location = useLocation();
+  const user = useSelector((state) => state.user?.data);
   return (
     <div className="grid grid-cols-12 w-full mx-auto min-h-screen">
       {/* ============ sidbar============ */}
@@ -243,11 +245,11 @@ const Dashboard = () => {
       <div className="col-span-12 lg:col-span-9 xl:col-span-10">
         <div className="bg-[#eee] flex justify-center items-center gap-2 py-3">
           <img
-            src={require("../images/logo.png")}
+            src={user?.avatar?.url ? user?.avatar?.url : user?.avatar?.default}
             alt=""
-            className="w-16 rounded-full"
+            className="w-10 rounded-full"
           />
-          <span className="capitalize">Person name</span>
+          <span className="capitalize">{user?.name}</span>
           <IconButton
             variant="text"
             className="text-black block lg:hidden"

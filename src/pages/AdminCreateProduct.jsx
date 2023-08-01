@@ -127,7 +127,6 @@ const AdminCreateProduct = () => {
     const { name, price, sellPrice } = e.target;
 
     if (parseInt(price.value) < parseInt(sellPrice.value)) {
-      console.log(price, sellPrice);
       return ToastError("Sell price should be smaller than product price");
     }
 

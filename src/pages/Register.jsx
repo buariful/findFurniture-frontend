@@ -27,6 +27,7 @@ export default function Register() {
         e.target.name.value = "";
       })
       .catch((err) => {
+        console.log(err);
         ToastError("Registration failed");
       });
   };
