@@ -22,10 +22,10 @@ import useAuthCheck from "./utils/useAuthCheck";
 import { LoaderFullScreen } from "./utils/Loader";
 import OrderSuccess from "./pages/OrderSuccess";
 import OrderFail from "./pages/OrderFail";
+import PrivateRoute from "./utils/PrivateRoute";
 
 function App() {
   const isAuthChecked = useAuthCheck();
-
   return !isAuthChecked ? (
     <LoaderFullScreen />
   ) : (
@@ -56,19 +56,12 @@ function App() {
               </Layout>
             }
           />
+
           <Route
             path="/product/:id"
             element={
               <Layout>
                 <ProductDetails />{" "}
-              </Layout>
-            }
-          />
-          <Route
-            path="/wishlist"
-            element={
-              <Layout>
-                <Wishlist />
               </Layout>
             }
           />
@@ -88,30 +81,42 @@ function App() {
               </Layout>
             }
           />
-          <Route
-            path="/checkout"
-            element={
-              <Layout>
-                <Checkout />
-              </Layout>
-            }
-          />
-          <Route
-            path="/order/success/:trans_id"
-            element={
-              <Layout>
-                <OrderSuccess />
-              </Layout>
-            }
-          />
-          <Route
-            path="/order/fail/:trans_id"
-            element={
-              <Layout>
-                <OrderFail />
-              </Layout>
-            }
-          />
+          {/* ---------- private routes --------- */}
+          <Route element={<PrivateRoute />}>
+            <Route
+              path="/wishlist"
+              element={
+                <Layout>
+                  <Wishlist />
+                </Layout>
+              }
+              exact
+            />
+            <Route
+              path="/checkout"
+              element={
+                <Layout>
+                  <Checkout />
+                </Layout>
+              }
+            />
+            <Route
+              path="/order/success/:trans_id"
+              element={
+                <Layout>
+                  <OrderSuccess />
+                </Layout>
+              }
+            />
+            <Route
+              path="/order/fail/:trans_id"
+              element={
+                <Layout>
+                  <OrderFail />
+                </Layout>
+              }
+            />
+          </Route>
 
           <Route path="/dashboard/" element={<Dashboard />}>
             <Route index element={<Order />} />

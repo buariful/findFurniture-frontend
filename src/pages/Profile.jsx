@@ -66,7 +66,7 @@ const Profile = () => {
     <>
       <div className="flex items-center justify-center gap-3 mt-6">
         <img
-          src={user?.avatar?.url ? user?.avatar?.url : user?.avatar?.default}
+          src={user?.avatar?.url || user?.avatar?.default}
           alt=""
           className="w-[200px] "
         />

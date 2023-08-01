@@ -29,7 +29,9 @@ export default function Login() {
         ToastSuccess(res?.message);
         e.target.email.value = "";
         e.target.password.value = "";
-        navigate("/");
+        const targetedLocation = localStorage.getItem("path") || "/";
+        localStorage.removeItem("path");
+        navigate(targetedLocation);
       })
       .catch((err) => {
         ToastError("Login failed");

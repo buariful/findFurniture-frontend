@@ -1,5 +1,5 @@
 import { Card, Input, Button, Typography } from "@material-tailwind/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useRegisterMutation } from "../features/user/userApi";
 import { LoaderFullScreen } from "../utils/Loader";
 import { useDispatch } from "react-redux";
@@ -10,6 +10,7 @@ import { ToastError, ToastSuccess } from "../utils/Toast";
 export default function Register() {
   const [register, { isLoading, error }] = useRegisterMutation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -22,12 +23,12 @@ export default function Register() {
       .then((res) => {
         dispatch(setUser(res?.data));
         ToastSuccess(res?.message);
-        e.target.email.value = "";
-        e.target.password.value = "";
-        e.target.name.value = "";
+        const targetedLocation = localStorage.getItem("path") || "/";
+        localStorage.removeItem("path");
+        navigate(targetedLocation);
+        e.target.reset();
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         ToastError("Registration failed");
       });
   };

@@ -15,9 +15,10 @@ export const ToastSuccess = (text) => {
     transition: Bounce,
   });
 };
-export const ToastError = (text) => {
+export const ToastError = (text, id) => {
   return toast.error(text, {
     position: "top-center",
+    toastId: id || "",
     autoClose: 3000,
     hideProgressBar: true,
     closeOnClick: true,

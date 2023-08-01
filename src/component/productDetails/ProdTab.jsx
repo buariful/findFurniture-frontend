@@ -32,11 +32,7 @@ const ProdTab = ({ data }) => {
         <div className="mb-8">
           <div className="flex gap-2">
             <img
-              src={
-                d?.user?.avatar?.url
-                  ? d?.user?.avatar?.url
-                  : d?.user?.avatar?.default
-              }
+              src={d?.user?.avatar?.url || d?.user?.avatar?.default}
               alt=""
               className="w-[50px] rounded-full"
             />

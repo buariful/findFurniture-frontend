@@ -48,11 +48,7 @@ const MenuDrawer = ({ drawerOpen, setDrawerOpen, data }) => {
               <MenuHandler>
                 <div className="flex justify-end items-center gap-1 font-semibold capitalize text-sm cursor-pointer ">
                   <img
-                    src={
-                      data?.avatar?.url
-                        ? data?.avatar?.url
-                        : data?.avatar?.default
-                    }
+                    src={data?.avatar?.url || data?.avatar?.default}
                     className="w-7 rounded-full"
                     alt=""
                   />
