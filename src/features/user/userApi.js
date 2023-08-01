@@ -76,13 +76,13 @@ const userApi = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    // userProfileUpdate: builder.mutation({
-    //   query: (data) => ({
-    //     url: "/user/profile",
-    //     method: "PUT",
-    //     body: data,
-    //   }),
-    // }),
+    userPasswordUpdate: builder.mutation({
+      query: (data) => ({
+        url: "/user/password",
+        method: "PUT",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -98,4 +98,5 @@ export const {
   useDeleteProdFromWishlistMutation,
   useUserOrdersQuery,
   useUserProfileUpdateMutation,
+  useUserPasswordUpdateMutation,
 } = userApi;

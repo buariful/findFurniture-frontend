@@ -38,6 +38,7 @@ export default function Login() {
 
   return (
     <div className="w-full mt-10 grid place-items-center mb-20">
+      {error && <AlertError text={error?.data?.message} />}
       <Card className="shadow-lg p-10 bg-gray-100">
         <Typography variant="h4" color="blue-gray">
           Sign In
@@ -75,7 +76,6 @@ export default function Login() {
         </form>
       </Card>
 
-      {error && <AlertError text={error?.data?.message} />}
       {isLoading && <LoaderFullScreen />}
     </div>
   );
