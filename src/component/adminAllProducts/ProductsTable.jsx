@@ -5,21 +5,22 @@ import { Button, IconButton } from "@material-tailwind/react";
 // import DeleteProdModal from "./DeleteProdModal";
 import { Link } from "react-router-dom";
 import Modal from "../../utils/Modal.js";
+import DeleteProdModal from "./DeleteProdModal.jsx";
+import { useEffect } from "react";
 
 const ProductsTable = ({ data }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [singleProduct, setSingleProduct] = useState("");
 
-  const handleModalOpen = (product) => {
-    setSingleProduct(product);
-    setModalOpen(!isModalOpen);
-  };
-
+  // const handleModalOpen = (product) => {
+  //   setSingleProduct(product);
+  //   setModalOpen(!isModalOpen);
+  // };
   const tableData = data.map((d) => (
     <tr className="bg-white border-b " key={d._id}>
       <td className="px-2 py-1">
         <img
-          src={d?.thumbImg?.url}
+          src={d?.images[0]?.url}
           alt=""
           className="!w-[50px] block rounded"
         />
@@ -38,12 +39,12 @@ const ProductsTable = ({ data }) => {
       </td>
       <td className="px-2 py-4 text-blue-600 font-bold ">
         <div className="flex justify-center items-center font">
-          {d.sellPrice ? d.sellPrice : d?.price}
+          {d.sellPrice || d?.price}
         </div>
       </td>
       <td className="px-2 py-4 font-semibold">
         <div className="flex justify-center items-center gap-1">
-          <Link to="/dashboard/admin/product/555">
+          <Link to={`/dashboard/admin/product/${d._id}`}>
             <IconButton
               variant="text"
               className="bg-green-50 hover:bg-green-100"
@@ -55,7 +56,10 @@ const ProductsTable = ({ data }) => {
           <IconButton
             variant="text"
             className="bg-red-50 hover:bg-red-100"
-            onClick={() => handleModalOpen(d)}
+            onClick={() => {
+              setModalOpen(true);
+              setSingleProduct(d);
+            }}
           >
             <TrashIcon className="w-5 text-red-500" />
           </IconButton>
@@ -63,6 +67,7 @@ const ProductsTable = ({ data }) => {
       </td>
     </tr>
   ));
+
   return (
     <>
       <div className="relative overflow-x-auto w-10/12 mx-auto">
@@ -93,55 +98,18 @@ const ProductsTable = ({ data }) => {
           <tbody>{tableData}</tbody>
         </table>
       </div>
-
+      {singleProduct && (
+        <DeleteProdModal
+          singleProduct={singleProduct}
+          isModalOpen={isModalOpen}
+          setModalOpen={setModalOpen}
+        />
+      )}
       {/* <DeleteProdModal
         product={singleProduct}
         handleModalOpen={handleModalOpen}
         isModalOpen={isModalOpen}
       /> */}
-
-      <Modal
-        key="DeleteProdModal"
-        isModalOpen={isModalOpen}
-        setModal={setModalOpen}
-      >
-        <div className="flex justify-center items-center mb-3 font-bold text-xl">
-          <span className="font-normal">Are you sure want to delete </span>{" "}
-          <span className="text-red-500 capitalize ml-2">
-            {singleProduct?.name}?
-          </span>
-        </div>
-
-        <div className="flex items-center justify-center gap-5">
-          <img
-            src={singleProduct?.thumbImg?.url}
-            alt={singleProduct?.name}
-            className="w-[200px] rounded"
-          />
-          <div>
-            <p className="text-sm capitalize">
-              Stock: <span className="font-semibold"> 22</span>
-            </p>
-            <p className="text-sm capitalize">
-              Code:
-              <span className="font-semibold">
-                {singleProduct?.productCode}
-              </span>
-            </p>
-            <p className="text-sm capitalize">
-              price:{" "}
-              <span className="font-semibold">{singleProduct?.price}</span>
-            </p>
-          </div>
-        </div>
-
-        <div className="flex justify-center items-center gap-2 mt-5">
-          <Button onClick={handleModalOpen}>Cancel</Button>
-          <Button color="red" onClick={handleModalOpen} className="mr-1">
-            Delete
-          </Button>
-        </div>
-      </Modal>
     </>
   );
 };

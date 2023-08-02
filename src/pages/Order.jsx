@@ -60,6 +60,7 @@ const Order = () => {
                 <td className="px-2 py-4 text-gray-900 whitespace-nowrap">
                   {d?.products?.map((prod) => (
                     <Link
+                      key={prod?._id}
                       to={`/product/${prod?._id}`}
                       className="font-semibold hover:text-blue-500 duration-300 block"
                     >

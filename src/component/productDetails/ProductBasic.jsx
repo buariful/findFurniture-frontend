@@ -2,24 +2,18 @@ import React, { useRef } from "react";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css/bundle";
-import "./productBasic.css";
 import {
   ArrowLeftCircleIcon,
   ArrowRightCircleIcon,
 } from "@heroicons/react/24/solid";
-import {
-  ArrowsPointingOutIcon,
-  ArrowLeftCircleIcon as ArrowLeft,
-  ArrowRightCircleIcon as ArrowRight,
-} from "@heroicons/react/24/outline";
+import { ArrowsPointingOutIcon } from "@heroicons/react/24/outline";
 import { Button, ButtonGroup } from "@material-tailwind/react";
 import { useState } from "react";
-import Modal from "../../utils/Modal";
 import ReactStars from "react-stars";
+import FullScreenImgSlider from "../shared/FullScreenImgSlider";
 
 export default function ProductBasics({ data }) {
   const productDetailsSlider = useRef();
-  const prodDetailsModalSlider = useRef();
   const [isProdImgModalOpen, setProdImgModal] = useState(false);
   const [prodQuantity, setProdQuantity] = useState(1);
   return (
@@ -58,45 +52,12 @@ export default function ProductBasics({ data }) {
           >
             <ArrowsPointingOutIcon className="w-6" />
           </button>
-
-          <Modal
-            key="ProductBasic"
-            isModalOpen={isProdImgModalOpen}
-            setModal={setProdImgModal}
-            size="xxl"
-            bgTransparent={true}
-          >
-            <div className="w-full relative">
-              <Swiper
-                navigation={true}
-                loop={true}
-                onBeforeInit={(swiper) =>
-                  (prodDetailsModalSlider.current = swiper)
-                }
-                className="productSlider"
-              >
-                {data?.data?.images?.map((img) => {
-                  return (
-                    <SwiperSlide key={img.url}>
-                      <img
-                        src={img.url}
-                        alt=""
-                        className="max-w-2xl mx-auto max-h-[70vh] mt-10"
-                      />
-                    </SwiperSlide>
-                  );
-                })}
-              </Swiper>
-              <ArrowLeft
-                className="w-10 cursor-pointer absolute left-0 top-1/2 -translate-y-1/2 z-50 text-white "
-                onClick={() => prodDetailsModalSlider.current.slidePrev()}
-              />
-              <ArrowRight
-                className="w-10 cursor-pointer absolute right-0 top-1/2 -translate-y-1/2 z-50 text-white "
-                onClick={() => prodDetailsModalSlider.current.slideNext()}
-              />
-            </div>
-          </Modal>
+          <FullScreenImgSlider
+            data={data?.data?.images}
+            state={isProdImgModalOpen}
+            setState={setProdImgModal}
+            key={data?.data?._id}
+          />
         </div>
 
         <div className="text-start flex flex-row md:flex-col gap-8 ">

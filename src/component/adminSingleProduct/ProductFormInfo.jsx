@@ -1,43 +1,60 @@
-import React, { useRef, useState } from "react";
-import {
-  Button,
-  Card,
-  CardBody,
-  Input,
-  Option,
-  Select,
-} from "@material-tailwind/react";
+import React, { useEffect, useRef, useState } from "react";
+import { Button, Card, CardBody, Input } from "@material-tailwind/react";
 import { CurrencyBangladeshiIcon } from "@heroicons/react/24/outline";
 import JoditEditor from "jodit-react";
 import ReactSelect from "react-select";
+import { useGetAllCategoriesQuery } from "../../features/category/categoryApi";
+import { useGetAllBrandsQuery } from "../../features/brand/brandApi";
+import prodColors from "../../app/colors.json";
+import { findUpazilas, selectedValues, upazilaArray } from "../../utils/helper";
+import { useGetLocationQuery } from "../../features/locations/locationApi";
 
 const ProductFormInfo = ({ product }) => {
+  const { isLoading, data } = useGetAllCategoriesQuery();
+  const { isLoading: dsctLoading, data: districts } =
+    useGetLocationQuery("district");
+
+  const { isLoading: brandLoading, data: brandData } = useGetAllBrandsQuery();
+  const { freeShipping, highShipping, lowShipping } =
+    product?.data?.shippingCost;
+
   const [prodInfo, setProdInfo] = useState({
     name: "",
     prodPrice: "",
     sellPrice: "",
     category: "",
-    relatedCategories: [],
+    relatedProducts_categories: [],
     brand: "",
     colors: [],
-    freeShipping: { area: [], time: "" },
-    lowShipping: { area: [], time: "", price: "" },
-    highShipping: { time: "", price: "" },
-    content: "",
+    shippingCost: {},
+    description: "",
   });
   const editor = useRef();
-  const colors = [{ label: "a", value: "a" }];
 
   const handleUpdateValues = () => {};
-
   const handleProdUpdate = () => {};
+  useEffect(() => {
+    setProdInfo({
+      name: product?.data?.name,
+      prodPrice: product?.data?.price,
+      sellPrice: product?.data?.sellPrice,
+      category: product?.data?.category,
+      relatedProducts_categories: product?.data?.relatedProducts_categories,
+      brand: product?.data?.brand,
+      colors: product?.data?.colors,
+      shippingCost: product?.data?.shippingCost,
+      description: product?.data?.description,
+    });
+  }, [product]);
+
+  console.log(product);
   return (
     <>
       <div className="w-11/12 max-w-4xl mx-auto mb-16">
         <Card>
           <CardBody>
             <form onSubmit={handleProdUpdate}>
-              {/* ----- product basics ----- */}
+              {/* ----- product basic ----- */}
               <h4 className="inline-block pb-1 border-b-2 border-b-blue-600 mb-4">
                 Basic Info
               </h4>
@@ -46,7 +63,16 @@ const ProductFormInfo = ({ product }) => {
                   <label htmlFor="name" className="mb-2 inline-block">
                     Product Name
                   </label>
-                  <Input label="Name" id="name" name="name" required />
+                  <Input
+                    label="Name"
+                    id="name"
+                    name="name"
+                    required
+                    value={prodInfo?.name}
+                    onChange={(e) =>
+                      setProdInfo({ ...prodInfo, name: e.target.value })
+                    }
+                  />
                 </div>
                 <div className="text-start">
                   <label
@@ -61,6 +87,13 @@ const ProductFormInfo = ({ product }) => {
                     name="price"
                     type="number"
                     required
+                    value={prodInfo?.prodPrice}
+                    onChange={(e) =>
+                      setProdInfo({
+                        ...prodInfo,
+                        prodPrice: parseInt(e.target.value),
+                      })
+                    }
                   />
                 </div>
                 <div className="text-start">
@@ -70,7 +103,18 @@ const ProductFormInfo = ({ product }) => {
                   >
                     Sell Price <CurrencyBangladeshiIcon className="w-5" />
                   </label>
-                  <Input label="Sell Price" id="sellPrice" name="sellPrice" />
+                  <Input
+                    label="Sell Price"
+                    id="sellPrice"
+                    name="sellPrice"
+                    value={prodInfo?.sellPrice}
+                    onChange={(e) =>
+                      setProdInfo({
+                        ...prodInfo,
+                        sellPrice: parseInt(e.target.value),
+                      })
+                    }
+                  />
                 </div>
               </div>
 
@@ -83,20 +127,17 @@ const ProductFormInfo = ({ product }) => {
                   <label htmlFor="category" className="mb-2 inline-block">
                     Select Category
                   </label>
-                  <Select
-                    label="Select Category"
-                    id="category"
-                    name="category"
-                    // onChange={(e) =>console.log(e)
-                    // }
-                    value={prodInfo.category}
-                  >
-                    <Option value="category 1">category 1</Option>
-                    <Option value="category 2">category 2</Option>
-                    <Option value="category 3">category 3</Option>
-                    <Option value="category 4">category 4</Option>
-                    <Option value="category 5">category 6</Option>
-                  </Select>
+                  <ReactSelect
+                    label="Select Colors"
+                    closeMenuOnSelect={true}
+                    options={data?.data}
+                    isLoading={isLoading}
+                    defaultValue={{
+                      label: product?.data?.category,
+                      value: product?.data?.category,
+                    }}
+                    className="capitalize text-sm"
+                  />
                 </div>
                 <div className="text-start">
                   <label
@@ -105,19 +146,16 @@ const ProductFormInfo = ({ product }) => {
                   >
                     Related category
                   </label>
-
                   <ReactSelect
                     label="Select Colors"
                     closeMenuOnSelect={false}
                     isMulti
-                    options={colors}
-                    // onChange={(e) => {
-                    //   const rel_category = e.map((e) => e.value);
-                    //   setCategoryBrand({
-                    //     ...categoryBrand,
-                    //     relatedCategory: rel_category,
-                    //   });
-                    // }}
+                    isLoading={isLoading}
+                    defaultValue={selectedValues(
+                      product?.data?.relatedProducts_categories
+                    )}
+                    options={data?.data}
+                    className="text-sm capitalize"
                   />
                 </div>
 
@@ -125,43 +163,33 @@ const ProductFormInfo = ({ product }) => {
                   <label htmlFor="brand" className="mb-2 inline-block">
                     Select Brand
                   </label>
-                  <Select
+                  <ReactSelect
                     label="Select Brand"
-                    id="brand"
-                    // onChange={(e) =>
-                    //   setCategoryBrand({ ...categoryBrand, brand: e })
-                    // }
-                    // value={categoryBrand.brand}
-                  >
-                    <Option value="brand 1">brand 1</Option>
-                    <Option value="brand 2">brand 2</Option>
-                    <Option value="brand 3">brand 3</Option>
-                    <Option value="brand 4">brand 4</Option>
-                  </Select>
+                    closeMenuOnSelect={true}
+                    isLoading={brandLoading}
+                    defaultValue={{
+                      label: product?.data?.brand,
+                      value: product?.data?.brand,
+                    }}
+                    options={brandData?.data}
+                    className="text-sm capitalize"
+                  />
                 </div>
                 <div className="text-start">
                   <label htmlFor="color" className="mb-2 inline-block">
-                    Select Available Colors
+                    Available Colors
                   </label>
                   <ReactSelect
                     label="Select Colors"
                     id="color"
-                    closeMenuOnSelect={false}
+                    closeMenuOnSelect={true}
                     isMulti
-                    options={colors}
-                    // onChange={(e) => {
-                    //   const colors = e.map((e) => e.value);
-                    //   setCategoryBrand({ ...categoryBrand, colors });
-                    // }}
-                  >
-                    <Option value="color 1">color 1</Option>
-                    <Option value="color 2">color 2</Option>
-                    <Option value="color 3">color 3</Option>
-                    <Option value="color 4">color 4</Option>
-                  </ReactSelect>
+                    defaultValue={selectedValues(product?.data?.colors)}
+                    options={prodColors?.colors}
+                    className="text-sm capitalize"
+                  />
                 </div>
               </div>
-
               {/* ----- product shippings ----- */}
               <div>
                 <h4 className="inline-block pb-1 border-b-2 border-b-blue-600 mb-8">
@@ -173,26 +201,26 @@ const ProductFormInfo = ({ product }) => {
                 </p>
                 <div className="pb-3 grid grid-cols-12 gap-5">
                   <div className="col-span-12 flex flex-wrap justify-center gap-2">
-                    {/* {shipAreas.selectedFreeShipAreas.length > 0 &&
-                    shipAreas.selectedFreeShipAreas.map((area, i) => (
-                      <p
-                        className="bg-[#eee] p-1 rounded flex items-center gap-1 text-sm"
-                        key={i}
-                      >
-                        <span>{area.name}</span>
-                        <XMarkIcon
-                          className="w-4 cursor-pointer"
-                          onClick={() =>
-                            handleSelectAreas(
-                              area,
-                              false,
-                              "selectedFreeShipAreas",
-                              "freeShipping"
-                            )
-                          }
-                        />
-                      </p>
-                    ))} */}
+                    {/* {shipAreas?.selectedFreeShipAreas?.length > 0 &&
+                      shipAreas?.selectedFreeShipAreas?.map((area, i) => (
+                        <p
+                          className="bg-[#eee] p-1 rounded flex items-center gap-1 text-sm"
+                          key={i}
+                        >
+                          <span>{area.name}</span>
+                          <XMarkIcon
+                            className="w-4 cursor-pointer"
+                            onClick={() =>
+                              handleSelectAreas(
+                                area,
+                                false,
+                                "selectedFreeShipAreas",
+                                "freeShipping"
+                              )
+                            }
+                          />
+                        </p>
+                      ))} */}
                   </div>
                   <div className="col-span-6 text-start">
                     <div>
@@ -200,8 +228,10 @@ const ProductFormInfo = ({ product }) => {
                         Select District
                       </label>
                       <ReactSelect
-                        options={colors}
+                        options={districts?.data}
+                        isLoading={dsctLoading}
                         closeMenuOnSelect={true}
+                        isMulti
                         // onChange={(result) =>
                         //   getTargetedUpazilas(result, "freeShipAreas")
                         // }
@@ -219,7 +249,7 @@ const ProductFormInfo = ({ product }) => {
                         id="freeShipTime"
                         type="number"
                         name="freeShipTime"
-                        // value={shippingInfo.freeShipping.time}
+                        value={freeShipping?.time}
                         // onChange={(e) =>
                         //   handleShippingInfo(
                         //     e.target.value,
@@ -269,7 +299,7 @@ const ProductFormInfo = ({ product }) => {
                         Shipping Areas
                       </label>
                       <ReactSelect
-                        options={colors}
+                        options={prodColors?.data}
                         closeMenuOnSelect={true}
                         // onChange={(result) =>
                         //   getTargetedUpazilas(result, "lowShipAreas")
@@ -380,7 +410,7 @@ const ProductFormInfo = ({ product }) => {
               <div>
                 <JoditEditor
                   ref={editor}
-                  value={prodInfo.content}
+                  value={prodInfo?.description}
                   // onChange={(newContent) => {
                   //   setContent(newContent);
                   // }}

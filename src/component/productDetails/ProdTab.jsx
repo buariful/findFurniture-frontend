@@ -29,7 +29,7 @@ const ProdTab = ({ data }) => {
   if (reviews?.data?.length > 0) {
     productReveiws = reviews?.data.map((d) => {
       return (
-        <div className="mb-8">
+        <div className="mb-8" key={d?._id}>
           <div className="flex gap-2">
             <img
               src={d?.user?.avatar?.url || d?.user?.avatar?.default}

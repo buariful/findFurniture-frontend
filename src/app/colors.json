@@ -1,3 +1,11 @@
 {
-  "colors": ["white", "red", "black", "wood", "green", "pink", "blue"]
+  "colors": [
+    { "label": "white", "value": "white" },
+    { "label": "red", "value": "red" },
+    { "label": "black", "value": "black" },
+    { "label": "wood", "value": "wood" },
+    { "label": "green", "value": "green" },
+    { "label": "pink", "value": "pink" },
+    { "label": "blue", "value": "blue" }
+  ]
 }

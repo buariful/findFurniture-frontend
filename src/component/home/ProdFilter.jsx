@@ -178,12 +178,12 @@ const ProdFilter = () => {
 
           <AccordionBody className="pt-2 pb-0">
             {colors.colors.map((color, i) => (
-              <div key={color + i}>
+              <div key={color?.value + i}>
                 <Checkbox
-                  label={<span className="capitalize">{color}</span>}
-                  id={color}
-                  checked={selectedColors.includes(color)}
-                  onChange={() => handleColorToggle(color)}
+                  label={<span className="capitalize">{color?.value}</span>}
+                  id={color?.value}
+                  checked={selectedColors.includes(color?.value)}
+                  onChange={() => handleColorToggle(color?.value)}
                 />
               </div>
             ))}
@@ -353,12 +353,12 @@ const ProdFilter = () => {
 
             <AccordionBody className="pt-2 pb-0">
               {colors.colors.map((color, i) => (
-                <div key={color + i}>
+                <div key={color?.value + i}>
                   <Checkbox
-                    label={<span className="capitalize">{color}</span>}
-                    id={color}
-                    checked={selectedColors.includes(color)}
-                    onChange={() => handleColorToggle(color)}
+                    label={<span className="capitalize">{color?.value}</span>}
+                    id={color?.value}
+                    checked={selectedColors.includes(color?.value)}
+                    onChange={() => handleColorToggle(color?.value)}
                   />
                 </div>
               ))}

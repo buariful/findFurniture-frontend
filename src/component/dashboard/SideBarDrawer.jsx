@@ -9,10 +9,13 @@ import {
   ListBulletIcon,
   SquaresPlusIcon,
   ChartPieIcon,
+  ArrowRightOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import { Button, Drawer, IconButton } from "@material-tailwind/react";
+import { useSelector } from "react-redux";
 
-const SideBarDrawer = ({ isSideBarOpen, setSiteBarOpen }) => {
+const SideBarDrawer = ({ isSideBarOpen, setSiteBarOpen, logoutAction }) => {
+  const userRole = useSelector((state) => state.user?.data?.role).toLowerCase();
   const location = useLocation();
   return (
     <>
@@ -41,11 +44,9 @@ const SideBarDrawer = ({ isSideBarOpen, setSiteBarOpen }) => {
         <h4 className="text-gray-600 text-lg font-semibold block mb-3 border-b border-b-gray-600">
           Menu
         </h4>
-
-        <ul>
+        <ul onClick={() => setSiteBarOpen(false)}>
           <li>
             <Link
-              onClick={() => setSiteBarOpen(false)}
               to="/dashboard"
               className={`px-2 py-3 hover:bg-[#333a48] duration-300 flex items-center gap-1 rounded ${
                 location.pathname === "/dashboard" && "bg-[#333a48]"
@@ -55,76 +56,87 @@ const SideBarDrawer = ({ isSideBarOpen, setSiteBarOpen }) => {
               <span>Orders</span>
             </Link>
           </li>
-          <div>
-            {/* user menu */}
-            <li>
-              <Link
-                onClick={() => setSiteBarOpen(false)}
-                to="/dashboard/review"
-                className={`px-2 py-3 hover:bg-[#333a48] duration-300 flex items-center gap-1 rounded ${
-                  location.pathname === "/dashboard/review" && "bg-[#333a48]"
-                }`}
-              >
-                <ChatBubbleLeftIcon className="w-5" />
-                <span>My reviews</span>
-              </Link>
-            </li>
 
-            <li>
-              <Link
-                onClick={() => setSiteBarOpen(false)}
-                to="/dashboard/profile"
-                className={`px-2 py-3 hover:bg-[#333a48] duration-300 flex items-center gap-1 rounded ${
-                  location.pathname === "/dashboard/profile" && "bg-[#333a48]"
-                }`}
-              >
-                <UserCircleIcon className="w-5" />
-                <span>Profile</span>
-              </Link>
-            </li>
-          </div>
+          {/* user menu */}
+          {userRole === "user" && (
+            <div>
+              <li>
+                <Link
+                  to="/dashboard/review"
+                  className={`px-2 py-3 hover:bg-[#333a48] duration-300 flex items-center gap-1 rounded ${
+                    location.pathname === "/dashboard/review" && "bg-[#333a48]"
+                  }`}
+                >
+                  <ChatBubbleLeftIcon className="w-5" />
+                  <span>My reviews</span>
+                </Link>
+              </li>
+            </div>
+          )}
+
           {/* admin menu */}
-          <div>
-            <li>
-              <Link
-                onClick={() => setSiteBarOpen(false)}
-                to="/dashboard/admin/overview"
-                className={`px-2 py-3 hover:bg-[#333a48] duration-300 flex items-center gap-1 rounded ${
-                  location.pathname === "/dashboard/admin/overview" &&
-                  "bg-[#333a48]"
-                }`}
-              >
-                <ChartPieIcon className="w-5" />
-                <span>Overview</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                onClick={() => setSiteBarOpen(false)}
-                to="/dashboard/admin/all-products"
-                className={`px-2 py-3 hover:bg-[#333a48] duration-300 flex items-center gap-1 rounded ${
-                  location.pathname === "/dashboard/admin/all-products" &&
-                  "bg-[#333a48]"
-                }`}
-              >
-                <ListBulletIcon className="w-5" />
-                <span>All Products</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                onClick={() => setSiteBarOpen(false)}
-                to="/dashboard/admin/product/new"
-                className={`px-2 py-3 hover:bg-[#333a48] duration-300 flex items-center gap-1 rounded ${
-                  location.pathname === "/dashboard/admin/product/new" &&
-                  "bg-[#333a48]"
-                }`}
-              >
-                <SquaresPlusIcon className="w-5" />
-                <span>Create Product</span>
-              </Link>
-            </li>
-          </div>
+          {userRole === "admin" && (
+            <div>
+              <li>
+                <Link
+                  to="/dashboard/admin/overview"
+                  className={`px-2 py-3 hover:bg-[#333a48] duration-300 flex items-center gap-1 rounded ${
+                    location.pathname === "/dashboard/admin/overview" &&
+                    "bg-[#333a48]"
+                  }`}
+                >
+                  <ChartPieIcon className="w-5" />
+                  <span>Overview</span>
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  to="/dashboard/admin/all-products"
+                  className={`px-2 py-3 hover:bg-[#333a48] duration-300 flex items-center gap-1 rounded ${
+                    location.pathname === "/dashboard/admin/all-products" &&
+                    "bg-[#333a48]"
+                  }`}
+                >
+                  <ListBulletIcon className="w-5" />
+                  <span>All Products</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/dashboard/admin/product/new"
+                  className={`px-2 py-3 hover:bg-[#333a48] duration-300 flex items-center gap-1 rounded ${
+                    location.pathname === "/dashboard/admin/product/new" &&
+                    "bg-[#333a48]"
+                  }`}
+                >
+                  <SquaresPlusIcon className="w-5" />
+                  <span>Create Product</span>
+                </Link>
+              </li>
+            </div>
+          )}
+          <li>
+            <Link
+              to="/dashboard/profile"
+              className={`px-2 py-3 hover:bg-[#333a48] duration-300 flex items-center gap-1 rounded ${
+                location.pathname === "/dashboard/profile" && "bg-[#333a48]"
+              }`}
+            >
+              <UserCircleIcon className="w-5" />
+              <span>Profile</span>
+            </Link>
+          </li>
+
+          <li>
+            <p
+              className="px-2 py-3 hover:bg-[#333a48] duration-300 flex items-center gap-1 rounded cursor-pointer"
+              onClick={logoutAction}
+            >
+              <ArrowRightOnRectangleIcon className="w-5" />
+              <span>Log out</span>
+            </p>
+          </li>
         </ul>
 
         <div className="text-center mt-6">
