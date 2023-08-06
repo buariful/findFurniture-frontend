@@ -58,7 +58,7 @@ const CheckoutRgt = ({ props }) => {
         {productPrices}
         <div className="flex justify-between">
           <h4 className="">Total shipping cost:</h4>
-          {shippingInfo?.cost > 0 ? (
+          {shippingInfo?.cost >= 0 ? (
             <h4 className="font-semibold ">Tk {shippingInfo?.cost}</h4>
           ) : (
             <span className="text-sm text-gray-500">Select your address</span>

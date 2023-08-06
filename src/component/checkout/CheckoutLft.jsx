@@ -62,29 +62,29 @@ const CheckoutLft = ({ props }) => {
       .unwrap()
       .catch(() => {});
     setAddress({ division: division, district: "", upazila: "", area: "" });
+    setShippingInfo({ cost: "", time: "" });
   };
   const handleDistrict = (district) => {
     getUpazilas(district.value)
       .unwrap()
       .catch(() => {});
     setAddress({ ...address, district: district, upazila: "", area: "" });
+    setShippingInfo({ cost: "", time: "" });
   };
   const handleUpazila = (upazila) => {
     setAddress({ ...address, upazila: upazila, area: "" });
-
     let matchedShippingCost = 0;
     let shippingTime = 0;
-    // Iterate through each cart item to find the matching shipping cost
+
     cartItem.forEach((item) => {
       const { freeShipping, lowShipping, highShipping } =
         item.product.shippingCost;
-
-      if (freeShipping?.area.includes(upazila?.value)) {
+      if (freeShipping?.area.find((ar) => upazila?.value === ar.value)) {
         matchedShippingCost += 0;
         if (freeShipping?.time > shippingTime) {
           shippingTime = freeShipping?.time;
         }
-      } else if (lowShipping?.area.includes(upazila?.value)) {
+      } else if (lowShipping?.area.find((ar) => upazila?.value === ar.value)) {
         matchedShippingCost += lowShipping.price;
         if (lowShipping?.time > shippingTime) {
           shippingTime = lowShipping?.time;
@@ -308,9 +308,7 @@ const CheckoutLft = ({ props }) => {
               className="text-[13px]"
               value={address?.division}
               onChange={(e) => handleDivision(e)}
-              options={
-                data?.data ? data?.data : [{ label: "No data", value: null }]
-              }
+              options={data?.data || [{ label: "No data", value: null }]}
             />
           </div>
           <div>
@@ -324,11 +322,7 @@ const CheckoutLft = ({ props }) => {
               value={address?.district}
               isDisabled={!address?.division}
               onChange={(e) => handleDistrict(e)}
-              options={
-                districts?.data
-                  ? districts?.data
-                  : [{ label: "No data", value: null }]
-              }
+              options={districts?.data || [{ label: "No data", value: null }]}
             />
           </div>
           <div>

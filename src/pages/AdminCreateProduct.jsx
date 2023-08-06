@@ -7,8 +7,6 @@ import {
   CardBody,
   Checkbox,
   Input,
-  Option,
-  Select,
 } from "@material-tailwind/react";
 import ReactSelect from "react-select";
 import { CurrencyBangladeshiIcon } from "@heroicons/react/24/outline";
@@ -20,11 +18,18 @@ import JoditEditor from "jodit-react";
 import { useCreateProductMutation } from "../features/product/productApi";
 import { LoaderFullScreen } from "../utils/Loader";
 import { ToastError, ToastSuccess } from "../utils/Toast";
+import colors from "../app/colors.json";
+import { useGetAllCategoriesQuery } from "../features/category/categoryApi";
+import { useGetAllBrandsQuery } from "../features/brand/brandApi";
+import { AlertError } from "../utils/Alert";
 
 const AdminCreateProduct = () => {
   const { isLoading, data } = useGetLocationQuery("district");
+  const { isLoading: categoryLoad, data: categories } =
+    useGetAllCategoriesQuery();
+  const { isLoading: brandLoad, data: brands } = useGetAllBrandsQuery();
   const [getUpazilas] = useGetUpazilasMutation();
-  const [createProduct, { isLoading: prodLoading }] =
+  const [createProduct, { isLoading: prodLoading, error: prodError }] =
     useCreateProductMutation();
   const [selectedImages, setSelectedImages] = useState([]);
   const [categoryBrand, setCategoryBrand] = useState({
@@ -46,16 +51,6 @@ const AdminCreateProduct = () => {
   });
   const editor = useRef(null);
   const [content, setContent] = useState("");
-
-  const colors = [
-    { label: "White", value: "White" },
-    { label: "Black", value: "Black" },
-    { label: "Red", value: "Red" },
-    { label: "Pink", value: "Pink" },
-    { label: "Green", value: "Green" },
-    { label: "Blue", value: "Blue" },
-  ];
-
   let districts;
   if (isLoading) {
     districts = [{ label: "loading...", value: "loading..." }];
@@ -70,9 +65,8 @@ const AdminCreateProduct = () => {
     getUpazilas(result.value)
       .unwrap()
       .then((res) => setShipAreas({ ...shipAreas, [stateText]: res.data }))
-      .catch((err) => console.log(err));
+      .catch(() => {});
   };
-
   const handleSelectAreas = (area, isChecked, stateText1, stateText2) => {
     let data = shippingInfo[stateText2];
     if (isChecked) {
@@ -121,10 +115,9 @@ const AdminCreateProduct = () => {
       return updatedImages;
     });
   };
-
   const handleProdCreate = (e) => {
     e.preventDefault();
-    const { name, price, sellPrice } = e.target;
+    const { name, price, sellPrice, stock } = e.target;
 
     if (parseInt(price.value) < parseInt(sellPrice.value)) {
       return ToastError("Sell price should be smaller than product price");
@@ -134,6 +127,7 @@ const AdminCreateProduct = () => {
     formData.append("name", name.value);
     formData.append("price", price.value);
     formData.append("sellPrice", sellPrice.value);
+    formData.set("stock", stock.value);
     formData.append("category", categoryBrand.category);
     formData.append(
       "relatedProducts_categories",
@@ -246,6 +240,7 @@ const AdminCreateProduct = () => {
       <div className="w-11/12 max-w-4xl mx-auto mb-16">
         <Card>
           <CardBody>
+            {prodError && <AlertError text={prodError?.data?.message} />}
             <form onSubmit={handleProdCreate}>
               {/* ----- product basics ----- */}
               <h4 className="inline-block pb-1 border-b-2 border-b-blue-600 mb-4">
@@ -289,7 +284,13 @@ const AdminCreateProduct = () => {
                   >
                     Product In Stock
                   </label>
-                  <Input label="Stock" id="stock" name="stock" type="number" />
+                  <Input
+                    label="Stock"
+                    id="stock"
+                    name="stock"
+                    type="number"
+                    required
+                  />
                 </div>
               </div>
 
@@ -302,7 +303,18 @@ const AdminCreateProduct = () => {
                   <label htmlFor="category" className="mb-2 inline-block">
                     Select Category
                   </label>
-                  <Select
+                  <ReactSelect
+                    closeMenuOnSelect={true}
+                    options={categories?.data}
+                    isLoading={categoryLoad}
+                    className="capitalize text-sm"
+                    onChange={(e) => {
+                      setCategoryBrand({ ...categoryBrand, category: e.value });
+                    }}
+                    required
+                  />
+
+                  {/* <Select
                     label="Select Category"
                     id="category"
                     name="category"
@@ -315,8 +327,8 @@ const AdminCreateProduct = () => {
                     <Option value="category 2">category 2</Option>
                     <Option value="category 3">category 3</Option>
                     <Option value="category 4">category 4</Option>
-                    <Option value="category 5">category 6</Option>
-                  </Select>
+                    <Option value="category 5">category 65s4fd</Option>
+                  </Select> */}
                 </div>
                 <div className="text-start">
                   <label
@@ -325,8 +337,7 @@ const AdminCreateProduct = () => {
                   >
                     Related category
                   </label>
-
-                  <ReactSelect
+                  {/* <ReactSelect
                     label="Select Colors"
                     id="relted_category"
                     closeMenuOnSelect={false}
@@ -339,6 +350,21 @@ const AdminCreateProduct = () => {
                         relatedCategory: rel_category,
                       });
                     }}
+                  /> */}
+                  <ReactSelect
+                    closeMenuOnSelect={false}
+                    options={categories?.data}
+                    isMulti
+                    isLoading={categoryLoad}
+                    className="capitalize text-sm"
+                    onChange={(e) => {
+                      const rel_category = e.map((e) => e.value);
+                      setCategoryBrand({
+                        ...categoryBrand,
+                        relatedCategory: rel_category,
+                      });
+                    }}
+                    required
                   />
                 </div>
 
@@ -346,7 +372,7 @@ const AdminCreateProduct = () => {
                   <label htmlFor="brand" className="mb-2 inline-block">
                     Select Brand
                   </label>
-                  <Select
+                  {/* <Select
                     label="Select Brand"
                     id="brand"
                     onChange={(e) =>
@@ -358,28 +384,34 @@ const AdminCreateProduct = () => {
                     <Option value="brand 2">brand 2</Option>
                     <Option value="brand 3">brand 3</Option>
                     <Option value="brand 4">brand 4</Option>
-                  </Select>
+                  </Select> */}
+
+                  <ReactSelect
+                    closeMenuOnSelect={true}
+                    options={brands?.data}
+                    isLoading={brandLoad}
+                    className="capitalize text-sm"
+                    onChange={(e) =>
+                      setCategoryBrand({ ...categoryBrand, brand: e.value })
+                    }
+                    required
+                  />
                 </div>
                 <div className="text-start">
                   <label htmlFor="color" className="mb-2 inline-block">
                     Select Available Colors
                   </label>
                   <ReactSelect
-                    label="Select Colors"
-                    id="color"
                     closeMenuOnSelect={false}
                     isMulti
-                    options={colors}
+                    className="capitalize text-sm"
+                    options={colors?.colors}
                     onChange={(e) => {
                       const colors = e.map((e) => e.value);
                       setCategoryBrand({ ...categoryBrand, colors });
                     }}
-                  >
-                    <Option value="color 1">color 1</Option>
-                    <Option value="color 2">color 2</Option>
-                    <Option value="color 3">color 3</Option>
-                    <Option value="color 4">color 4</Option>
-                  </ReactSelect>
+                    required
+                  />
                 </div>
               </div>
 
@@ -495,6 +527,7 @@ const AdminCreateProduct = () => {
                         onChange={(result) =>
                           getTargetedUpazilas(result, "lowShipAreas")
                         }
+                        required
                       />
                     </div>
                     <div className="text-start">
@@ -517,6 +550,7 @@ const AdminCreateProduct = () => {
                             "price"
                           )
                         }
+                        required
                       />
                     </div>
                     <div className="text-start">
@@ -539,6 +573,7 @@ const AdminCreateProduct = () => {
                             "time"
                           )
                         }
+                        required
                       />
                     </div>
                   </div>
@@ -572,6 +607,7 @@ const AdminCreateProduct = () => {
                           "price"
                         )
                       }
+                      required
                     />
                   </div>
                   <div className="text-start">
@@ -594,6 +630,7 @@ const AdminCreateProduct = () => {
                           "time"
                         )
                       }
+                      required
                     />
                   </div>
                 </div>
@@ -613,6 +650,7 @@ const AdminCreateProduct = () => {
                 accept="image/*"
                 multiple
                 onChange={handleImageSelect}
+                required
               />
               <div className="flex justify-center items-center gap-5 my-10">
                 {selectedImages.map((image, index) => (
