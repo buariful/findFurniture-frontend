@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { EyeIcon, TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { LoaderSmall } from "../../utils/Loader";
 import FullScreenImgSlider from "../shared/FullScreenImgSlider";
 import { Button } from "@material-tailwind/react";
 
-const AdProdImages = ({ product, isLoading }) => {
+const AdProdImages = ({ product }) => {
   const [isFullScreenSliderOpen, setFullScreenSlider] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
   const handleImageSelect = (event) => {
@@ -50,11 +49,11 @@ const AdProdImages = ({ product, isLoading }) => {
                   strokeWidth={2}
                 />
               </div>
-              {isLoading && (
+              {/* {isLoading && (
                 <div className="absolute top-0 left-0 h-full w-full bg-[#efefefa1] grid place-items-center">
                   <LoaderSmall />
                 </div>
-              )}
+              )} */}
             </div>
           ))}
         </div>

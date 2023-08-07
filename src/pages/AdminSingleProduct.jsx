@@ -28,7 +28,7 @@ const AdminSingleProduct = () => {
         </Button>
       </div>
       <AdProductBasics data={product?.data} />
-      <AdProdImages product={product} isLoading={"dite hobe"} />
+      <AdProdImages product={product} />
 
       <div className="w-11/12 mx-auto mt-6 mb-3">
         <h3 className="font-semibold text-xl text-start">

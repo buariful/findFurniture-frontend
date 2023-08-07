@@ -46,7 +46,6 @@ const AdminCreateProduct = () => {
   const [shipAreas, setShipAreas] = useState({
     freeShipAreas: [],
     lowShipAreas: [],
-    selectedFreeShipAreas: [],
     selectedLowShipAreas: [],
   });
   const editor = useRef(null);
@@ -67,28 +66,16 @@ const AdminCreateProduct = () => {
       .then((res) => setShipAreas({ ...shipAreas, [stateText]: res.data }))
       .catch(() => {});
   };
-  const handleSelectAreas = (area, isChecked, stateText1, stateText2) => {
+  const handleSelectAreas = (area, isChecked, stateText2) => {
     let data = shippingInfo[stateText2];
     if (isChecked) {
-      setShipAreas({
-        ...shipAreas,
-        [stateText1]: [...shipAreas[stateText1], area],
-      });
-      data.area.push(area.id);
+      data.area.push({ label: area.label, value: area.value });
     } else {
-      let filterAreas = shipAreas[stateText1].filter(
-        (upazila) => upazila.id !== area.id
-      );
-      setShipAreas({
-        ...shipAreas,
-        [stateText1]: filterAreas,
-      });
-      const filterData = data.area.filter((d) => d !== area.id);
+      const filterData = data.area.filter((d) => d.label !== area.label);
       data.area = filterData;
     }
     setShippingInfo({ ...shippingInfo, [stateText2]: data });
   };
-
   const handleShippingInfo = (value, stateText, stateKey) => {
     let state = shippingInfo[stateText];
     state = { ...state, [stateKey]: value };
@@ -155,8 +142,6 @@ const AdminCreateProduct = () => {
     setShipAreas({
       freeShipAreas: [],
       lowShipAreas: [],
-      selectedFreeShipAreas: [],
-      selectedLowShipAreas: [],
     });
 
     setCategoryBrand({
@@ -173,11 +158,12 @@ const AdminCreateProduct = () => {
     });
     setContent("");
   };
+
   const freeShipUpazilas =
     shipAreas?.freeShipAreas?.length > 0 &&
     shipAreas?.freeShipAreas?.map((area) => {
-      const isSelected = shipAreas.selectedLowShipAreas.some(
-        (item) => item.id === area.id
+      const isSelected = shippingInfo?.lowShipping?.area?.some(
+        (item) => item.value === area.value
       );
       if (!isSelected) {
         return (
@@ -185,16 +171,11 @@ const AdminCreateProduct = () => {
             key={area.id}
             id={area.id + " freeShipping"}
             label={area.name}
-            checked={shipAreas.selectedFreeShipAreas.some(
-              (a) => a.id === area.id
+            checked={shippingInfo?.freeShipping?.area?.some(
+              (a) => a.value === area.value
             )}
             onChange={(e) =>
-              handleSelectAreas(
-                area,
-                e.target.checked,
-                "selectedFreeShipAreas",
-                "freeShipping"
-              )
+              handleSelectAreas(area, e.target.checked, "freeShipping")
             }
           />
         );
@@ -205,8 +186,8 @@ const AdminCreateProduct = () => {
   const lowShipUpazilas =
     shipAreas?.lowShipAreas?.length > 0 &&
     shipAreas?.lowShipAreas?.map((area) => {
-      const isSelected = shipAreas.selectedFreeShipAreas.some(
-        (item) => item.id === area.id
+      const isSelected = shippingInfo?.freeShipping?.area?.some(
+        (item) => item?.value === area?.value
       );
       if (!isSelected) {
         return (
@@ -214,14 +195,14 @@ const AdminCreateProduct = () => {
             key={area.id}
             id={area.id + " lowShipping"}
             label={area.name}
-            checked={shipAreas.selectedLowShipAreas.some(
-              (a) => a.id === area.id
+            checked={shippingInfo?.lowShipping?.area.some(
+              (a) => a.value === area.value
             )}
             onChange={(e) =>
               handleSelectAreas(
                 area,
                 e.target.checked,
-                "selectedLowShipAreas",
+                // "selectedLowShipAreas",
                 "lowShipping"
               )
             }
@@ -313,22 +294,6 @@ const AdminCreateProduct = () => {
                     }}
                     required
                   />
-
-                  {/* <Select
-                    label="Select Category"
-                    id="category"
-                    name="category"
-                    onChange={(e) =>
-                      setCategoryBrand({ ...categoryBrand, category: e })
-                    }
-                    value={categoryBrand.category}
-                  >
-                    <Option value="category 1">category 1</Option>
-                    <Option value="category 2">category 2</Option>
-                    <Option value="category 3">category 3</Option>
-                    <Option value="category 4">category 4</Option>
-                    <Option value="category 5">category 65s4fd</Option>
-                  </Select> */}
                 </div>
                 <div className="text-start">
                   <label
@@ -337,20 +302,6 @@ const AdminCreateProduct = () => {
                   >
                     Related category
                   </label>
-                  {/* <ReactSelect
-                    label="Select Colors"
-                    id="relted_category"
-                    closeMenuOnSelect={false}
-                    isMulti
-                    options={colors}
-                    onChange={(e) => {
-                      const rel_category = e.map((e) => e.value);
-                      setCategoryBrand({
-                        ...categoryBrand,
-                        relatedCategory: rel_category,
-                      });
-                    }}
-                  /> */}
                   <ReactSelect
                     closeMenuOnSelect={false}
                     options={categories?.data}
@@ -372,20 +323,6 @@ const AdminCreateProduct = () => {
                   <label htmlFor="brand" className="mb-2 inline-block">
                     Select Brand
                   </label>
-                  {/* <Select
-                    label="Select Brand"
-                    id="brand"
-                    onChange={(e) =>
-                      setCategoryBrand({ ...categoryBrand, brand: e })
-                    }
-                    value={categoryBrand.brand}
-                  >
-                    <Option value="brand 1">brand 1</Option>
-                    <Option value="brand 2">brand 2</Option>
-                    <Option value="brand 3">brand 3</Option>
-                    <Option value="brand 4">brand 4</Option>
-                  </Select> */}
-
                   <ReactSelect
                     closeMenuOnSelect={true}
                     options={brands?.data}
@@ -426,22 +363,17 @@ const AdminCreateProduct = () => {
                 </p>
                 <div className="pb-3 grid grid-cols-12 gap-5">
                   <div className="col-span-12 flex flex-wrap justify-center gap-2">
-                    {shipAreas?.selectedFreeShipAreas?.length > 0 &&
-                      shipAreas?.selectedFreeShipAreas?.map((area, i) => (
+                    {shippingInfo?.freeShipping?.area?.length > 0 &&
+                      shippingInfo?.freeShipping?.area?.map((area) => (
                         <p
                           className="bg-[#eee] p-1 rounded flex items-center gap-1 text-sm"
-                          key={i}
+                          key={area?.value}
                         >
-                          <span>{area.name}</span>
+                          <span>{area?.label}</span>
                           <XMarkIcon
                             className="w-4 cursor-pointer"
                             onClick={() =>
-                              handleSelectAreas(
-                                area,
-                                false,
-                                "selectedFreeShipAreas",
-                                "freeShipping"
-                              )
+                              handleSelectAreas(area, false, "freeShipping")
                             }
                           />
                         </p>
@@ -453,6 +385,7 @@ const AdminCreateProduct = () => {
                         Select District
                       </label>
                       <ReactSelect
+                        className="text-sm capitalize"
                         options={districts}
                         closeMenuOnSelect={true}
                         onChange={(result) =>
@@ -494,22 +427,17 @@ const AdminCreateProduct = () => {
                 </p>
                 <div className="pb-3 grid grid-cols-12 gap-5">
                   <div className="col-span-12 flex flex-wrap justify-center gap-2">
-                    {shipAreas?.selectedLowShipAreas?.length > 0 &&
-                      shipAreas?.selectedLowShipAreas?.map((area, i) => (
+                    {shippingInfo?.lowShipping?.area?.length > 0 &&
+                      shippingInfo?.lowShipping?.area?.map((area, i) => (
                         <p
                           className="bg-[#eee] p-1 rounded flex items-center gap-1 text-sm"
                           key={i}
                         >
-                          <span>{area.name}</span>
+                          <span>{area.label}</span>
                           <XMarkIcon
                             className="w-4 cursor-pointer"
                             onClick={() =>
-                              handleSelectAreas(
-                                area,
-                                false,
-                                "selectedLowShipAreas",
-                                "lowShipping"
-                              )
+                              handleSelectAreas(area, false, "lowShipping")
                             }
                           />
                         </p>
@@ -522,6 +450,7 @@ const AdminCreateProduct = () => {
                         Shipping Areas
                       </label>
                       <ReactSelect
+                        className="text-sm capitalize"
                         options={districts}
                         closeMenuOnSelect={true}
                         onChange={(result) =>
@@ -678,7 +607,6 @@ const AdminCreateProduct = () => {
                   value={content}
                   onChange={(newContent) => {
                     setContent(newContent);
-                    // console.log(newContent);
                   }}
                 />
               </div>

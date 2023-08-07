@@ -10,6 +10,7 @@ import { findUpazilas, selectedValues, upazilaArray } from "../../utils/helper";
 import { useGetLocationQuery } from "../../features/locations/locationApi";
 
 const ProductFormInfo = ({ product }) => {
+  console.log("product", product?.data?.shippingCost?.freeShipping);
   const { isLoading, data } = useGetAllCategoriesQuery();
   const { isLoading: dsctLoading, data: districts } =
     useGetLocationQuery("district");
@@ -47,7 +48,6 @@ const ProductFormInfo = ({ product }) => {
     });
   }, [product]);
 
-  console.log(product);
   return (
     <>
       <div className="w-11/12 max-w-4xl mx-auto mb-16">
@@ -68,10 +68,10 @@ const ProductFormInfo = ({ product }) => {
                     id="name"
                     name="name"
                     required
-                    value={prodInfo?.name}
                     onChange={(e) =>
                       setProdInfo({ ...prodInfo, name: e.target.value })
                     }
+                    defaultValue={prodInfo?.name}
                   />
                 </div>
                 <div className="text-start">
@@ -87,13 +87,13 @@ const ProductFormInfo = ({ product }) => {
                     name="price"
                     type="number"
                     required
-                    value={prodInfo?.prodPrice}
                     onChange={(e) =>
                       setProdInfo({
                         ...prodInfo,
                         prodPrice: parseInt(e.target.value),
                       })
                     }
+                    defaultValue={prodInfo?.prodPrice}
                   />
                 </div>
                 <div className="text-start">
@@ -107,13 +107,13 @@ const ProductFormInfo = ({ product }) => {
                     label="Sell Price"
                     id="sellPrice"
                     name="sellPrice"
-                    value={prodInfo?.sellPrice}
                     onChange={(e) =>
                       setProdInfo({
                         ...prodInfo,
                         sellPrice: parseInt(e.target.value),
                       })
                     }
+                    defaultValue={prodInfo?.sellPrice}
                   />
                 </div>
               </div>
@@ -249,7 +249,7 @@ const ProductFormInfo = ({ product }) => {
                         id="freeShipTime"
                         type="number"
                         name="freeShipTime"
-                        value={freeShipping?.time}
+                        defaultValue={freeShipping?.time}
                         // onChange={(e) =>
                         //   handleShippingInfo(
                         //     e.target.value,
@@ -318,7 +318,7 @@ const ProductFormInfo = ({ product }) => {
                         id="lowShipCost"
                         name="lowShipCost"
                         type="number"
-                        // value={shippingInfo.lowShipping.price}
+                        // defaultValue={shippingInfo.lowShipping.price}
                         // onChange={(e) =>
                         //   handleShippingInfo(
                         //     e.target.value,
@@ -340,7 +340,7 @@ const ProductFormInfo = ({ product }) => {
                         id="lowShipTime"
                         name="lowShipTime"
                         type="number"
-                        // value={shippingInfo.lowShipping.time}
+                        // defaultValue={shippingInfo.lowShipping.time}
                         // onChange={(e) =>
                         //   handleShippingInfo(
                         //     e.target.value,
@@ -373,7 +373,7 @@ const ProductFormInfo = ({ product }) => {
                       type="number"
                       id="standardShipPrice"
                       name="standardShipPrice"
-                      // value={shippingInfo.highShipping.price}
+                      // defaultValue={shippingInfo.highShipping.price}
                       // onChange={(e) =>
                       //   handleShippingInfo(
                       //     e.target.value,
@@ -395,7 +395,7 @@ const ProductFormInfo = ({ product }) => {
                       id="standardShipTime"
                       name="standardShipTime"
                       type="number"
-                      // value={shippingInfo.highShipping.time}
+                      // defaultValue={shippingInfo.highShipping.time}
                       // onChange={(e) =>
                       //   handleShippingInfo(
                       //     e.target.value,
