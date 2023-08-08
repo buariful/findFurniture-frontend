@@ -2,13 +2,21 @@ import React, { useState } from "react";
 import { EyeIcon, TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import FullScreenImgSlider from "../shared/FullScreenImgSlider";
 import { Button, Spinner } from "@material-tailwind/react";
-import { useAddProdImageMutation } from "../../features/product/productApi";
+import {
+  useAddProdImageMutation,
+  useDeleteProdImageMutation,
+} from "../../features/product/productApi";
 import { ToastError, ToastSuccess } from "../../utils/Toast";
+import { LoaderSmall } from "../../utils/Loader";
 
 const AdProdImages = ({ product, refetch }) => {
   const [addProdImage, { isLoading }] = useAddProdImageMutation();
+  const [deleteProdImage, { isLoading: imgDltLoading }] =
+    useDeleteProdImageMutation();
   const [isFullScreenSliderOpen, setFullScreenSlider] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
+  const [dltImagePublicId, setDltImagePublicId] = useState("");
+
   const handleImageSelect = (event) => {
     const files = Array.from(event.target.files);
     const selectedImagesArray = files.map((file) => ({
@@ -21,7 +29,7 @@ const AdProdImages = ({ product, refetch }) => {
     ]);
   };
 
-  const handleImageDelete = (index) => {
+  const removeImg = (index) => {
     setSelectedImages((prevSelectedImages) => {
       const updatedImages = [...prevSelectedImages];
       updatedImages.splice(index, 1);
@@ -47,12 +55,33 @@ const AdProdImages = ({ product, refetch }) => {
       .catch((err) => ToastError(err?.data?.message));
   };
 
+  const handleImgDelete = (publicId) => {
+    setDltImagePublicId(publicId);
+    const bodyData = {
+      id: product?.data?._id,
+      data: { publicIdStr: publicId },
+    };
+    deleteProdImage(bodyData)
+      .unwrap()
+      .then((res) => {
+        ToastSuccess(res?.message);
+        refetch();
+      })
+      .catch((err) => ToastError(err?.data?.message));
+  };
+
   return (
     <>
       <div className="w-11/12 mx-auto mt-6 mb-3">
         {/* ---------- the images that are using ------ */}
         <h3 className="font-semibold text-xl text-start">Product Images</h3>
         <div className="flex items-center flex-wrap gap-8">
+          {console.log(
+            "product image",
+            product?.data?.images.find(
+              (f) => f.publicId === "findFurniture/omtee8paw4zfmac7nr7d"
+            )
+          )}
           {product?.data?.images?.map((img) => (
             <div key={img?.url} className="relative">
               <img
@@ -69,8 +98,14 @@ const AdProdImages = ({ product, refetch }) => {
                 <TrashIcon
                   className="w-4 cursor-pointer hover:text-red-700"
                   strokeWidth={2}
+                  onClick={() => handleImgDelete(img.publicId)}
                 />
               </div>
+              {imgDltLoading && dltImagePublicId === img.publicId && (
+                <div className="absolute top-0 left-0 h-full w-full bg-[#efefefa1] grid place-items-center">
+                  <LoaderSmall />
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -91,7 +126,7 @@ const AdProdImages = ({ product, refetch }) => {
                   />
                   <span
                     className="inline-block p-1 absolute top-0 right-0 bg-red-50 hover:bg-red-200 text-black rounded cursor-pointer"
-                    onClick={() => handleImageDelete(index)}
+                    onClick={() => removeImg(index)}
                   >
                     <XMarkIcon className="w-4" strokeWidth={2} />
                   </span>
@@ -121,7 +156,7 @@ const AdProdImages = ({ product, refetch }) => {
               />
             </div>
             <Button type="submit" disabled={selectedImages.length < 1}>
-              {isLoading ? <Spinner className="w-5" /> : <span>uploadddd</span>}
+              {isLoading ? <Spinner className="w-5" /> : <span>upload</span>}
             </Button>
           </form>
         </div>
