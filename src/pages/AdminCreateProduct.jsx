@@ -79,7 +79,6 @@ const AdminCreateProduct = () => {
   const handleShippingInfo = (value, stateText, stateKey) => {
     let state = shippingInfo[stateText];
     state = { ...state, [stateKey]: value };
-
     setShippingInfo({ ...shippingInfo, [stateText]: state });
   };
 

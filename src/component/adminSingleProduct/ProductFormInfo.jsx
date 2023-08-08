@@ -1,53 +1,177 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Card, CardBody, Input } from "@material-tailwind/react";
-import { CurrencyBangladeshiIcon } from "@heroicons/react/24/outline";
+import {
+  Button,
+  Card,
+  CardBody,
+  Checkbox,
+  Input,
+  Spinner,
+} from "@material-tailwind/react";
+import {
+  CurrencyBangladeshiIcon,
+  CircleStackIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import JoditEditor from "jodit-react";
 import ReactSelect from "react-select";
 import { useGetAllCategoriesQuery } from "../../features/category/categoryApi";
 import { useGetAllBrandsQuery } from "../../features/brand/brandApi";
 import prodColors from "../../app/colors.json";
-import { findUpazilas, selectedValues, upazilaArray } from "../../utils/helper";
-import { useGetLocationQuery } from "../../features/locations/locationApi";
+import {
+  // findUpazilas,
+  relCateModify,
+  selectedValues,
+  // upazilaArray,
+} from "../../utils/helper";
+import {
+  useGetLocationQuery,
+  useGetUpazilasMutation,
+} from "../../features/locations/locationApi";
+import { useUpdateProductMutation } from "../../features/product/productApi";
+import { ToastError, ToastSuccess } from "../../utils/Toast";
 
-const ProductFormInfo = ({ product }) => {
-  console.log("product", product?.data?.shippingCost?.freeShipping);
+const ProductFormInfo = ({ product, refetch }) => {
   const { isLoading, data } = useGetAllCategoriesQuery();
   const { isLoading: dsctLoading, data: districts } =
     useGetLocationQuery("district");
-
+  const [getUpazilas] = useGetUpazilasMutation();
   const { isLoading: brandLoading, data: brandData } = useGetAllBrandsQuery();
-  const { freeShipping, highShipping, lowShipping } =
-    product?.data?.shippingCost;
-
+  const [updateProduct, { isLoading: prodUpLoading }] =
+    useUpdateProductMutation();
   const [prodInfo, setProdInfo] = useState({
     name: "",
-    prodPrice: "",
+    price: "",
     sellPrice: "",
+    stock: "",
     category: "",
     relatedProducts_categories: [],
     brand: "",
     colors: [],
-    shippingCost: {},
+    shippingCost: {
+      freeShipping: { area: [], time: "" },
+      lowShipping: { area: [], time: "", price: "" },
+      highShipping: { time: "", price: "" },
+    },
     description: "",
   });
+  const { freeShipping, highShipping, lowShipping } = prodInfo?.shippingCost;
+  const [shipAreas, setShipAreas] = useState({
+    freeShipAreas: [],
+    lowShipAreas: [],
+  });
   const editor = useRef();
+  const getTargetedUpazilas = (e, stateText) => {
+    getUpazilas(e.value)
+      .unwrap()
+      .then((res) => setShipAreas({ ...shipAreas, [stateText]: res.data }))
+      .catch(() => {});
+  };
+  const handleTimePrice = (parKey, childKey, value, shipObj) => {
+    let expectedValue = value || product?.data?.shippingCost[parKey][childKey];
+    setProdInfo({
+      ...prodInfo,
+      shippingCost: {
+        ...prodInfo.shippingCost,
+        [parKey]: { ...shipObj, [childKey]: expectedValue },
+      },
+    });
+  };
+  const handleSelectAreas = (area, isChecked, key) => {
+    let data = prodInfo.shippingCost[key];
+    if (isChecked) {
+      data.area.push({ label: area.label, value: area.value });
+    } else {
+      const filterData = data.area.filter((d) => d.label !== area.label);
+      data.area = filterData;
+    }
+    setProdInfo({
+      ...prodInfo,
+      shippingCost: { ...prodInfo.shippingCost, [key]: data },
+    });
+  };
+  const handleProdUpdate = (e) => {
+    e.preventDefault();
+    updateProduct({ data: prodInfo, id: product?.data?._id })
+      .unwrap()
+      .then((res) => {
+        refetch();
+        ToastSuccess(res?.message);
+      })
+      .catch((err) => {
+        ToastError(err?.data?.message);
+      });
+  };
+  const freeShipUpazilas =
+    shipAreas?.freeShipAreas?.length > 0 &&
+    shipAreas?.freeShipAreas?.map((area) => {
+      const isSelected = lowShipping?.area?.some(
+        (item) => item.value === area.value
+      );
+      if (!isSelected) {
+        return (
+          <Checkbox
+            key={area.id}
+            id={area.id + " freeShipping"}
+            label={area.name}
+            checked={freeShipping?.area?.some((a) => a.value === area.value)}
+            onChange={(e) =>
+              handleSelectAreas(area, e.target.checked, "freeShipping")
+            }
+          />
+        );
+      } else {
+        return "";
+      }
+    });
 
-  const handleUpdateValues = () => {};
-  const handleProdUpdate = () => {};
+  const lowShipUpazilas =
+    shipAreas?.lowShipAreas?.length > 0 &&
+    shipAreas?.lowShipAreas?.map((area) => {
+      const isSelected = freeShipping?.area?.some(
+        (item) => item?.value === area?.value
+      );
+      if (!isSelected) {
+        return (
+          <Checkbox
+            key={area.id}
+            id={area.id}
+            label={area.name}
+            checked={lowShipping?.area.some((a) => a.value === area.value)}
+            onChange={(e) =>
+              handleSelectAreas(area, e.target.checked, "lowShipping")
+            }
+          />
+        );
+      } else {
+        return "";
+      }
+    });
   useEffect(() => {
+    const shipping = {
+      freeShipping: {
+        ...product?.data?.shippingCost?.freeShipping,
+        area: [...product?.data?.shippingCost?.freeShipping.area],
+      },
+      lowShipping: {
+        ...product?.data?.shippingCost?.lowShipping,
+        area: [...product?.data?.shippingCost?.lowShipping?.area],
+      },
+      highShipping: { ...product?.data?.shippingCost?.highShipping },
+    };
+
     setProdInfo({
       name: product?.data?.name,
-      prodPrice: product?.data?.price,
+      price: product?.data?.price,
       sellPrice: product?.data?.sellPrice,
+      stock: product?.data?.stock,
       category: product?.data?.category,
       relatedProducts_categories: product?.data?.relatedProducts_categories,
       brand: product?.data?.brand,
       colors: product?.data?.colors,
-      shippingCost: product?.data?.shippingCost,
+      shippingCost: shipping,
       description: product?.data?.description,
     });
   }, [product]);
-
   return (
     <>
       <div className="w-11/12 max-w-4xl mx-auto mb-16">
@@ -90,10 +214,10 @@ const ProductFormInfo = ({ product }) => {
                     onChange={(e) =>
                       setProdInfo({
                         ...prodInfo,
-                        prodPrice: parseInt(e.target.value),
+                        price: parseInt(e.target.value),
                       })
                     }
-                    defaultValue={prodInfo?.prodPrice}
+                    defaultValue={prodInfo?.price}
                   />
                 </div>
                 <div className="text-start">
@@ -103,6 +227,7 @@ const ProductFormInfo = ({ product }) => {
                   >
                     Sell Price <CurrencyBangladeshiIcon className="w-5" />
                   </label>
+                  {console.log(prodInfo)}
                   <Input
                     label="Sell Price"
                     id="sellPrice"
@@ -113,7 +238,27 @@ const ProductFormInfo = ({ product }) => {
                         sellPrice: parseInt(e.target.value),
                       })
                     }
-                    defaultValue={prodInfo?.sellPrice}
+                    defaultValue={prodInfo?.sellPrice || null}
+                  />
+                </div>
+                <div className="text-start">
+                  <label
+                    htmlFor="stock"
+                    className="flex items-center gap-1 mb-2"
+                  >
+                    Stock <CircleStackIcon className="w-5" />
+                  </label>
+                  <Input
+                    label="Stock"
+                    id="stock"
+                    name="stock"
+                    onChange={(e) =>
+                      setProdInfo({
+                        ...prodInfo,
+                        stock: parseInt(e.target.value),
+                      })
+                    }
+                    defaultValue={prodInfo?.stock}
                   />
                 </div>
               </div>
@@ -128,10 +273,12 @@ const ProductFormInfo = ({ product }) => {
                     Select Category
                   </label>
                   <ReactSelect
-                    label="Select Colors"
                     closeMenuOnSelect={true}
                     options={data?.data}
                     isLoading={isLoading}
+                    onChange={(e) =>
+                      setProdInfo({ ...prodInfo, category: e.label })
+                    }
                     defaultValue={{
                       label: product?.data?.category,
                       value: product?.data?.category,
@@ -147,7 +294,6 @@ const ProductFormInfo = ({ product }) => {
                     Related category
                   </label>
                   <ReactSelect
-                    label="Select Colors"
                     closeMenuOnSelect={false}
                     isMulti
                     isLoading={isLoading}
@@ -156,6 +302,12 @@ const ProductFormInfo = ({ product }) => {
                     )}
                     options={data?.data}
                     className="text-sm capitalize"
+                    onChange={(e) =>
+                      setProdInfo({
+                        ...prodInfo,
+                        relatedProducts_categories: relCateModify(e),
+                      })
+                    }
                   />
                 </div>
 
@@ -164,7 +316,6 @@ const ProductFormInfo = ({ product }) => {
                     Select Brand
                   </label>
                   <ReactSelect
-                    label="Select Brand"
                     closeMenuOnSelect={true}
                     isLoading={brandLoading}
                     defaultValue={{
@@ -173,6 +324,9 @@ const ProductFormInfo = ({ product }) => {
                     }}
                     options={brandData?.data}
                     className="text-sm capitalize"
+                    onChange={(e) =>
+                      setProdInfo({ ...prodInfo, brand: e.value })
+                    }
                   />
                 </div>
                 <div className="text-start">
@@ -180,47 +334,44 @@ const ProductFormInfo = ({ product }) => {
                     Available Colors
                   </label>
                   <ReactSelect
-                    label="Select Colors"
-                    id="color"
                     closeMenuOnSelect={true}
                     isMulti
                     defaultValue={selectedValues(product?.data?.colors)}
                     options={prodColors?.colors}
                     className="text-sm capitalize"
+                    onChange={(e) =>
+                      setProdInfo({ ...prodInfo, colors: relCateModify(e) })
+                    }
                   />
                 </div>
               </div>
-              {/* ----- product shippings ----- */}
+
               <div>
                 <h4 className="inline-block pb-1 border-b-2 border-b-blue-600 mb-8">
                   Shipping Options
                 </h4>
 
+                {/* -------------- free shipping ------------- */}
                 <p className="text-black bg-[#eee] py-2 font-semibold mb-3 ">
                   Free Shipping
                 </p>
                 <div className="pb-3 grid grid-cols-12 gap-5">
                   <div className="col-span-12 flex flex-wrap justify-center gap-2">
-                    {/* {shipAreas?.selectedFreeShipAreas?.length > 0 &&
-                      shipAreas?.selectedFreeShipAreas?.map((area, i) => (
+                    {freeShipping?.area?.length > 0 &&
+                      freeShipping?.area?.map((area) => (
                         <p
                           className="bg-[#eee] p-1 rounded flex items-center gap-1 text-sm"
-                          key={i}
+                          key={area?.value}
                         >
-                          <span>{area.name}</span>
+                          <span>{area?.label}</span>
                           <XMarkIcon
                             className="w-4 cursor-pointer"
                             onClick={() =>
-                              handleSelectAreas(
-                                area,
-                                false,
-                                "selectedFreeShipAreas",
-                                "freeShipping"
-                              )
+                              handleSelectAreas(area, false, "freeShipping")
                             }
                           />
                         </p>
-                      ))} */}
+                      ))}
                   </div>
                   <div className="col-span-6 text-start">
                     <div>
@@ -228,13 +379,13 @@ const ProductFormInfo = ({ product }) => {
                         Select District
                       </label>
                       <ReactSelect
+                        className="capitalize text-sm"
                         options={districts?.data}
                         isLoading={dsctLoading}
                         closeMenuOnSelect={true}
-                        isMulti
-                        // onChange={(result) =>
-                        //   getTargetedUpazilas(result, "freeShipAreas")
-                        // }
+                        onChange={(e) =>
+                          getTargetedUpazilas(e, "freeShipAreas")
+                        }
                       />
                     </div>
                     <div>
@@ -250,47 +401,44 @@ const ProductFormInfo = ({ product }) => {
                         type="number"
                         name="freeShipTime"
                         defaultValue={freeShipping?.time}
-                        // onChange={(e) =>
-                        //   handleShippingInfo(
-                        //     e.target.value,
-                        //     "freeShipping",
-                        //     "time"
-                        //   )
-                        // }
+                        onChange={(e) =>
+                          handleTimePrice(
+                            "freeShipping",
+                            "time",
+                            parseInt(e.target.value),
+                            freeShipping
+                          )
+                        }
                       />
                     </div>
                   </div>
 
                   <div className="col-span-6 text-sm flex flex-wrap justify-start ">
-                    {/* {freeShipUpazilas} */}
+                    {freeShipUpazilas}
                   </div>
                 </div>
 
+                {/* ---------------- low shipping ------------- */}
                 <p className="text-black bg-[#eee] py-2 font-semibold mb-3 ">
                   Low Shipping
                 </p>
                 <div className="pb-3 grid grid-cols-12 gap-5">
                   <div className="col-span-12 flex flex-wrap justify-center gap-2">
-                    {/* {shipAreas.selectedLowShipAreas.length > 0 &&
-                    shipAreas.selectedLowShipAreas.map((area, i) => (
-                      <p
-                        className="bg-[#eee] p-1 rounded flex items-center gap-1 text-sm"
-                        key={i}
-                      >
-                        <span>{area.name}</span>
-                        <XMarkIcon
-                          className="w-4 cursor-pointer"
-                          onClick={() =>
-                            handleSelectAreas(
-                              area,
-                              false,
-                              "selectedLowShipAreas",
-                              "lowShipping"
-                            )
-                          }
-                        />
-                      </p>
-                    ))} */}
+                    {lowShipping?.area?.length > 0 &&
+                      lowShipping?.area?.map((area, i) => (
+                        <p
+                          className="bg-[#eee] p-1 rounded flex items-center gap-1 text-sm"
+                          key={i}
+                        >
+                          <span>{area.label}</span>
+                          <XMarkIcon
+                            className="w-4 cursor-pointer"
+                            onClick={() =>
+                              handleSelectAreas(area, false, "lowShipping")
+                            }
+                          />
+                        </p>
+                      ))}
                   </div>
 
                   <div className="col-span-6 text-start">
@@ -299,11 +447,11 @@ const ProductFormInfo = ({ product }) => {
                         Shipping Areas
                       </label>
                       <ReactSelect
-                        options={prodColors?.data}
+                        options={districts?.data}
+                        isLoading={dsctLoading}
+                        className="text-sm capitalize"
                         closeMenuOnSelect={true}
-                        // onChange={(result) =>
-                        //   getTargetedUpazilas(result, "lowShipAreas")
-                        // }
+                        onChange={(e) => getTargetedUpazilas(e, "lowShipAreas")}
                       />
                     </div>
                     <div className="text-start">
@@ -318,14 +466,15 @@ const ProductFormInfo = ({ product }) => {
                         id="lowShipCost"
                         name="lowShipCost"
                         type="number"
-                        // defaultValue={shippingInfo.lowShipping.price}
-                        // onChange={(e) =>
-                        //   handleShippingInfo(
-                        //     e.target.value,
-                        //     "lowShipping",
-                        //     "price"
-                        //   )
-                        // }
+                        defaultValue={lowShipping.price}
+                        onChange={(e) =>
+                          handleTimePrice(
+                            "lowShipping",
+                            "price",
+                            parseInt(e.target.value),
+                            lowShipping
+                          )
+                        }
                       />
                     </div>
                     <div className="text-start">
@@ -340,23 +489,25 @@ const ProductFormInfo = ({ product }) => {
                         id="lowShipTime"
                         name="lowShipTime"
                         type="number"
-                        // defaultValue={shippingInfo.lowShipping.time}
-                        // onChange={(e) =>
-                        //   handleShippingInfo(
-                        //     e.target.value,
-                        //     "lowShipping",
-                        //     "time"
-                        //   )
-                        // }
+                        defaultValue={lowShipping.time}
+                        onChange={(e) =>
+                          handleTimePrice(
+                            "lowShipping",
+                            "time",
+                            parseInt(e.target.value),
+                            lowShipping
+                          )
+                        }
                       />
                     </div>
                   </div>
 
                   <div className="col-span-6 text-sm flex flex-wrap justify-start">
-                    {/* {lowShipUpazilas} */}
+                    {lowShipUpazilas}
                   </div>
                 </div>
 
+                {/* ----------- standard shipping ------------ */}
                 <p className="text-black bg-[#eee] py-2 font-semibold mb-3 ">
                   Standard Shipping
                 </p>
@@ -370,17 +521,18 @@ const ProductFormInfo = ({ product }) => {
                     </label>
                     <Input
                       label="Cost"
+                      id="highShipCost"
+                      name="highShipCost"
                       type="number"
-                      id="standardShipPrice"
-                      name="standardShipPrice"
-                      // defaultValue={shippingInfo.highShipping.price}
-                      // onChange={(e) =>
-                      //   handleShippingInfo(
-                      //     e.target.value,
-                      //     "highShipping",
-                      //     "price"
-                      //   )
-                      // }
+                      defaultValue={highShipping?.price}
+                      onChange={(e) =>
+                        handleTimePrice(
+                          "highShipping",
+                          "price",
+                          parseInt(e.target.value),
+                          highShipping
+                        )
+                      }
                     />
                   </div>
                   <div className="text-start">
@@ -390,19 +542,21 @@ const ProductFormInfo = ({ product }) => {
                     >
                       Time in days (ex: 5-6)
                     </label>
+
                     <Input
                       label="Time"
                       id="standardShipTime"
                       name="standardShipTime"
                       type="number"
-                      // defaultValue={shippingInfo.highShipping.time}
-                      // onChange={(e) =>
-                      //   handleShippingInfo(
-                      //     e.target.value,
-                      //     "highShipping",
-                      //     "time"
-                      //   )
-                      // }
+                      defaultValue={highShipping?.time}
+                      onChange={(e) =>
+                        handleTimePrice(
+                          "highShipping",
+                          "time",
+                          parseInt(e.target.value),
+                          highShipping
+                        )
+                      }
                     />
                   </div>
                 </div>
@@ -411,15 +565,19 @@ const ProductFormInfo = ({ product }) => {
                 <JoditEditor
                   ref={editor}
                   value={prodInfo?.description}
-                  // onChange={(newContent) => {
-                  //   setContent(newContent);
-                  // }}
+                  onChange={(newContent) => {
+                    setProdInfo({ ...prodInfo, description: newContent });
+                  }}
                 />
               </div>
 
               <div className="mt-10 ">
                 <Button variant="gradient" type="submit">
-                  Create
+                  {prodUpLoading ? (
+                    <Spinner className="w-5" />
+                  ) : (
+                    <span>Update</span>
+                  )}
                 </Button>
               </div>
             </form>

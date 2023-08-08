@@ -13,6 +13,7 @@ import ReactStars from "react-stars";
 import FullScreenImgSlider from "../shared/FullScreenImgSlider";
 
 export default function ProductBasics({ data }) {
+  console.log("data", data);
   const productDetailsSlider = useRef();
   const [isProdImgModalOpen, setProdImgModal] = useState(false);
   const [prodQuantity, setProdQuantity] = useState(1);
@@ -92,12 +93,9 @@ export default function ProductBasics({ data }) {
           <div className=" md:py-3">
             <div className="flex items-end gap-2 mb-1 md:mb-3">
               <h2 className="text-gray-900 font-bold text-xl md:text-3xl">
-                Tk{" "}
-                {data?.data?.discount
-                  ? data?.data?.sellPrice
-                  : data?.data?.price}
+                Tk {data?.data?.sellPrice || data?.data?.price}
               </h2>
-              {data?.data?.discount && (
+              {data?.data?.sellPrice && (
                 <>
                   <h4 className="line-through text-gray-500">
                     Tk {data?.data?.price}
@@ -108,7 +106,7 @@ export default function ProductBasics({ data }) {
                 </>
               )}
             </div>
-            {data?.data?.discount && (
+            {data?.data?.sellPrice && (
               <p className="text-blue-500 font-bold block md:hidden">
                 {data?.data?.discount}% OFF
               </p>

@@ -11,7 +11,7 @@ import AdProdImages from "../component/adminSingleProduct/AdProdImages";
 const AdminSingleProduct = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { isLoading, data: product } = useGetSingleProductQuery(id);
+  const { isLoading, data: product, refetch } = useGetSingleProductQuery(id);
 
   return isLoading ? (
     <LoaderFullScreen />
@@ -34,7 +34,7 @@ const AdminSingleProduct = () => {
         <h3 className="font-semibold text-xl text-start">
           Change Product Information
         </h3>
-        <ProductFormInfo product={product} />
+        <ProductFormInfo product={product} refetch={refetch} />
       </div>
     </>
   );

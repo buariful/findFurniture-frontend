@@ -6,6 +6,12 @@ export const selectedValues = (array) => {
   return result;
 };
 
+export const relCateModify = (array) => {
+  return array.map((arr) => {
+    return arr.label;
+  });
+};
+
 export function findUpazilas(arrayWith_Fulldata, arrayOf_id) {
   const idMap = {};
   for (const item of arrayWith_Fulldata) {
