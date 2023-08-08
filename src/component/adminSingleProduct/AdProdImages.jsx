@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { EyeIcon, TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import FullScreenImgSlider from "../shared/FullScreenImgSlider";
-import { Button } from "@material-tailwind/react";
+import { Button, Spinner } from "@material-tailwind/react";
+import { useAddProdImageMutation } from "../../features/product/productApi";
+import { ToastError, ToastSuccess } from "../../utils/Toast";
 
-const AdProdImages = ({ product }) => {
+const AdProdImages = ({ product, refetch }) => {
+  const [addProdImage, { isLoading }] = useAddProdImageMutation();
   const [isFullScreenSliderOpen, setFullScreenSlider] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
   const handleImageSelect = (event) => {
@@ -25,6 +28,25 @@ const AdProdImages = ({ product }) => {
       return updatedImages;
     });
   };
+
+  const handleImageUpload = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    selectedImages.forEach((image) => {
+      formData.append("images", image.file);
+    });
+
+    addProdImage({ data: formData, id: product?.data?._id })
+      .unwrap()
+      .then((res) => {
+        ToastSuccess(res?.message);
+        refetch();
+        e.target.reset();
+        setSelectedImages("");
+      })
+      .catch((err) => ToastError(err?.data?.message));
+  };
+
   return (
     <>
       <div className="w-11/12 mx-auto mt-6 mb-3">
@@ -49,11 +71,6 @@ const AdProdImages = ({ product }) => {
                   strokeWidth={2}
                 />
               </div>
-              {/* {isLoading && (
-                <div className="absolute top-0 left-0 h-full w-full bg-[#efefefa1] grid place-items-center">
-                  <LoaderSmall />
-                </div>
-              )} */}
             </div>
           ))}
         </div>
@@ -82,7 +99,10 @@ const AdProdImages = ({ product }) => {
               ))}
             </div>
           )}
-          <form className="flex justify-center items-end gap-6">
+          <form
+            className="flex justify-center items-end gap-6"
+            onSubmit={handleImageUpload}
+          >
             <div>
               {" "}
               <label
@@ -100,7 +120,9 @@ const AdProdImages = ({ product }) => {
                 onChange={handleImageSelect}
               />
             </div>
-            <Button disabled={selectedImages.length < 1}>Upload</Button>
+            <Button type="submit" disabled={selectedImages.length < 1}>
+              {isLoading ? <Spinner className="w-5" /> : <span>uploadddd</span>}
+            </Button>
           </form>
         </div>
       </div>

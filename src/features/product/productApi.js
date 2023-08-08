@@ -27,6 +27,13 @@ const productApi = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    addProdImage: builder.mutation({
+      query: ({ data, id }) => ({
+        url: `/product-image/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -35,4 +42,5 @@ export const {
   useCreateProductMutation,
   useGetSingleProductQuery,
   useUpdateProductMutation,
+  useAddProdImageMutation,
 } = productApi;
