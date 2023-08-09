@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import ProdFilter from "./ProdFilter";
 import ProdAllProducts from "./ProdAllProducts";
-import Pagination from "./Pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetAllProductsMutation } from "../../features/product/productApi";
 import { LoaderBig } from "../../utils/Loader";
 import { AlertError } from "../../utils/Alert";
 import { setPage } from "../../features/searchFilter/searchFilterSlice";
+import Pagination from "../shared/Pagination";
 
 const ProductSection = () => {
   const [getAllProducts, { isLoading, error, data }] =
@@ -94,6 +94,7 @@ const ProductSection = () => {
             handlePaginationAction={handlePaginationAction}
             totalProducts={totalProducts}
             activePageNumber={activePageNumber}
+            limit={10}
           />
         )}
 

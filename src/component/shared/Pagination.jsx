@@ -7,6 +7,7 @@ export default function Pagination({
   handlePaginationAction,
   activePageNumber,
   totalProducts,
+  limit,
 }) {
   const [totalPage, setTotalPage] = useState(1);
 
@@ -28,9 +29,9 @@ export default function Pagination({
   };
 
   useEffect(() => {
-    const pages = Math.ceil(totalProducts / 10);
+    const pages = Math.ceil(totalProducts / limit);
     setTotalPage(pages);
-  }, [totalProducts]);
+  }, [totalProducts, limit]);
 
   // let pages;
   return (

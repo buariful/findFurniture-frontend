@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import DashboardTitle from "../component/shared/DashboardTitle";
 import ProductsTable from "../component/adminAllProducts/ProductsTable";
-import Pagination from "../component/home/Pagination";
 import { useGetAllProductsMutation } from "../features/product/productApi";
 import { LoaderBig } from "../utils/Loader";
 import { useEffect } from "react";
+import Pagination from "../component/shared/Pagination";
 
 const AdminAllProducts = () => {
   const [getAllProducts, { isLoading, data }] = useGetAllProductsMutation();
@@ -31,6 +31,7 @@ const AdminAllProducts = () => {
           handlePaginationAction={handlePaginationAction}
           activePageNumber={activePageNumber}
           totalProducts={totalProducts}
+          limit={2}
         />
       </div>
     );

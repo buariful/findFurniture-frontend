@@ -15,7 +15,25 @@ const orderApi = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    getAllOrders: builder.mutation({
+      query: ({ page, limit, delivered }) => ({
+        url: `/order/all?page=${page}&limit=${limit}&delivered=${delivered}`,
+        method: "GET",
+      }),
+    }),
+    updateOrder: builder.mutation({
+      query: (data) => ({
+        url: `/order/update`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { usePlaceOrderMutation, useGetOneOrderQuery } = orderApi;
+export const {
+  usePlaceOrderMutation,
+  useGetOneOrderQuery,
+  useGetAllOrdersMutation,
+  useUpdateOrderMutation,
+} = orderApi;
