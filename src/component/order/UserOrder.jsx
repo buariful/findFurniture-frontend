@@ -69,9 +69,13 @@ const UserOrder = () => {
                   ))}
                 </td>
                 <td className="px-2 py-4 text-gray-900 whitespace-nowrap">
-                  <span className="text-green-600 font-semibold text-cetner bg-green-50 py-1 px-3 rounded-full">
-                    {d?.isDelivered ? "Delivered" : "Processing"}
-                  </span>
+                  {d?.isDelivered ? (
+                    "Delivered"
+                  ) : (
+                    <span className="text-orange-600 font-semibold text-cetner bg-orange-50 py-1 px-3 rounded-full">
+                      Processing
+                    </span>
+                  )}
                 </td>
                 <td className="px-2 py-4 text-gray-900 whitespace-nowrap">
                   <span>{d?.shipping_address}</span>

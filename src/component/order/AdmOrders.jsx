@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import DashboardTitle from "../../component/shared/DashboardTitle";
+import DashboardTitle from "../shared/DashboardTitle";
 import {
   useGetAllOrdersMutation,
   useUpdateOrderMutation,
@@ -12,7 +12,7 @@ import { ToastError, ToastSuccess } from "../../utils/Toast";
 import { LoaderFullScreen } from "../../utils/Loader";
 import { useCallback } from "react";
 
-const AdOrders = () => {
+const AdmOrders = () => {
   const [getAllOrders, { isLoading, error, data }] = useGetAllOrdersMutation();
   const [updateOrder, { isLoading: statusLoading }] = useUpdateOrderMutation();
   const [activePageNumber, setPageNumber] = useState(1);
@@ -72,8 +72,22 @@ const AdOrders = () => {
       <div className="w-10/12 mx-auto flex items-center gap-7 mb-5 text-sm">
         <div className="w-[200px]">
           <Select label="Filter" className="text-sm">
-            <Option onClick={() => setDelivered("")}>All</Option>
-            <Option onClick={() => setDelivered(true)}>Delivered</Option>
+            <Option
+              onClick={() => {
+                setPageNumber(1);
+                setDelivered("");
+              }}
+            >
+              All
+            </Option>
+            <Option
+              onClick={() => {
+                setPageNumber(1);
+                setDelivered(true);
+              }}
+            >
+              Delivered
+            </Option>
             <Option
               onClick={() => {
                 setPageNumber(1);
@@ -84,6 +98,8 @@ const AdOrders = () => {
             </Option>
           </Select>
         </div>
+
+        {/* -------- product delivery status options --------- */}
         <div className="flex items-center gap-1">
           <Checkbox
             onChange={(e) => handleSelectOrders(e)}
@@ -114,6 +130,7 @@ const AdOrders = () => {
           </Button>
         </div>
       </div>
+      {/* ---------- all products --------- */}
       <div className="relative overflow-x-auto w-10/12 mx-auto">
         <AdmOrderTable
           data={data}
@@ -134,4 +151,4 @@ const AdOrders = () => {
   );
 };
 
-export default AdOrders;
+export default AdmOrders;

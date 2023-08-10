@@ -31,11 +31,6 @@ const PurchasedProducts = ({ orderData, reviewedProducts, refetchReview }) => {
   const isProductExist = (_id) => {
     return products.some((product) => product._id === _id);
   };
-  // const handleReviewModal = (id) => {
-  //   setReview({ rating: null, comment: null, product: null });
-  //   setReview((prev) => ({ ...prev, product: id }));
-  //   setReviewModal(true);
-  // };
   const handleReviewModal = (matchingReview, prod) => {
     setReview({ rating: null, comment: null, product: null, reviewId: null });
     setProdForReview(prod);
