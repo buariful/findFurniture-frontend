@@ -22,6 +22,7 @@ export default function Login() {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
+    console.log(process.env.REACT_APP_SERVER_URL);
     login({ data: { email, password } })
       .unwrap()
       .then((res) => {
