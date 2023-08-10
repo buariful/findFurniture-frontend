@@ -13,7 +13,6 @@ import ReactStars from "react-stars";
 import FullScreenImgSlider from "../shared/FullScreenImgSlider";
 
 export default function ProductBasics({ data }) {
-  console.log("data", data);
   const productDetailsSlider = useRef();
   const [isProdImgModalOpen, setProdImgModal] = useState(false);
   const [prodQuantity, setProdQuantity] = useState(1);
@@ -57,7 +56,6 @@ export default function ProductBasics({ data }) {
             data={data?.data?.images}
             state={isProdImgModalOpen}
             setState={setProdImgModal}
-            key={data?.data?._id}
           />
         </div>
 

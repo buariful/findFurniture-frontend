@@ -1,8 +1,20 @@
 import { Button } from "@material-tailwind/react";
 import React from "react";
 import Modal from "../../utils/Modal";
+import { useDeleteProductMutation } from "../../features/product/productApi";
+import { LoaderFullScreen } from "../../utils/Loader";
+import { ToastError, ToastSuccess } from "../../utils/Toast";
 
 const DeleteProdModal = ({ singleProduct, isModalOpen, setModalOpen }) => {
+  const [deleteProduct, { isLoading }] = useDeleteProductMutation();
+
+  const handleDeleteProduct = (productId) => {
+    setModalOpen(false);
+    deleteProduct(productId)
+      .unwrap()
+      .then(() => ToastSuccess("Product Deleted Successfully"))
+      .catch(() => ToastError("Product can not be deleted"));
+  };
   return (
     <>
       <Modal
@@ -51,13 +63,14 @@ const DeleteProdModal = ({ singleProduct, isModalOpen, setModalOpen }) => {
           <Button onClick={() => setModalOpen(false)}>Cancel</Button>
           <Button
             color="red"
-            onClick={() => setModalOpen(false)}
+            onClick={() => handleDeleteProduct(singleProduct?._id)}
             className="mr-1"
           >
             Delete
           </Button>
         </div>
       </Modal>
+      {isLoading && <LoaderFullScreen />}
     </>
   );
 };

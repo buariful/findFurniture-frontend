@@ -1,13 +1,19 @@
 import React, { useState } from "react";
 
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { IconButton } from "@material-tailwind/react";
+import { Button, IconButton } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import DeleteProdModal from "./DeleteProdModal.jsx";
+import Modal from "../../utils/Modal.js";
+import { useDeleteProductMutation } from "../../features/product/productApi.js";
+import { ToastError, ToastSuccess } from "../../utils/Toast.js";
+import { LoaderFullScreen } from "../../utils/Loader.js";
+import { AlertError } from "../../utils/Alert.js";
 
 const ProductsTable = ({ data }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [singleProduct, setSingleProduct] = useState("");
+  const [deleteProduct, { isLoading, error }] = useDeleteProductMutation();
 
   const tableData = data.map((d) => (
     <tr className="bg-white border-b " key={d._id}>
@@ -61,9 +67,18 @@ const ProductsTable = ({ data }) => {
     </tr>
   ));
 
+  const handleDeleteProduct = (productId) => {
+    setModalOpen(false);
+    deleteProduct(productId)
+      .unwrap()
+      .then(() => ToastSuccess("Product Deleted Successfully"))
+      .catch(() => ToastError("Product can not be deleted"));
+  };
+
   return (
     <>
       <div className="relative overflow-x-auto w-10/12 mx-auto">
+        {error && <AlertError text={error?.data?.message} />}
         <table className="w-full text-sm  border">
           <thead className="text-xs uppercase bg-gray-50 ">
             <tr className="">
@@ -92,17 +107,65 @@ const ProductsTable = ({ data }) => {
         </table>
       </div>
       {singleProduct && (
-        <DeleteProdModal
-          singleProduct={singleProduct}
+        <Modal
+          key="DeleteProdModal"
           isModalOpen={isModalOpen}
-          setModalOpen={setModalOpen}
-        />
+          setModal={setModalOpen}
+        >
+          <div className="flex justify-center items-center mb-3 font-bold text-xl">
+            <span className="font-normal">Are you sure want to delete </span>{" "}
+            <span className="text-red-500 capitalize ml-2">
+              {singleProduct?.name}?
+            </span>
+          </div>
+          <div className="flex items-center justify-center gap-5">
+            <img
+              src={singleProduct?.images[0]?.url}
+              alt={singleProduct?.name}
+              className="w-[200px] rounded"
+            />
+            <div>
+              <p className="text-sm capitalize">
+                Stock: <span className="font-semibold"> 22</span>
+              </p>
+              <p className="text-sm capitalize">
+                Code:
+                <span className="font-semibold">
+                  {singleProduct?.productCode}
+                </span>
+              </p>
+              <p className="text-sm capitalize">
+                price:{" "}
+                <span className="font-semibold">{singleProduct?.price}</span>
+              </p>
+              {singleProduct?.sellPrice && (
+                <p className="text-sm capitalize">
+                  SellPrice:{" "}
+                  <span className="font-semibold">
+                    {singleProduct?.sellPrice}
+                  </span>
+                </p>
+              )}
+            </div>
+          </div>
+          <div className="flex justify-center items-center gap-2 mt-5">
+            <Button onClick={() => setModalOpen(false)}>Cancel</Button>
+            <Button
+              color="red"
+              onClick={() => handleDeleteProduct(singleProduct?._id)}
+              className="mr-1"
+            >
+              Delete
+            </Button>
+          </div>
+        </Modal>
       )}
       {/* <DeleteProdModal
         product={singleProduct}
         handleModalOpen={handleModalOpen}
         isModalOpen={isModalOpen}
       /> */}
+      {isLoading && <LoaderFullScreen />}
     </>
   );
 };

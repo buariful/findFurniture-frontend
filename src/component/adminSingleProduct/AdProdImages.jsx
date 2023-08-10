@@ -166,7 +166,6 @@ const AdProdImages = ({ product, refetch }) => {
         data={product?.data?.images}
         state={isFullScreenSliderOpen}
         setState={setFullScreenSlider}
-        key={product?._id}
       />
     </>
   );
