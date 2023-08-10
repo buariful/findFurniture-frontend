@@ -26,13 +26,18 @@ import ReactStars from "react-stars";
 
 const ProdAllProducts = ({ data }) => {
   const [addProdToCart, { isLoading }] = useAddProdToCartMutation();
-  const [addProdToWishlist] = useAddProdToWishlistMutation();
+
+  const [addProdToWishlist, { isLoading: wishLoading }] =
+    useAddProdToWishlistMutation();
   const [deleteProdFromWishlist] = useDeleteProdFromWishlistMutation();
   const [btnClicked, setBtnClicked] = useState(null);
+  const [clickedHrtIcon, setClickedHrtIcon] = useState(null);
   const { cartItem, wishList } = useSelector((state) => state?.user?.data);
   const dispatch = useDispatch();
+
   const handleAddCart = (prod) => {
     setBtnClicked(prod?._id);
+
     addProdToCart({ productId: prod?._id })
       .unwrap()
       .then((res) => {
@@ -56,6 +61,7 @@ const ProdAllProducts = ({ data }) => {
       .catch((err) => ToastError(err?.data?.message));
   };
   const handleWishlist = (prod, isAdding) => {
+    setClickedHrtIcon(prod?._id);
     if (isAdding) {
       addProdToWishlist(prod?._id)
         .unwrap()
@@ -110,7 +116,9 @@ const ProdAllProducts = ({ data }) => {
             >
               {d?.name}
             </Link>
-            {isWishlisted ? (
+            {wishLoading && clickedHrtIcon === d?._id ? (
+              <Spinner className="w-5" />
+            ) : isWishlisted ? (
               <HeartIconFill
                 className="w-5 text-red-600 cursor-pointer"
                 onClick={() => handleWishlist(d, false)}

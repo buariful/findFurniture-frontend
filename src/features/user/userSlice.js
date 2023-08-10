@@ -40,7 +40,6 @@ export const userSlice = createSlice({
       state?.data?.wishList.push(action.payload);
     },
     deleteFromWishlist: (state, action) => {
-      console.log(action.payload);
       const prodIndex = state?.data?.wishList.findIndex(
         (item) => item?._id === action.payload
       );

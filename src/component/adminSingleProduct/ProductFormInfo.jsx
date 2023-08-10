@@ -17,27 +17,24 @@ import ReactSelect from "react-select";
 import { useGetAllCategoriesQuery } from "../../features/category/categoryApi";
 import { useGetAllBrandsQuery } from "../../features/brand/brandApi";
 import prodColors from "../../app/colors.json";
-import {
-  // findUpazilas,
-  relCateModify,
-  selectedValues,
-  // upazilaArray,
-} from "../../utils/helper";
+import { relCateModify, selectedValues } from "../../utils/helper";
 import {
   useGetLocationQuery,
   useGetUpazilasMutation,
 } from "../../features/locations/locationApi";
 import { useUpdateProductMutation } from "../../features/product/productApi";
 import { ToastError, ToastSuccess } from "../../utils/Toast";
+import { LoaderSmall } from "../../utils/Loader";
 
 const ProductFormInfo = ({ product, refetch }) => {
   const { isLoading, data } = useGetAllCategoriesQuery();
   const { isLoading: dsctLoading, data: districts } =
     useGetLocationQuery("district");
-  const [getUpazilas] = useGetUpazilasMutation();
+  const [getUpazilas, { isLoading: upzLoading }] = useGetUpazilasMutation();
   const { isLoading: brandLoading, data: brandData } = useGetAllBrandsQuery();
   const [updateProduct, { isLoading: prodUpLoading }] =
     useUpdateProductMutation();
+  const [selectingShipping, setSelectingShipping] = useState(null);
   const [prodInfo, setProdInfo] = useState({
     name: "",
     price: "",
@@ -61,6 +58,7 @@ const ProductFormInfo = ({ product, refetch }) => {
   });
   const editor = useRef();
   const getTargetedUpazilas = (e, stateText) => {
+    setSelectingShipping(stateText);
     getUpazilas(e.value)
       .unwrap()
       .then((res) => setShipAreas({ ...shipAreas, [stateText]: res.data }))
@@ -227,7 +225,6 @@ const ProductFormInfo = ({ product, refetch }) => {
                   >
                     Sell Price <CurrencyBangladeshiIcon className="w-5" />
                   </label>
-                  {console.log(prodInfo)}
                   <Input
                     label="Sell Price"
                     id="sellPrice"
@@ -274,7 +271,11 @@ const ProductFormInfo = ({ product, refetch }) => {
                   </label>
                   <ReactSelect
                     closeMenuOnSelect={true}
-                    options={data?.data}
+                    options={
+                      data?.data || [
+                        { loading: "loading...", value: "loading" },
+                      ]
+                    }
                     isLoading={isLoading}
                     onChange={(e) =>
                       setProdInfo({ ...prodInfo, category: e.label })
@@ -300,7 +301,9 @@ const ProductFormInfo = ({ product, refetch }) => {
                     defaultValue={selectedValues(
                       product?.data?.relatedProducts_categories
                     )}
-                    options={data?.data}
+                    options={
+                      data?.data || [{ label: "loading...", value: "loading" }]
+                    }
                     className="text-sm capitalize"
                     onChange={(e) =>
                       setProdInfo({
@@ -322,7 +325,11 @@ const ProductFormInfo = ({ product, refetch }) => {
                       label: product?.data?.brand,
                       value: product?.data?.brand,
                     }}
-                    options={brandData?.data}
+                    options={
+                      brandData?.data || [
+                        { label: "loading...", value: "loading" },
+                      ]
+                    }
                     className="text-sm capitalize"
                     onChange={(e) =>
                       setProdInfo({ ...prodInfo, brand: e.value })
@@ -380,7 +387,11 @@ const ProductFormInfo = ({ product, refetch }) => {
                       </label>
                       <ReactSelect
                         className="capitalize text-sm"
-                        options={districts?.data}
+                        options={
+                          districts?.data || [
+                            { label: "loading...", value: "loading" },
+                          ]
+                        }
                         isLoading={dsctLoading}
                         closeMenuOnSelect={true}
                         onChange={(e) =>
@@ -414,7 +425,13 @@ const ProductFormInfo = ({ product, refetch }) => {
                   </div>
 
                   <div className="col-span-6 text-sm flex flex-wrap justify-start ">
-                    {freeShipUpazilas}
+                    {upzLoading && selectingShipping === "freeShipAreas" ? (
+                      <div className="grid place-items-center w-full">
+                        <LoaderSmall />
+                      </div>
+                    ) : (
+                      freeShipUpazilas
+                    )}
                   </div>
                 </div>
 
@@ -447,7 +464,11 @@ const ProductFormInfo = ({ product, refetch }) => {
                         Shipping Areas
                       </label>
                       <ReactSelect
-                        options={districts?.data}
+                        options={
+                          districts?.data || [
+                            { label: "loading...", value: "loading" },
+                          ]
+                        }
                         isLoading={dsctLoading}
                         className="text-sm capitalize"
                         closeMenuOnSelect={true}
@@ -503,7 +524,13 @@ const ProductFormInfo = ({ product, refetch }) => {
                   </div>
 
                   <div className="col-span-6 text-sm flex flex-wrap justify-start">
-                    {lowShipUpazilas}
+                    {upzLoading && selectingShipping === "lowShipAreas" ? (
+                      <div className="grid place-items-center w-full">
+                        <LoaderSmall />
+                      </div>
+                    ) : (
+                      lowShipUpazilas
+                    )}
                   </div>
                 </div>
 

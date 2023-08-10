@@ -16,7 +16,7 @@ import {
 } from "../features/locations/locationApi";
 import JoditEditor from "jodit-react";
 import { useCreateProductMutation } from "../features/product/productApi";
-import { LoaderFullScreen } from "../utils/Loader";
+import { LoaderFullScreen, LoaderSmall } from "../utils/Loader";
 import { ToastError, ToastSuccess } from "../utils/Toast";
 import colors from "../app/colors.json";
 import { useGetAllCategoriesQuery } from "../features/category/categoryApi";
@@ -28,10 +28,11 @@ const AdminCreateProduct = () => {
   const { isLoading: categoryLoad, data: categories } =
     useGetAllCategoriesQuery();
   const { isLoading: brandLoad, data: brands } = useGetAllBrandsQuery();
-  const [getUpazilas] = useGetUpazilasMutation();
+  const [getUpazilas, { isLoading: upzLoading }] = useGetUpazilasMutation();
   const [createProduct, { isLoading: prodLoading, error: prodError }] =
     useCreateProductMutation();
   const [selectedImages, setSelectedImages] = useState([]);
+  const [selectingShipping, setSelectingShipping] = useState(null);
   const [categoryBrand, setCategoryBrand] = useState({
     category: "",
     relatedCategory: [],
@@ -61,6 +62,7 @@ const AdminCreateProduct = () => {
   }
 
   const getTargetedUpazilas = (result, stateText) => {
+    setSelectingShipping(stateText);
     getUpazilas(result.value)
       .unwrap()
       .then((res) => setShipAreas({ ...shipAreas, [stateText]: res.data }))
@@ -285,7 +287,11 @@ const AdminCreateProduct = () => {
                   </label>
                   <ReactSelect
                     closeMenuOnSelect={true}
-                    options={categories?.data}
+                    options={
+                      categories?.data || [
+                        { label: "loading...", value: "loading" },
+                      ]
+                    }
                     isLoading={categoryLoad}
                     className="capitalize text-sm"
                     onChange={(e) => {
@@ -303,7 +309,11 @@ const AdminCreateProduct = () => {
                   </label>
                   <ReactSelect
                     closeMenuOnSelect={false}
-                    options={categories?.data}
+                    options={
+                      categories?.data || [
+                        { label: "loading...", value: "loading" },
+                      ]
+                    }
                     isMulti
                     isLoading={categoryLoad}
                     className="capitalize text-sm"
@@ -324,7 +334,11 @@ const AdminCreateProduct = () => {
                   </label>
                   <ReactSelect
                     closeMenuOnSelect={true}
-                    options={brands?.data}
+                    options={
+                      brands?.data || [
+                        { label: "loading...", value: "loading" },
+                      ]
+                    }
                     isLoading={brandLoad}
                     className="capitalize text-sm"
                     onChange={(e) =>
@@ -351,7 +365,7 @@ const AdminCreateProduct = () => {
                 </div>
               </div>
 
-              {/* ----- product shippings ----- */}
+              {/* ----------- product shippings ----------------- */}
               <div>
                 <h4 className="inline-block pb-1 border-b-2 border-b-blue-600 mb-8">
                   Shipping Options
@@ -416,8 +430,14 @@ const AdminCreateProduct = () => {
                     </div>
                   </div>
 
-                  <div className="col-span-6 text-sm flex flex-wrap justify-start ">
-                    {freeShipUpazilas}
+                  <div className="col-span-6 text-sm flex flex-wrap justify-start">
+                    {upzLoading && selectingShipping === "freeShipAreas" ? (
+                      <div className="grid place-items-center w-full">
+                        <LoaderSmall />
+                      </div>
+                    ) : (
+                      freeShipUpazilas
+                    )}
                   </div>
                 </div>
 
@@ -507,7 +527,13 @@ const AdminCreateProduct = () => {
                   </div>
 
                   <div className="col-span-6 text-sm flex flex-wrap justify-start">
-                    {lowShipUpazilas}
+                    {upzLoading && selectingShipping === "lowShipAreas" ? (
+                      <div className="grid place-items-center w-full">
+                        <LoaderSmall />
+                      </div>
+                    ) : (
+                      lowShipUpazilas
+                    )}
                   </div>
                 </div>
 

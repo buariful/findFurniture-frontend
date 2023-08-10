@@ -3,6 +3,7 @@ import {
   ButtonGroup,
   IconButton,
   Input,
+  Spinner,
 } from "@material-tailwind/react";
 import React, { useEffect } from "react";
 import { TrashIcon } from "@heroicons/react/24/outline";
@@ -33,21 +34,26 @@ const CheckoutLft = ({ props }) => {
     setShippingInfo,
   } = props;
   const cartItem = useSelector((state) => state.user?.data?.cartItem);
-  const [updateProdOfCart] = useUpdateProdOfCartMutation();
+  const [updateProdOfCart, { isLoading }] = useUpdateProdOfCartMutation();
   const [deleteProdFromCart] = useDeleteProdFromCartMutation();
-  const { data } = useGetLocationQuery("division");
-  const [getDistrict, { data: districts }] = useGetDistrictMutation();
-  const [getUpazilas, { data: upazilas }] = useGetUpazilasMutation();
+  const { data, isLoading: dvsLoading } = useGetLocationQuery("division");
+  const [getDistrict, { data: districts, isLoading: dstLoading }] =
+    useGetDistrictMutation();
+  const [getUpazilas, { data: upazilas, isLoading: upzLoading }] =
+    useGetUpazilasMutation();
   const dispatch = useDispatch();
   const [quantityError, setQuantityError] = useState("");
+  const [clickedProdId, setClickedProdId] = useState(null);
+
   const updateCartProuctQuantity = (productId, quantity) => {
+    setClickedProdId(productId);
     const data = { productId, quantity };
     updateProdOfCart(data)
       .unwrap()
       .then(() => {
         dispatch(updateCartProdQuantity(data));
       })
-      .catch((err) => console.log(err));
+      .catch(() => {});
   };
 
   const deleteCartItem = (productId) => {
@@ -188,7 +194,11 @@ const CheckoutLft = ({ props }) => {
                           className="text-[11px] font-normal px-3 py-1 text-black bg-white border cursor-default"
                           variant="text"
                         >
-                          {cart?.quantity}
+                          {clickedProdId === cart?.product?._id && isLoading ? (
+                            <Spinner className="w-3" />
+                          ) : (
+                            <span>{cart?.quantity}</span>
+                          )}
                         </Button>
                         <Button
                           className="text-sm font-normal px-3 py-1"
@@ -303,12 +313,14 @@ const CheckoutLft = ({ props }) => {
               Select Your Division
             </label>
             <ReactSelect
-              label="Select Colors"
               closeMenuOnSelect={true}
               className="text-[13px]"
               value={address?.division}
               onChange={(e) => handleDivision(e)}
-              options={data?.data || [{ label: "No data", value: null }]}
+              options={
+                data?.data || [{ label: "loading...", value: "loading" }]
+              }
+              isLoading={dvsLoading}
             />
           </div>
           <div>
@@ -316,13 +328,15 @@ const CheckoutLft = ({ props }) => {
               Select Your District
             </label>
             <ReactSelect
-              label="Select Colors"
               closeMenuOnSelect={true}
               className="text-[13px]"
               value={address?.district}
               isDisabled={!address?.division}
               onChange={(e) => handleDistrict(e)}
-              options={districts?.data || [{ label: "No data", value: null }]}
+              isLoading={dstLoading}
+              options={
+                districts?.data || [{ label: "Loading...", value: "loading" }]
+              }
             />
           </div>
           <div>
@@ -330,16 +344,14 @@ const CheckoutLft = ({ props }) => {
               Select Your Upazila
             </label>
             <ReactSelect
-              label="Select Colors"
               closeMenuOnSelect={true}
               className="text-[13px]"
               isDisabled={!address?.district}
               value={address?.upazila}
               onChange={(e) => handleUpazila(e)}
+              isLoading={upzLoading}
               options={
-                upazilas?.data
-                  ? upazilas?.data
-                  : [{ label: "No data", value: null }]
+                upazilas?.data || [{ label: "Loading...", value: "loading" }]
               }
             />
           </div>
