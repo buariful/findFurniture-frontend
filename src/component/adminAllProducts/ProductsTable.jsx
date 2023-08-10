@@ -1,21 +1,14 @@
 import React, { useState } from "react";
 
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { Button, IconButton } from "@material-tailwind/react";
-// import DeleteProdModal from "./DeleteProdModal";
+import { IconButton } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
-import Modal from "../../utils/Modal.js";
 import DeleteProdModal from "./DeleteProdModal.jsx";
-import { useEffect } from "react";
 
 const ProductsTable = ({ data }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [singleProduct, setSingleProduct] = useState("");
 
-  // const handleModalOpen = (product) => {
-  //   setSingleProduct(product);
-  //   setModalOpen(!isModalOpen);
-  // };
   const tableData = data.map((d) => (
     <tr className="bg-white border-b " key={d._id}>
       <td className="px-2 py-1">
