@@ -16,8 +16,8 @@ const orderApi = apiSlice.injectEndpoints({
       }),
     }),
     getAllOrders: builder.mutation({
-      query: ({ page, limit, delivered }) => ({
-        url: `/order/all?page=${page}&limit=${limit}&delivered=${delivered}`,
+      query: ({ page, limit, delivered, transId }) => ({
+        url: `/order/all?page=${page}&limit=${limit}&delivered=${delivered}&transId=${transId}`,
         method: "GET",
       }),
     }),

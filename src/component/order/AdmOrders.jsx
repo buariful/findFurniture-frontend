@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import DashboardTitle from "../shared/DashboardTitle";
 import {
   useGetAllOrdersMutation,
@@ -7,10 +7,16 @@ import {
 import { useEffect } from "react";
 import AdmOrderTable from "./AdmOrderTable";
 import Pagination from "../shared/Pagination";
-import { Button, Checkbox, Option, Select } from "@material-tailwind/react";
+import {
+  Button,
+  Checkbox,
+  Input,
+  Option,
+  Select,
+} from "@material-tailwind/react";
 import { ToastError, ToastSuccess } from "../../utils/Toast";
 import { LoaderFullScreen } from "../../utils/Loader";
-import { useCallback } from "react";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 const AdmOrders = () => {
   const [getAllOrders, { isLoading, error, data }] = useGetAllOrdersMutation();
@@ -19,7 +25,10 @@ const AdmOrders = () => {
   const [isDelivered, setDelivered] = useState();
   const [selectedAction, setSelectedAction] = useState();
   const [selectedOrders, setSelectedOrders] = useState([]);
-  const limitOrder = 2;
+  const [serachTxt, setSearchText] = useState("");
+  const [transId, setTransId] = useState("");
+  const limitOrder = 3;
+
   const handlePaginationAction = (index) => {
     setPageNumber(index);
     setSelectedOrders([]);
@@ -42,11 +51,12 @@ const AdmOrders = () => {
       page: activePageNumber,
       limit: limitOrder,
       delivered: isDelivered,
+      transId: transId,
     })
       .unwrap()
       .then(() => {})
       .catch(() => {});
-  }, [getAllOrders, activePageNumber, isDelivered]);
+  }, [getAllOrders, activePageNumber, isDelivered, transId]);
 
   const updateOrderStatus = () => {
     updateOrder({ orders: selectedOrders, status: selectedAction })
@@ -59,7 +69,6 @@ const AdmOrders = () => {
         ToastError(err?.data?.message);
       });
   };
-
   useEffect(() => {
     fetchAllOrders();
   }, [fetchAllOrders, activePageNumber, isDelivered]);
@@ -69,13 +78,15 @@ const AdmOrders = () => {
       <div className="mt-16 mb-8">
         <DashboardTitle text="All orders" />
       </div>
-      <div className="w-10/12 mx-auto flex items-center gap-7 mb-5 text-sm">
+      <div className="w-10/12 mx-auto flex flex-wrap items-center gap-7 mb-5 text-sm">
         <div className="w-[200px]">
-          <Select label="Filter" className="text-sm">
+          <Select label="Filter">
             <Option
               onClick={() => {
                 setPageNumber(1);
                 setDelivered("");
+                setTransId("");
+                setSearchText("");
               }}
             >
               All
@@ -84,6 +95,8 @@ const AdmOrders = () => {
               onClick={() => {
                 setPageNumber(1);
                 setDelivered(true);
+                setTransId("");
+                setSearchText("");
               }}
             >
               Delivered
@@ -92,6 +105,8 @@ const AdmOrders = () => {
               onClick={() => {
                 setPageNumber(1);
                 setDelivered(false);
+                setTransId("");
+                setSearchText("");
               }}
             >
               Processing
@@ -128,6 +143,35 @@ const AdmOrders = () => {
           >
             Apply
           </Button>
+        </div>
+        {/* -------search ------- */}
+        <div>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              setPageNumber(1);
+              setDelivered("");
+              setTransId(e.target.search.value);
+            }}
+          >
+            <div className="relative flex mx-auto w-[20rem] max-w-[16rem] ">
+              <Input
+                type="text"
+                label="Transection Id"
+                name="search"
+                className="pr-20"
+                value={serachTxt}
+                onChange={(e) => setSearchText(e.target.value)}
+              />
+              <Button
+                size="sm"
+                type="submit"
+                className="!absolute right-1 top-1 rounded"
+              >
+                <MagnifyingGlassIcon className="w-4 h-4 " />
+              </Button>
+            </div>
+          </form>
         </div>
       </div>
       {/* ---------- all products --------- */}
