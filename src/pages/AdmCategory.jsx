@@ -29,7 +29,6 @@ const AdmCategory = () => {
     const formData = new FormData();
     formData.append("image", e.target.image.files[0]);
     formData.set("name", e.target.name.value);
-    console.log(formData);
     createCategories(formData)
       .unwrap()
       .then((res) => {

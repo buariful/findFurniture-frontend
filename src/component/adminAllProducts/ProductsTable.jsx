@@ -14,6 +14,14 @@ const ProductsTable = ({ data }) => {
   const [singleProduct, setSingleProduct] = useState("");
   const [deleteProduct, { isLoading, error }] = useDeleteProductMutation();
 
+  const handleDeleteProduct = (productId) => {
+    setModalOpen(false);
+    deleteProduct(productId)
+      .unwrap()
+      .then(() => ToastSuccess("Product Deleted Successfully"))
+      .catch(() => ToastError("Product can not be deleted"));
+  };
+
   const tableData = data.map((d) => (
     <tr
       className={`border-b ${
@@ -67,15 +75,6 @@ const ProductsTable = ({ data }) => {
       </td>
     </tr>
   ));
-
-  const handleDeleteProduct = (productId) => {
-    setModalOpen(false);
-    deleteProduct(productId)
-      .unwrap()
-      .then(() => ToastSuccess("Product Deleted Successfully"))
-      .catch(() => ToastError("Product can not be deleted"));
-  };
-
   return (
     <>
       <div className="relative overflow-x-auto w-10/12 mx-auto">
