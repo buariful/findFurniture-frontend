@@ -24,6 +24,7 @@ import OrderSuccess from "./pages/OrderSuccess";
 import OrderFail from "./pages/OrderFail";
 import PrivateRoute from "./utils/PrivateRoute";
 import AdmAllUsers from "./pages/AdmAllUsers";
+import AdmCategory from "./pages/AdmCategory";
 
 function App() {
   const isAuthChecked = useAuthCheck();
@@ -138,6 +139,7 @@ function App() {
                 element={<AdminCreateProduct />}
               />
               <Route path="admin/users" element={<AdmAllUsers />} />
+              <Route path="admin/category" element={<AdmCategory />} />
             </Route>
           </Route>
         </Routes>

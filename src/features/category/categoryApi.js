@@ -8,7 +8,25 @@ const categoryApi = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    createCategories: builder.mutation({
+      query: (data) => ({
+        url: "/category",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    delteCategory: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/category/${id}`,
+        method: "DELETE",
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useGetAllCategoriesQuery } = categoryApi;
+export const {
+  useGetAllCategoriesQuery,
+  useCreateCategoriesMutation,
+  useDelteCategoryMutation,
+} = categoryApi;

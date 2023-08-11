@@ -10,6 +10,7 @@ import {
   SquaresPlusIcon,
   ChartPieIcon,
   ArrowRightOnRectangleIcon,
+  TagIcon,
 } from "@heroicons/react/24/outline";
 import { Button } from "@material-tailwind/react";
 import { useSelector } from "react-redux";
@@ -112,6 +113,18 @@ const SideBar = ({ logoutAction }) => {
               >
                 <UserGroupIcon className="w-5" />
                 <span>Users</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/dashboard/admin/category"
+                className={`px-2 py-3 hover:bg-[#333a48] duration-300 flex items-center gap-1 rounded ${
+                  location.pathname === "/dashboard/admin/category" &&
+                  "bg-[#333a48]"
+                }`}
+              >
+                <TagIcon className="w-5" />
+                <span>Category</span>
               </Link>
             </li>
           </div>
