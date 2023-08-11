@@ -114,6 +114,18 @@ const SideBarDrawer = ({ isSideBarOpen, setSiteBarOpen, logoutAction }) => {
                   <span>Create Product</span>
                 </Link>
               </li>
+              <li>
+                <Link
+                  to="/dashboard/admin/users"
+                  className={`px-2 py-3 hover:bg-[#333a48] duration-300 flex items-center gap-1 rounded ${
+                    location.pathname === "/dashboard/admin/users" &&
+                    "bg-[#333a48]"
+                  }`}
+                >
+                  <UserCircleIcon className="w-5" />
+                  <span>Users</span>
+                </Link>
+              </li>
             </div>
           )}
           <li>

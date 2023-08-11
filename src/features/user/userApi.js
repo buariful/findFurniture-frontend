@@ -83,6 +83,12 @@ const userApi = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    getAllUsers: builder.mutation({
+      query: (queryParam) => ({
+        url: `/user/all/?${queryParam}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -99,4 +105,5 @@ export const {
   useUserOrdersQuery,
   useUserProfileUpdateMutation,
   useUserPasswordUpdateMutation,
+  useGetAllUsersMutation,
 } = userApi;

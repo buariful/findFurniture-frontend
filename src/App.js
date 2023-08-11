@@ -23,6 +23,7 @@ import { LoaderFullScreen } from "./utils/Loader";
 import OrderSuccess from "./pages/OrderSuccess";
 import OrderFail from "./pages/OrderFail";
 import PrivateRoute from "./utils/PrivateRoute";
+import AdmAllUsers from "./pages/AdmAllUsers";
 
 function App() {
   const isAuthChecked = useAuthCheck();
@@ -136,6 +137,7 @@ function App() {
                 path="admin/product/new"
                 element={<AdminCreateProduct />}
               />
+              <Route path="admin/users" element={<AdmAllUsers />} />
             </Route>
           </Route>
         </Routes>
