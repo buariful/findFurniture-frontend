@@ -22,7 +22,7 @@ const AdmOrders = () => {
   const [getAllOrders, { isLoading, error, data }] = useGetAllOrdersMutation();
   const [updateOrder, { isLoading: statusLoading }] = useUpdateOrderMutation();
   const [activePageNumber, setPageNumber] = useState(1);
-  const [isDelivered, setDelivered] = useState();
+  const [isDelivered, setDelivered] = useState("");
   const [selectedAction, setSelectedAction] = useState();
   const [selectedOrders, setSelectedOrders] = useState([]);
   const [serachTxt, setSearchText] = useState("");
@@ -47,12 +47,15 @@ const AdmOrders = () => {
   };
 
   const fetchAllOrders = useCallback(() => {
-    getAllOrders({
-      page: activePageNumber,
-      limit: limitOrder,
-      delivered: isDelivered,
-      transId: transId,
-    })
+    const params = new URLSearchParams();
+    params.set("limit", limitOrder);
+    params.set("page", activePageNumber);
+    params.set("delivered", isDelivered);
+    if (transId) {
+      params.set("transId", transId);
+    }
+
+    getAllOrders(decodeURIComponent(params))
       .unwrap()
       .then(() => {})
       .catch(() => {});

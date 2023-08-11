@@ -1,16 +1,27 @@
 import React, { useState } from "react";
-import DashboardTitle from "../component/shared/DashboardTitle";
 import ProductsTable from "../component/adminAllProducts/ProductsTable";
 import { useGetAllProductsMutation } from "../features/product/productApi";
 import { LoaderBig } from "../utils/Loader";
 import { useEffect } from "react";
 import Pagination from "../component/shared/Pagination";
+import { useGetAllCategoriesQuery } from "../features/category/categoryApi";
+import { useGetAllBrandsQuery } from "../features/brand/brandApi";
+import FilterOption from "../component/adminAllProducts/FilterOption";
 
 const AdminAllProducts = () => {
   const [getAllProducts, { isLoading, data }] = useGetAllProductsMutation();
+  const { isLoading: ctgLoading, data: prodCategories } =
+    useGetAllCategoriesQuery();
+  const { isLoading: brnLoading, data: prodBrands } = useGetAllBrandsQuery();
   const [activePageNumber, setActivePageNumber] = useState(1);
-  const [totalProducts, setTotalProducts] = useState("");
-
+  const [filter, setFilter] = useState({
+    brands: [],
+    categories: [],
+    search: "",
+    stock: "",
+  });
+  const { brands, categories, search, stock } = filter;
+  const limitProduct = 20;
   const handlePaginationAction = (pageNumber) => {
     setActivePageNumber(pageNumber);
   };
@@ -30,8 +41,8 @@ const AdminAllProducts = () => {
         <Pagination
           handlePaginationAction={handlePaginationAction}
           activePageNumber={activePageNumber}
-          totalProducts={totalProducts}
-          limit={2}
+          totalProducts={data?.totalResults}
+          limit={limitProduct}
         />
       </div>
     );
@@ -39,9 +50,17 @@ const AdminAllProducts = () => {
 
   useEffect(() => {
     const params = new URLSearchParams();
-
-    if (activePageNumber !== 1) {
-      params.set("page", activePageNumber);
+    params.set("page", activePageNumber);
+    params.set("limit", limitProduct);
+    params.set("stock", stock);
+    if (categories?.length > 0) {
+      params.set("categories", categories.join(","));
+    }
+    if (brands?.length > 0) {
+      params.set("brands", brands.join(","));
+    }
+    if (search) {
+      params.set("keyword", search);
     }
 
     let queryParams;
@@ -53,18 +72,29 @@ const AdminAllProducts = () => {
 
     getAllProducts(queryParams)
       .unwrap()
-      .then((res) => {
-        setTotalProducts(res?.totalResults);
-      })
+      .then((res) => {})
       .catch((err) => {});
-  }, [getAllProducts, activePageNumber]);
+  }, [
+    getAllProducts,
+    activePageNumber,
+    categories,
+    categories.length,
+    brands,
+    brands.length,
+    search,
+    stock,
+  ]);
 
   return (
     <>
-      <div className="mt-16 mb-8">
-        <DashboardTitle text="all products" />
-      </div>
-
+      <FilterOption
+        ctgLoading={ctgLoading}
+        categories={prodCategories}
+        brnLoading={brnLoading}
+        brands={prodBrands}
+        filter={filter}
+        setFilter={setFilter}
+      />
       {pageData}
     </>
   );

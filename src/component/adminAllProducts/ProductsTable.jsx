@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { Button, IconButton } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
-import DeleteProdModal from "./DeleteProdModal.jsx";
 import Modal from "../../utils/Modal.js";
 import { useDeleteProductMutation } from "../../features/product/productApi.js";
 import { ToastError, ToastSuccess } from "../../utils/Toast.js";
@@ -16,7 +15,12 @@ const ProductsTable = ({ data }) => {
   const [deleteProduct, { isLoading, error }] = useDeleteProductMutation();
 
   const tableData = data.map((d) => (
-    <tr className="bg-white border-b " key={d._id}>
+    <tr
+      className={`border-b ${
+        d?.stock <= 0 ? "bg-red-100" : "bg-white"
+      }  capitalize`}
+      key={d._id}
+    >
       <td className="px-2 py-1">
         <img
           src={d?.images[0]?.url}
@@ -28,13 +32,10 @@ const ProductsTable = ({ data }) => {
         <Link to={`/dashboard/admin/product/${d._id}`}>{d?.name}</Link>
       </td>
       <td className="px-2 py-4 font-medium text-gray-900 whitespace-nowrap">
-        <span className="text-green-600 font-semibold text-cetner bg-green-50 py-1 px-3 rounded-full">
-          1056
-        </span>
-        pieces
+        {d?.category}
       </td>
       <td className="font-semibold px-2 py-4 text-gray-900 whitespace-nowrap">
-        3
+        {d?.stock}
       </td>
       <td className="px-2 py-4 text-blue-600 font-bold ">
         <div className="flex justify-center items-center font">
@@ -89,7 +90,7 @@ const ProductsTable = ({ data }) => {
                 Product name
               </th>
               <th scope="col" className="px-2 py-4 whitespace-nowrap text-sm">
-                Pending Orders
+                Category
               </th>
               <th scope="col" className="px-2 py-4 whitespace-nowrap text-sm">
                 Stock
