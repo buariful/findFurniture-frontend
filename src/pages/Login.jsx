@@ -93,39 +93,39 @@ export default function Login() {
       </Card>
 
       {/* login info */}
-      <div class="overflow-x-auto w-11/12 max-w-[500px] mx-auto my-8">
-        <table class="min-w-full border text-center text-sm font-light ">
+      <div className="overflow-x-auto w-11/12 max-w-[500px] mx-auto my-8">
+        <table className="min-w-full border text-center text-sm font-light ">
           <tbody>
             <tr
-              class="border-b font-semibold cursor-pointer hover:bg-blue-gray-50 duration-300"
+              className="border-b font-semibold cursor-pointer hover:bg-blue-gray-50 duration-300"
               onClick={() => {
                 setEmail("admin@gmail.com");
                 setPassword("111111");
               }}
             >
-              <td class="whitespace-nowrap border-r px-4 py-2 font-medium ">
+              <td className="whitespace-nowrap border-r px-4 py-2 font-medium ">
                 <span className="font-semibold">Admin</span>
               </td>
-              <td class="whitespace-nowrap border-r px-4 py-2">
+              <td className="whitespace-nowrap border-r px-4 py-2">
                 admin@gmail.com
               </td>
-              <td class="whitespace-nowrap px-4 py-2">111111</td>
+              <td className="whitespace-nowrap px-4 py-2">111111</td>
             </tr>
 
             <tr
-              class="border-b font-semibold cursor-pointer hover:bg-blue-gray-50 duration-300"
+              className="border-b font-semibold cursor-pointer hover:bg-blue-gray-50 duration-300"
               onClick={() => {
                 setEmail("user@gmail.com");
                 setPassword("111111");
               }}
             >
-              <td class="whitespace-nowrap border-r px-4 py-2 font-medium ">
+              <td className="whitespace-nowrap border-r px-4 py-2 font-medium ">
                 <span className="font-semibold">User</span>
               </td>
-              <td class="whitespace-nowrap border-r px-4 py-2">
+              <td className="whitespace-nowrap border-r px-4 py-2">
                 user@gmail.com
               </td>
-              <td class="whitespace-nowrap px-4 py-2">111111</td>
+              <td className="whitespace-nowrap px-4 py-2">111111</td>
             </tr>
           </tbody>
         </table>
