@@ -8,6 +8,7 @@ import {
 } from "../features/user/userApi";
 import { addToCart, deleteFromWishlist } from "../features/user/userSlice";
 import { ToastError, ToastSuccess } from "../utils/Toast";
+import { AlertError } from "../utils/Alert";
 
 const Cart = () => {
   const wishlist = useSelector((state) => state.user?.data?.wishList);
@@ -57,26 +58,26 @@ const Cart = () => {
       <div className="w-11/12 mx-auto mb-16">
         <div className="flex flex-col overflow-x-auto">
           <div className="sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-              <div className="overflow-x-auto">
-                <table className="min-w-full text-center text-sm font-light">
-                  <thead className="border-b font-medium dark:border-neutral-500">
-                    <tr>
-                      <th scope="col" className="px-6 py-4"></th>
-                      <th scope="col" className="px-6 py-4">
-                        Name
-                      </th>
-                      <th scope="col" className="px-6 py-4">
-                        Price
-                      </th>
-                      <th scope="col" className="px-6 py-4 whitespace-nowrap">
-                        Stock Status
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {wishlist?.length > 0 &&
-                      wishlist?.map((item) => {
+            {wishlist?.length > 0 ? (
+              <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-center text-sm font-light">
+                    <thead className="border-b font-medium dark:border-neutral-500">
+                      <tr>
+                        <th scope="col" className="px-6 py-4"></th>
+                        <th scope="col" className="px-6 py-4">
+                          Name
+                        </th>
+                        <th scope="col" className="px-6 py-4">
+                          Price
+                        </th>
+                        <th scope="col" className="px-6 py-4 whitespace-nowrap">
+                          Stock Status
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {wishlist?.map((item) => {
                         return (
                           <tr
                             className="border-b dark:border-neutral-500"
@@ -133,10 +134,13 @@ const Cart = () => {
                           </tr>
                         );
                       })}
-                  </tbody>
-                </table>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
+            ) : (
+              <AlertError text="No products in your wishlist" />
+            )}
           </div>
         </div>
       </div>

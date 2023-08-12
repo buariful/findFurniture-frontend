@@ -32,6 +32,7 @@ const Navbar = ({ setDrawerOpen, setCartDrawer }) => {
   const naviagate = useNavigate();
   const location = useLocation();
   const { data } = useSelector((state) => state.user);
+  const { keyword } = useSelector((state) => state.filter);
   const [logOut] = useLogOutMutation();
   const user = useSelector((state) => state.user?.data);
   const { cartItem, wishList } = user;
@@ -113,6 +114,7 @@ const Navbar = ({ setDrawerOpen, setCartDrawer }) => {
                 type="text"
                 label="Search"
                 name="search"
+                value={keyword}
                 className="pr-20"
                 onChange={(e) => {
                   if (

@@ -50,8 +50,14 @@ const ProductSection = () => {
     if (selectedPage !== 1) {
       params.set("page", selectedPage);
     }
-    params.set("highPrice", highPrice);
+    // if (highPrice !== 40000) {
+    //   params.set("highPrice", highPrice);
+    // }
+    // if (lowPrice !== 0) {
+    //   params.set("lowPrice", lowPrice);
+    // }
     params.set("lowPrice", lowPrice);
+    params.set("highPrice", highPrice);
 
     let queryParams;
     if (params.size > 0) {
