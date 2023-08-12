@@ -100,7 +100,7 @@ export default function Login() {
               class="border-b font-semibold cursor-pointer hover:bg-blue-gray-50 duration-300"
               onClick={() => {
                 setEmail("admin@gmail.com");
-                setPassword(111111);
+                setPassword("111111");
               }}
             >
               <td class="whitespace-nowrap border-r px-4 py-2 font-medium ">
@@ -116,7 +116,7 @@ export default function Login() {
               class="border-b font-semibold cursor-pointer hover:bg-blue-gray-50 duration-300"
               onClick={() => {
                 setEmail("user@gmail.com");
-                setPassword(111111);
+                setPassword("111111");
               }}
             >
               <td class="whitespace-nowrap border-r px-4 py-2 font-medium ">
