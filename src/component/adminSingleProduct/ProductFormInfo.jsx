@@ -272,9 +272,7 @@ const ProductFormInfo = ({ product, refetch }) => {
                   <ReactSelect
                     closeMenuOnSelect={true}
                     options={
-                      data?.data || [
-                        { loading: "loading...", value: "loading" },
-                      ]
+                      data?.data || [{ label: "loading...", value: "loading" }]
                     }
                     isLoading={isLoading}
                     onChange={(e) =>

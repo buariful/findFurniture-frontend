@@ -17,6 +17,7 @@ import {
 import { ToastError, ToastSuccess } from "../../utils/Toast";
 import { LoaderFullScreen } from "../../utils/Loader";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import ReactSelect from "react-select";
 
 const AdmOrders = () => {
   const [getAllOrders, { isLoading, error, data }] = useGetAllOrdersMutation();
@@ -87,38 +88,24 @@ const AdmOrders = () => {
       </div>
       <div className="w-10/12 mx-auto flex flex-wrap items-center gap-7 mb-5 text-sm">
         <div className="w-[200px]">
-          <Select label="Filter" disabled={shipExpired}>
-            <Option
-              onClick={() => {
-                setPageNumber(1);
-                setDelivered("");
-                setTransId("");
-                setSearchText("");
-              }}
-            >
-              All
-            </Option>
-            <Option
-              onClick={() => {
-                setPageNumber(1);
-                setDelivered(true);
-                setTransId("");
-                setSearchText("");
-              }}
-            >
-              Delivered
-            </Option>
-            <Option
-              onClick={() => {
-                setPageNumber(1);
-                setDelivered(false);
-                setTransId("");
-                setSearchText("");
-              }}
-            >
-              Processing
-            </Option>
-          </Select>
+          <ReactSelect
+            closeMenuOnSelect={true}
+            isDisabled={shipExpired}
+            placeholder="Deliver Status"
+            options={[
+              { label: "All", value: "" },
+              { label: "Delivered", value: true },
+              { label: "Processing", value: false },
+            ]}
+            onChange={(e) => {
+              setPageNumber(1);
+              setDelivered(e.value);
+              setTransId("");
+              setSearchText("");
+            }}
+            // value={{ label: isDelivered, value: isDelivered }}
+            className="capitalize text-sm"
+          />
         </div>
 
         {/* -------- product delivery status options --------- */}
