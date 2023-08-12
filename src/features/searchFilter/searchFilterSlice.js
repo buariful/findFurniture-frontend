@@ -7,6 +7,8 @@ let initialState = {
   colors: [],
   discount: null,
   selectedPage: 1,
+  highPrice: 30000,
+  lowPrice: 2000,
 };
 
 function toggleValueOfArray(array, value) {
@@ -43,6 +45,10 @@ const searchFilterSlice = createSlice({
     setPage: (state, action) => {
       state.selectedPage = action.payload;
     },
+    setPrice: (state, action) => {
+      state.highPrice = action.payload[1];
+      state.lowPrice = action.payload[0];
+    },
     resetFilter: (state) => {
       state.keyword = "";
       state.brands = [];
@@ -50,6 +56,8 @@ const searchFilterSlice = createSlice({
       state.colors = [];
       state.discount = null;
       state.selectedPage = 1;
+      state.highPrice = 30000;
+      state.lowPrice = 2000;
     },
   },
 });
@@ -61,6 +69,7 @@ export const {
   setColors,
   setDiscount,
   setPage,
+  setPrice,
   resetFilter,
 } = searchFilterSlice.actions;
 export default searchFilterSlice.reducer;

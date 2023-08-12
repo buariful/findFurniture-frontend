@@ -3,7 +3,7 @@ import ProdFilter from "./ProdFilter";
 import ProdAllProducts from "./ProdAllProducts";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetAllProductsMutation } from "../../features/product/productApi";
-import { LoaderBig } from "../../utils/Loader";
+import { LoaderFullScreen } from "../../utils/Loader";
 import { AlertError } from "../../utils/Alert";
 import { setPage } from "../../features/searchFilter/searchFilterSlice";
 import Pagination from "../shared/Pagination";
@@ -12,8 +12,16 @@ const ProductSection = () => {
   const [getAllProducts, { isLoading, error, data }] =
     useGetAllProductsMutation();
   const filterData = useSelector((state) => state.filter);
-  const { brands, categories, colors, discount, keyword, selectedPage } =
-    filterData;
+  const {
+    brands,
+    categories,
+    colors,
+    discount,
+    keyword,
+    selectedPage,
+    highPrice,
+    lowPrice,
+  } = filterData;
   const [totalProducts, setTotalProducts] = useState("");
   const [activePageNumber, setActivePageNumber] = useState(1);
   const dispatch = useDispatch();
@@ -22,7 +30,6 @@ const ProductSection = () => {
     dispatch(setPage(pageNumber));
     setActivePageNumber(pageNumber);
   };
-
   useEffect(() => {
     const params = new URLSearchParams();
     if (colors?.length > 0) {
@@ -43,6 +50,8 @@ const ProductSection = () => {
     if (selectedPage !== 1) {
       params.set("page", selectedPage);
     }
+    params.set("highPrice", highPrice);
+    params.set("lowPrice", lowPrice);
 
     let queryParams;
     if (params.size > 0) {
@@ -64,6 +73,8 @@ const ProductSection = () => {
     discount,
     keyword,
     selectedPage,
+    lowPrice,
+    highPrice,
     dispatch,
     getAllProducts,
   ]);
@@ -97,12 +108,7 @@ const ProductSection = () => {
             limit={10}
           />
         )}
-
-        {isLoading && (
-          <div className="w-full h-full grid place-items-center">
-            <LoaderBig />
-          </div>
-        )}
+        {isLoading && <LoaderFullScreen />}
       </div>
     </div>
   );

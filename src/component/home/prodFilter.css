@@ -1,0 +1,8 @@
+#price_range_slider {
+  height: 6px;
+}
+
+#price_range_slider .range-slider__thumb {
+  height: 20px;
+  width: 20px;
+}
