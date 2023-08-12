@@ -25,6 +25,7 @@ const ProductSection = () => {
   const [totalProducts, setTotalProducts] = useState("");
   const [activePageNumber, setActivePageNumber] = useState(1);
   const dispatch = useDispatch();
+  const productLimit = 10;
 
   const handlePaginationAction = (pageNumber) => {
     dispatch(setPage(pageNumber));
@@ -50,14 +51,9 @@ const ProductSection = () => {
     if (selectedPage !== 1) {
       params.set("page", selectedPage);
     }
-    // if (highPrice !== 40000) {
-    //   params.set("highPrice", highPrice);
-    // }
-    // if (lowPrice !== 0) {
-    //   params.set("lowPrice", lowPrice);
-    // }
     params.set("lowPrice", lowPrice);
     params.set("highPrice", highPrice);
+    params.set("limit", productLimit);
 
     let queryParams;
     if (params.size > 0) {
@@ -106,14 +102,12 @@ const ProductSection = () => {
             }
           />
         )}
-        {data?.totalResults > 4 && (
-          <Pagination
-            handlePaginationAction={handlePaginationAction}
-            totalProducts={totalProducts}
-            activePageNumber={activePageNumber}
-            limit={10}
-          />
-        )}
+        <Pagination
+          handlePaginationAction={handlePaginationAction}
+          totalProducts={totalProducts}
+          activePageNumber={activePageNumber}
+          limit={productLimit}
+        />
         {isLoading && <LoaderFullScreen />}
       </div>
     </div>

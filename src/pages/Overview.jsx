@@ -47,7 +47,9 @@ const Overview = () => {
             <div className="flex items-center gap-2">
               <GiftIcon className="w-5" strokeWidth={2} /> Total Orders
             </div>
-            <span className="font-bold text-lg">{orders?.data?.length}</span>
+            <span className="font-bold text-lg">
+              {orders?.data?.length || 0}
+            </span>
           </CardBody>
         </Card>
         <Card className="bg-[#f0fff0] text-green-600 px-10">
