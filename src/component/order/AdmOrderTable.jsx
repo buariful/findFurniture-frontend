@@ -4,6 +4,7 @@ import { LoaderBig } from "../../utils/Loader";
 import { AlertError } from "../../utils/Alert";
 import { Link } from "react-router-dom";
 import { Checkbox } from "@material-tailwind/react";
+import { formatDate, isDateExpired } from "../../utils/formateDate";
 
 const AdmOrderTable = ({
   isLoading,
@@ -65,11 +66,23 @@ const AdmOrderTable = ({
             ></th>
           </tr>
         </thead>
-
         <tbody>
           {data?.data?.map((d) => {
+            let isDeliveredExpired = null;
+            if (d?.isDelivered) {
+              isDeliveredExpired = null;
+            } else {
+              if (isDateExpired(d?.shipping_time)) {
+                isDeliveredExpired = true;
+              }
+            }
             return (
-              <tr className="bg-white border-b capitalize" key={d?._id}>
+              <tr
+                className={`border-b capitalize ${
+                  isDeliveredExpired ? "bg-red-50" : "bg-white"
+                }`}
+                key={d?._id}
+              >
                 <td className="px-2 py-1">
                   <Checkbox
                     checked={selectedOrders.some((item) => item === d?._id)}
@@ -105,7 +118,13 @@ const AdmOrderTable = ({
                   <span>{d?.shipping_address}</span>
                 </td>
                 <td className="px-2 py-4 text-gray-900 whitespace-nowrap">
-                  <span>{d?.shipping_time} days</span>
+                  <span
+                    className={
+                      isDeliveredExpired && "text-red-500 font-semibold"
+                    }
+                  >
+                    {formatDate(d?.shipping_time)}
+                  </span>
                 </td>
                 <td className="px-2 py-4 text-blue-600 font-bold ">
                   <div className="flex justify-center items-center font">

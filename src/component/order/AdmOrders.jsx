@@ -26,6 +26,7 @@ const AdmOrders = () => {
   const [selectedAction, setSelectedAction] = useState();
   const [selectedOrders, setSelectedOrders] = useState([]);
   const [serachTxt, setSearchText] = useState("");
+  const [shipExpired, setShipExpired] = useState(null);
   const [transId, setTransId] = useState("");
   const limitOrder = 3;
 
@@ -54,12 +55,15 @@ const AdmOrders = () => {
     if (transId) {
       params.set("transId", transId);
     }
+    if (shipExpired) {
+      params.set("expired", shipExpired);
+    }
 
     getAllOrders(decodeURIComponent(params))
       .unwrap()
       .then(() => {})
       .catch(() => {});
-  }, [getAllOrders, activePageNumber, isDelivered, transId]);
+  }, [getAllOrders, activePageNumber, isDelivered, transId, shipExpired]);
 
   const updateOrderStatus = () => {
     updateOrder({ orders: selectedOrders, status: selectedAction })
@@ -74,7 +78,7 @@ const AdmOrders = () => {
   };
   useEffect(() => {
     fetchAllOrders();
-  }, [fetchAllOrders, activePageNumber, isDelivered]);
+  }, [fetchAllOrders, activePageNumber, isDelivered, shipExpired]);
   return (
     <>
       {" "}
@@ -83,7 +87,7 @@ const AdmOrders = () => {
       </div>
       <div className="w-10/12 mx-auto flex flex-wrap items-center gap-7 mb-5 text-sm">
         <div className="w-[200px]">
-          <Select label="Filter">
+          <Select label="Filter" disabled={shipExpired}>
             <Option
               onClick={() => {
                 setPageNumber(1);
@@ -122,12 +126,13 @@ const AdmOrders = () => {
           <Checkbox
             onChange={(e) => handleSelectOrders(e)}
             checked={selectedOrders.length === data?.data.length}
+            disabled={shipExpired}
           />
           <div className="w-[200px]">
             <Select
               label="Action"
               className="text-sm"
-              disabled={selectedOrders.length <= 0}
+              disabled={selectedOrders.length <= 0 || shipExpired}
             >
               <Option onClick={() => setSelectedAction(true)}>Delivered</Option>
               <Option onClick={() => setSelectedAction(false)}>
@@ -140,7 +145,9 @@ const AdmOrders = () => {
             variant="gradient"
             className="text-[12px] py-1"
             disabled={
-              selectedOrders.length <= 0 || selectedAction === undefined
+              selectedOrders.length <= 0 ||
+              selectedAction === undefined ||
+              shipExpired
             }
             onClick={updateOrderStatus}
           >
@@ -164,11 +171,13 @@ const AdmOrders = () => {
                 name="search"
                 className="pr-20"
                 value={serachTxt}
+                disabled={shipExpired}
                 onChange={(e) => setSearchText(e.target.value)}
               />
               <Button
                 size="sm"
                 type="submit"
+                disabled={shipExpired}
                 className="!absolute right-1 top-1 rounded"
               >
                 <MagnifyingGlassIcon className="w-4 h-4 " />
@@ -176,6 +185,25 @@ const AdmOrders = () => {
             </div>
           </form>
         </div>
+        {/* -- shipping time expired -- */}
+      </div>
+      <div className="text-start w-10/12 mx-auto mb-5">
+        {" "}
+        <Checkbox
+          id="expired_shipTime"
+          label={
+            <span className="font-bold text-xl text-gray-900">
+              Show shipping time expired orders
+            </span>
+          }
+          onChange={(e) => {
+            setPageNumber(1);
+            setDelivered("");
+            setTransId("");
+            setSearchText("");
+            setShipExpired(e.target.checked);
+          }}
+        />
       </div>
       {/* ---------- all products --------- */}
       <div className="relative overflow-x-auto w-10/12 mx-auto">

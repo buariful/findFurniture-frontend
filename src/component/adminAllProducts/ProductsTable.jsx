@@ -9,7 +9,7 @@ import { ToastError, ToastSuccess } from "../../utils/Toast.js";
 import { LoaderFullScreen } from "../../utils/Loader.js";
 import { AlertError } from "../../utils/Alert.js";
 
-const ProductsTable = ({ data }) => {
+const ProductsTable = ({ data, refetchProdFn }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [singleProduct, setSingleProduct] = useState("");
   const [deleteProduct, { isLoading, error }] = useDeleteProductMutation();
@@ -18,7 +18,10 @@ const ProductsTable = ({ data }) => {
     setModalOpen(false);
     deleteProduct(productId)
       .unwrap()
-      .then(() => ToastSuccess("Product Deleted Successfully"))
+      .then(() => {
+        ToastSuccess("Product Deleted Successfully");
+        refetchProdFn();
+      })
       .catch(() => ToastError("Product can not be deleted"));
   };
 

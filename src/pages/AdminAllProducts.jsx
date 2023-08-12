@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import ProductsTable from "../component/adminAllProducts/ProductsTable";
 import { useGetAllProductsMutation } from "../features/product/productApi";
 import { LoaderBig } from "../utils/Loader";
@@ -7,9 +7,11 @@ import Pagination from "../component/shared/Pagination";
 import { useGetAllCategoriesQuery } from "../features/category/categoryApi";
 import { useGetAllBrandsQuery } from "../features/brand/brandApi";
 import FilterOption from "../component/adminAllProducts/FilterOption";
+import { AlertError } from "../utils/Alert";
 
 const AdminAllProducts = () => {
-  const [getAllProducts, { isLoading, data }] = useGetAllProductsMutation();
+  const [getAllProducts, { isLoading, data, error }] =
+    useGetAllProductsMutation();
   const { isLoading: ctgLoading, data: prodCategories } =
     useGetAllCategoriesQuery();
   const { isLoading: brnLoading, data: prodBrands } = useGetAllBrandsQuery();
@@ -26,29 +28,7 @@ const AdminAllProducts = () => {
     setActivePageNumber(pageNumber);
   };
 
-  let pageData;
-  if (isLoading) {
-    pageData = (
-      <div className="flex justify-center mb-14">
-        <LoaderBig />
-      </div>
-    );
-  }
-  if (data) {
-    pageData = (
-      <div className="mb-12">
-        <ProductsTable data={data?.data} />
-        <Pagination
-          handlePaginationAction={handlePaginationAction}
-          activePageNumber={activePageNumber}
-          totalProducts={data?.totalResults}
-          limit={limitProduct}
-        />
-      </div>
-    );
-  }
-
-  useEffect(() => {
+  const fetchProduct = useCallback(() => {
     const params = new URLSearchParams();
     params.set("page", activePageNumber);
     params.set("limit", limitProduct);
@@ -72,9 +52,36 @@ const AdminAllProducts = () => {
 
     getAllProducts(queryParams)
       .unwrap()
-      .then((res) => {})
-      .catch((err) => {});
+      .then(() => {})
+      .catch(() => {});
+  }, [activePageNumber, brands, categories, getAllProducts, search, stock]);
+
+  let pageData;
+  if (isLoading) {
+    pageData = (
+      <div className="flex justify-center mb-14">
+        <LoaderBig />
+      </div>
+    );
+  }
+  if (data) {
+    pageData = (
+      <div className="mb-12">
+        <ProductsTable data={data?.data} refetchProdFn={fetchProduct} />
+        <Pagination
+          handlePaginationAction={handlePaginationAction}
+          activePageNumber={activePageNumber}
+          totalProducts={data?.totalResults}
+          limit={limitProduct}
+        />
+      </div>
+    );
+  }
+
+  useEffect(() => {
+    fetchProduct();
   }, [
+    fetchProduct,
     getAllProducts,
     activePageNumber,
     categories,
@@ -95,6 +102,7 @@ const AdminAllProducts = () => {
         filter={filter}
         setFilter={setFilter}
       />
+      {error && <AlertError text={error?.data?.message} />}
       {pageData}
     </>
   );

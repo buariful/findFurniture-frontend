@@ -165,8 +165,9 @@ const ProdFilter = () => {
             </div>
             <RangeSlider
               id="price_range_slider"
-              min={300}
-              max={70000}
+              min={0}
+              max={40000}
+              step={500}
               value={value}
               onThumbDragEnd={() => dispatch(setPrice(value))}
               onInput={setValue}

@@ -7,8 +7,8 @@ let initialState = {
   colors: [],
   discount: null,
   selectedPage: 1,
-  highPrice: 30000,
-  lowPrice: 2000,
+  highPrice: 40000,
+  lowPrice: 0,
 };
 
 function toggleValueOfArray(array, value) {
@@ -56,8 +56,8 @@ const searchFilterSlice = createSlice({
       state.colors = [];
       state.discount = null;
       state.selectedPage = 1;
-      state.highPrice = 30000;
-      state.lowPrice = 2000;
+      state.highPrice = 40000;
+      state.lowPrice = 0;
     },
   },
 });
