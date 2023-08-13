@@ -26,6 +26,7 @@ import PrivateRoute from "./utils/PrivateRoute";
 import AdmAllUsers from "./pages/AdmAllUsers";
 import AdmCategory from "./pages/AdmCategory";
 import AdmAllBrand from "./pages/AdmAllBrand";
+import NotFound from "./pages/NotFound";
 
 function App() {
   const isAuthChecked = useAuthCheck();
@@ -144,6 +145,14 @@ function App() {
               <Route path="admin/brand" element={<AdmAllBrand />} />
             </Route>
           </Route>
+          <Route
+            path="*"
+            element={
+              <Layout>
+                <NotFound />
+              </Layout>
+            }
+          />
         </Routes>
       </Router>
 

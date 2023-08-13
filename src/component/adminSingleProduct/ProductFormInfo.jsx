@@ -24,7 +24,7 @@ import {
 } from "../../features/locations/locationApi";
 import { useUpdateProductMutation } from "../../features/product/productApi";
 import { ToastError, ToastSuccess } from "../../utils/Toast";
-import { LoaderSmall } from "../../utils/Loader";
+import { LoaderFullScreen, LoaderSmall } from "../../utils/Loader";
 
 const ProductFormInfo = ({ product, refetch }) => {
   const { isLoading, data } = useGetAllCategoriesQuery();
@@ -608,6 +608,7 @@ const ProductFormInfo = ({ product, refetch }) => {
             </form>
           </CardBody>
         </Card>
+        {prodUpLoading && <LoaderFullScreen />}
       </div>
     </>
   );

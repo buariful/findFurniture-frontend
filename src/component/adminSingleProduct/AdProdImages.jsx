@@ -7,7 +7,7 @@ import {
   useDeleteProdImageMutation,
 } from "../../features/product/productApi";
 import { ToastError, ToastSuccess } from "../../utils/Toast";
-import { LoaderSmall } from "../../utils/Loader";
+import { LoaderFullScreen, LoaderSmall } from "../../utils/Loader";
 
 const AdProdImages = ({ product, refetch }) => {
   const [addProdImage, { isLoading }] = useAddProdImageMutation();
@@ -167,6 +167,7 @@ const AdProdImages = ({ product, refetch }) => {
         state={isFullScreenSliderOpen}
         setState={setFullScreenSlider}
       />
+      {isLoading && <LoaderFullScreen />}
     </>
   );
 };

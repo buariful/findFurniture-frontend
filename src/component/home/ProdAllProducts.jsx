@@ -109,26 +109,29 @@ const ProdAllProducts = ({ data }) => {
           </Link>
         </CardHeader>
         <CardBody className="pb-4 pt-1 px-4">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 text-start">
             <Link
               to={`/product/${d?._id}`}
               className="font-medium text-gray-700 capitalize hover:text-blue-500 duration-300"
             >
               {d?.name}
             </Link>
-            {wishLoading && clickedHrtIcon === d?._id ? (
-              <Spinner className="w-5" />
-            ) : isWishlisted ? (
-              <HeartIconFill
-                className="w-5 text-red-600 cursor-pointer"
-                onClick={() => handleWishlist(d, false)}
-              />
-            ) : (
-              <HeartIcon
-                className="w-5 text-black cursor-pointer"
-                onClick={() => handleWishlist(d, true)}
-              />
-            )}
+
+            <p>
+              {wishLoading && clickedHrtIcon === d?._id ? (
+                <Spinner className="w-5" />
+              ) : isWishlisted ? (
+                <HeartIconFill
+                  className="w-5 text-red-600 cursor-pointer"
+                  onClick={() => handleWishlist(d, false)}
+                />
+              ) : (
+                <HeartIcon
+                  className="w-5 text-black cursor-pointer"
+                  onClick={() => handleWishlist(d, true)}
+                />
+              )}
+            </p>
           </div>
 
           <div className="text-start">

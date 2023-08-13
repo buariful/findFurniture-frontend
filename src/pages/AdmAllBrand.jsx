@@ -16,6 +16,7 @@ import { TrashIcon } from "@heroicons/react/24/outline";
 import { LoaderFullScreen } from "../utils/Loader";
 import { AlertError } from "../utils/Alert";
 import { ToastError, ToastSuccess } from "../utils/Toast";
+import { formatDate } from "../utils/formateDate";
 
 const AdmAllBrand = () => {
   const { isLoading, data, refetch } = useGetAllBrandsQuery();
@@ -51,7 +52,7 @@ const AdmAllBrand = () => {
       <td className="px-2 py-1">
         <span className="font-semibold">{d?.name}</span>
       </td>
-      <td className="px-2 py-1">{d?.estabished}</td>
+      <td className="px-2 py-1">{formatDate(d?.estabished)}</td>
 
       <td className="px-2 py-1 text-gray-900 whitespace-nowrap lowercase">
         <IconButton

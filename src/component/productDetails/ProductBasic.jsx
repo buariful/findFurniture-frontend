@@ -7,15 +7,45 @@ import {
   ArrowRightCircleIcon,
 } from "@heroicons/react/24/solid";
 import { ArrowsPointingOutIcon } from "@heroicons/react/24/outline";
-import { Button, ButtonGroup } from "@material-tailwind/react";
+import { Button, ButtonGroup, Spinner } from "@material-tailwind/react";
 import { useState } from "react";
 import ReactStars from "react-stars";
 import FullScreenImgSlider from "../shared/FullScreenImgSlider";
+import { useAddProdToCartMutation } from "../../features/user/userApi";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../features/user/userSlice";
+import { ToastError, ToastSuccess } from "../../utils/Toast";
 
 export default function ProductBasics({ data }) {
   const productDetailsSlider = useRef();
+  const [addProdToCart, { isLoading }] = useAddProdToCartMutation();
   const [isProdImgModalOpen, setProdImgModal] = useState(false);
   const [prodQuantity, setProdQuantity] = useState(1);
+  const dispatch = useDispatch();
+
+  const handleAddCart = (prod) => {
+    addProdToCart({ productId: prod?._id })
+      .unwrap()
+      .then((res) => {
+        dispatch(
+          addToCart({
+            ...res?.data,
+            product: {
+              _id: prod?._id,
+              name: prod?.name,
+              productCode: prod?.productCode,
+              images: prod?.images,
+              price: prod?.price,
+              sellPrice: prod?.sellPrice,
+              stock: prod?.stock,
+              shippingCost: prod?.shippingCost,
+            },
+          })
+        );
+        ToastSuccess(res?.message);
+      })
+      .catch((err) => ToastError(err?.data?.message));
+  };
   return (
     <>
       <div className="flex flex-col md:flex-row justify-center items-center gap-5 md:gap-10 ">
@@ -155,7 +185,12 @@ export default function ProductBasics({ data }) {
               </Button>
             </ButtonGroup>
 
-            <Button className="mt-5">Add to cart</Button>
+            <Button
+              className="mt-5"
+              onClick={() => handleAddCart(data?.data?._id)}
+            >
+              {isLoading ? <Spinner className="w-4" /> : "Add to cart"}
+            </Button>
           </div>
         </div>
       </div>
