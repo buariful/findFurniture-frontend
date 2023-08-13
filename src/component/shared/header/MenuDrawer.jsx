@@ -41,8 +41,7 @@ const MenuDrawer = ({ drawerOpen, setDrawerOpen, data }) => {
             <XMarkIcon strokeWidth={2} className="h-5 w-5" />
           </IconButton>
         </div>
-
-        {data.name && (
+        {data?.name && (
           <div className="flex items-center justify-center mb-1">
             <Menu>
               <MenuHandler>
@@ -107,22 +106,34 @@ const MenuDrawer = ({ drawerOpen, setDrawerOpen, data }) => {
             </Link>
           </li>
           {data.name ? (
-            <li className="mb-4 border-b border-b-blue-gray cursor-pointer">
-              <span
-                onClick={() => {
-                  setDrawerOpen(false);
-                  logOut()
-                    .unwrap()
-                    .then((res) => {
-                      ToastSuccess(res?.message);
-                      dispatch(resetUser());
-                    })
-                    .catch(() => {});
-                }}
-              >
-                Logout
-              </span>
-            </li>
+            <>
+              <li className="mb-4 border-b border-b-blue-gray cursor-pointer">
+                <span
+                  onClick={() => {
+                    setDrawerOpen(false);
+                    logOut()
+                      .unwrap()
+                      .then((res) => {
+                        ToastSuccess(res?.message);
+                        dispatch(resetUser());
+                      })
+                      .catch(() => {});
+                  }}
+                >
+                  Logout
+                </span>
+              </li>
+              <li className="mb-4 border-b border-b-blue-gray cursor-pointer">
+                <Link
+                  to="/dashboard"
+                  onClick={() => {
+                    setDrawerOpen(false);
+                  }}
+                >
+                  Dashboard
+                </Link>
+              </li>
+            </>
           ) : (
             <>
               <li className="mb-4 border-b border-b-blue-gray">

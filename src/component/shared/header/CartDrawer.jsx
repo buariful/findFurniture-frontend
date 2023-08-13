@@ -13,10 +13,7 @@ import {
   useUpdateProdOfCartMutation,
 } from "../../../features/user/userApi.js";
 import { useDispatch } from "react-redux";
-import {
-  deleteFromCart,
-  updateCartProdQuantity,
-} from "../../../features/user/userSlice.js";
+import { deleteFromCart } from "../../../features/user/userSlice.js";
 import { LoaderSmall } from "../../../utils/Loader.js";
 
 const CartDrawer = ({ state, setState }) => {
@@ -33,10 +30,7 @@ const CartDrawer = ({ state, setState }) => {
     setSelectedCrtItem(productId);
     updateProdOfCart(data)
       .unwrap()
-      .then(() => {
-        dispatch(updateCartProdQuantity(data));
-      })
-      .catch((err) => console.log(err));
+      .catch(() => {});
   };
 
   const deleteCartItem = (productId) => {
@@ -86,111 +80,109 @@ const CartDrawer = ({ state, setState }) => {
         )}
         {cartItem?.map((cart) => {
           return (
-            <>
-              <div
-                className={`grid grid-cols-12 gap-1 pb-2 border-b border-b-blue-gray relative`}
-                key={cart?.product?._id}
-              >
-                <div className="col-span-8 text-start break-all">
-                  <Link
-                    to={`/product/${cart?.product?._id}`}
-                    onClick={() => setState(false)}
-                    className="text-sm font-semibold mb-1 capitalize hover:text-blue-600"
-                  >
-                    {cart?.product?.name}
-                  </Link>
-                  <p
-                    className={`text-sm ${
-                      cart?.quantity > cart?.product?.stock &&
-                      "bg-red-50 py-1 px-2"
+            <div
+              className={`grid grid-cols-12 gap-1 pb-2 border-b border-b-blue-gray relative`}
+              key={cart?.product?._id}
+            >
+              <div className="col-span-8 text-start break-all">
+                <Link
+                  to={`/product/${cart?.product?._id}`}
+                  onClick={() => setState(false)}
+                  className="text-sm font-semibold mb-1 capitalize hover:text-blue-600"
+                >
+                  {cart?.product?.name}
+                </Link>
+                <p
+                  className={`text-sm ${
+                    cart?.quantity > cart?.product?.stock &&
+                    "bg-red-50 py-1 px-2"
+                  }`}
+                >
+                  Stock:{" "}
+                  <span
+                    className={`font-semibold inline-block px-3 rounded-full ${
+                      cart?.product?.stock < cart?.quantity
+                        ? "text-red-500 bg-red-50"
+                        : "text-green-500 bg-green-50"
                     }`}
                   >
-                    Stock:{" "}
-                    <span
-                      className={`font-semibold inline-block px-3 rounded-full ${
-                        cart?.product?.stock < cart?.quantity
-                          ? "text-red-500 bg-red-50"
-                          : "text-green-500 bg-green-50"
-                      }`}
+                    {cart?.product?.stock}
+                  </span>
+                </p>
+                <p className="text-sm ">
+                  Code:{" "}
+                  <span className="font-semibold">
+                    {cart?.product?.productCode}
+                  </span>
+                </p>
+                <p className=" text-blue-500 font-semibold">
+                  Tk{" "}
+                  {cart?.product?.sellPrice
+                    ? cart?.product?.sellPrice
+                    : cart?.product?.price}
+                </p>
+                <div
+                  className={`${
+                    cart?.quantity > cart?.product?.stock &&
+                    "bg-red-50 py-1 px-2"
+                  }`}
+                >
+                  <ButtonGroup size="sm">
+                    <Button
+                      className="text-sm font-normal px-3 py-1"
+                      disabled={cart?.quantity === 1}
+                      onClick={() =>
+                        updateCartProuctQuantity(
+                          cart?.product?._id,
+                          cart?.quantity - 1
+                        )
+                      }
                     >
-                      {cart?.product?.stock}
-                    </span>
-                  </p>
-                  <p className="text-sm ">
-                    Code:{" "}
-                    <span className="font-semibold">
-                      {cart?.product?.productCode}
-                    </span>
-                  </p>
-                  <p className=" text-blue-500 font-semibold">
-                    Tk{" "}
-                    {cart?.product?.sellPrice
-                      ? cart?.product?.sellPrice
-                      : cart?.product?.price}
-                  </p>
-                  <div
-                    className={`${
-                      cart?.quantity > cart?.product?.stock &&
-                      "bg-red-50 py-1 px-2"
-                    }`}
-                  >
-                    <ButtonGroup size="sm">
-                      <Button
-                        className="text-sm font-normal px-3 py-1"
-                        disabled={cart?.quantity === 1}
-                        onClick={() =>
-                          updateCartProuctQuantity(
-                            cart?.product?._id,
-                            cart?.quantity - 1
-                          )
-                        }
-                      >
-                        -
-                      </Button>
-                      <Button
-                        className="text-[11px] font-normal px-3 py-1 text-black bg-white border cursor-default"
-                        variant="text"
-                      >
-                        {cart?.quantity}
-                      </Button>
-                      <Button
-                        className="text-sm font-normal px-3 py-1"
-                        disabled={cart?.quantity >= cart?.product?.stock}
-                        onClick={() =>
-                          updateCartProuctQuantity(
-                            cart?.product?._id,
-                            cart?.quantity + 1
-                          )
-                        }
-                      >
-                        +
-                      </Button>
-                    </ButtonGroup>
-                  </div>
-                </div>
-                <div className="col-span-4">
-                  <div className="flex items-center gap-1">
-                    <img
-                      src={cart?.product?.images[0]?.url}
-                      alt=""
-                      className="w-full max-w-[90px]"
-                    />
-                    <button
-                      className="text-red-500 block"
-                      onClick={() => deleteCartItem(cart?.product?._id)}
+                      -
+                    </Button>
+                    <Button
+                      className="text-[11px] font-normal px-3 py-1 text-black bg-white border cursor-default"
+                      variant="text"
                     >
-                      <TrashIcon className="w-5" />
-                    </button>
-                  </div>
+                      {cart?.quantity}
+                    </Button>
+                    <Button
+                      className="text-sm font-normal px-3 py-1"
+                      disabled={cart?.quantity >= cart?.product?.stock}
+                      onClick={() =>
+                        updateCartProuctQuantity(
+                          cart?.product?._id,
+                          cart?.quantity + 1
+                        )
+                      }
+                    >
+                      +
+                    </Button>
+                  </ButtonGroup>
                 </div>
-                {(isLoading || updCartQuntityLoad) &&
-                  selectedCrtItem === cart?.product?._id && (
-                    <div className="absolute top-0 left-0 w-[104%] h-full bg-[#efefefa1] grid place-items-center">
-                      <LoaderSmall />
-                    </div>
-                  )}
               </div>
-            </>
+              <div className="col-span-4">
+                <div className="flex items-center gap-1">
+                  <img
+                    src={cart?.product?.images[0]?.url}
+                    alt=""
+                    className="w-full max-w-[90px]"
+                  />
+                  <button
+                    className="text-red-500 block"
+                    onClick={() => deleteCartItem(cart?.product?._id)}
+                  >
+                    <TrashIcon className="w-5" />
+                  </button>
+                </div>
+              </div>
+              {(isLoading || updCartQuntityLoad) &&
+                selectedCrtItem === cart?.product?._id && (
+                  <div className="absolute top-0 left-0 w-[104%] h-full bg-[#efefefa1] grid place-items-center">
+                    <LoaderSmall />
+                  </div>
+                )}
+            </div>
           );
         })}
         {cartItem?.length === 0 && (

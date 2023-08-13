@@ -14,10 +14,7 @@ import {
   useDeleteProdFromCartMutation,
   useUpdateProdOfCartMutation,
 } from "../../features/user/userApi";
-import {
-  deleteFromCart,
-  updateCartProdQuantity,
-} from "../../features/user/userSlice";
+import { deleteFromCart } from "../../features/user/userSlice";
 import {
   useGetDistrictMutation,
   useGetLocationQuery,
@@ -50,9 +47,6 @@ const CheckoutLft = ({ props }) => {
     const data = { productId, quantity };
     updateProdOfCart(data)
       .unwrap()
-      .then(() => {
-        dispatch(updateCartProdQuantity(data));
-      })
       .catch(() => {});
   };
 

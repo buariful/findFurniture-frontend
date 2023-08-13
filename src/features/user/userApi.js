@@ -1,4 +1,5 @@
 import apiSlice from "../api/apiSlice";
+import { updateCartProdQuantity } from "./userSlice";
 
 const userApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -41,6 +42,9 @@ const userApi = apiSlice.injectEndpoints({
         method: "PUT",
         body: data,
       }),
+      async onQueryStarted(data, { dispatch }) {
+        dispatch(updateCartProdQuantity(data));
+      },
     }),
     deleteProdFromCart: builder.mutation({
       query: (productId) => ({

@@ -42,21 +42,7 @@ const ProdAllProducts = ({ data }) => {
     addProdToCart({ productId: prod?._id })
       .unwrap()
       .then((res) => {
-        dispatch(
-          addToCart({
-            ...res?.data,
-            product: {
-              _id: prod?._id,
-              name: prod?.name,
-              productCode: prod?.productCode,
-              images: prod?.images,
-              price: prod?.price,
-              sellPrice: prod?.sellPrice,
-              stock: prod?.stock,
-              shippingCost: prod?.shippingCost,
-            },
-          })
-        );
+        dispatch(addToCart(res?.data));
         ToastSuccess(res?.message);
       })
       .catch((err) => ToastError(err?.data?.message));

@@ -314,7 +314,7 @@ const ProdFilter = () => {
         <Drawer
           open={filterOpen}
           onClose={() => setFilterOpen(false)}
-          className="p-4"
+          className="p-4 overflow-y-auto"
         >
           <div className="mb-6 flex items-center justify-between pb-1 border-b border-blue-gray">
             <h2 className="font-semibold">Filter</h2>
@@ -353,7 +353,39 @@ const ProdFilter = () => {
               </Button>
             </form>
           </div>
-
+          <Accordion
+            open={filterOptionsToggle.price}
+            icon={
+              <ChevronDownIcon
+                className={`${
+                  filterOptionsToggle.price ? "rotate-180" : "rotate-0"
+                } duration-300 w-4`}
+              />
+            }
+            className="text-start mb-6"
+          >
+            <AccordionHeader
+              onClick={() => filterOptionsToggleHandler("price")}
+              className="p-0 border-b-0 text-sm"
+            >
+              <FilterTitle text="Price" />
+            </AccordionHeader>
+            <AccordionBody className="py-4">
+              <div className="flex justify-between text-[12px] items-center mb-1">
+                <span>{value[0]}</span>
+                <span>{value[1]}</span>
+              </div>
+              <RangeSlider
+                id="price_range_slider"
+                min={0}
+                max={40000}
+                step={500}
+                value={value}
+                onThumbDragEnd={() => dispatch(setPrice(value))}
+                onInput={setValue}
+              />
+            </AccordionBody>
+          </Accordion>
           <Accordion
             open={filterOptionsToggle.category}
             icon={
@@ -448,20 +480,20 @@ const ProdFilter = () => {
 
             <AccordionBody className="pt-2 pb-0">
               <Radio
-                id="discountProducts"
-                name="discount"
+                id="discountProductsMbl"
+                name="mbl_discount"
                 label="Discount Products"
                 onChange={() => handleDiscount(true)}
               />
               <Radio
-                id="withoutDiscountProducts"
-                name="discount"
+                id="withoutDiscountProductsMbl"
+                name="mbl_discount"
                 label="without discount"
                 onChange={() => handleDiscount(false)}
               />
               <Radio
-                id="allProduct"
-                name="discount"
+                id="allProductMbl"
+                name="mbl_discount"
                 label="All products"
                 onChange={() => handleDiscount(null)}
               />

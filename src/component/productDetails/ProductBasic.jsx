@@ -11,43 +11,50 @@ import { Button, ButtonGroup, Spinner } from "@material-tailwind/react";
 import { useState } from "react";
 import ReactStars from "react-stars";
 import FullScreenImgSlider from "../shared/FullScreenImgSlider";
-import { useAddProdToCartMutation } from "../../features/user/userApi";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../../features/user/userSlice";
+import {
+  useAddProdToCartMutation,
+  useUpdateProdOfCartMutation,
+} from "../../features/user/userApi";
+import { useDispatch, useSelector } from "react-redux";
 import { ToastError, ToastSuccess } from "../../utils/Toast";
+import { addToCart } from "../../features/user/userSlice";
 
 export default function ProductBasics({ data }) {
   const productDetailsSlider = useRef();
   const [addProdToCart, { isLoading }] = useAddProdToCartMutation();
+  const [updateProdOfCart, { isLoading: crtQntLoad }] =
+    useUpdateProdOfCartMutation();
   const [isProdImgModalOpen, setProdImgModal] = useState(false);
   const [prodQuantity, setProdQuantity] = useState(1);
+  const cartItem = useSelector((state) => state.user?.data?.cartItem);
   const dispatch = useDispatch();
 
+  const isProdExist_inCart = cartItem.find(
+    (item) => item?.product?._id === data?.data?._id
+  );
   const handleAddCart = (prod) => {
-    console.log(prod);
-
-    addProdToCart({ productId: prod?._id })
+    addProdToCart({ productId: prod?._id, quantity: prodQuantity })
       .unwrap()
       .then((res) => {
-        dispatch(
-          addToCart({
-            ...res?.data,
-            product: {
-              _id: prod?._id,
-              name: prod?.name,
-              productCode: prod?.productCode,
-              images: prod?.images,
-              price: prod?.price,
-              sellPrice: prod?.sellPrice,
-              stock: prod?.stock,
-              shippingCost: prod?.shippingCost,
-            },
-          })
-        );
+        dispatch(addToCart(res?.data));
         ToastSuccess(res?.message);
       })
       .catch((err) => ToastError(err?.data?.message));
   };
+  const updateCartProuctQuantity = (isAdd) => {
+    if (isProdExist_inCart) {
+      const quantity = isAdd
+        ? isProdExist_inCart.quantity + 1
+        : isProdExist_inCart.quantity - 1;
+      updateProdOfCart({ productId: data?.data?._id, quantity })
+        .unwrap()
+        .catch(() => {});
+    } else {
+      const quantity = isAdd ? prodQuantity + 1 : prodQuantity - 1;
+      setProdQuantity(quantity);
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col md:flex-row justify-center items-center gap-5 md:gap-10 ">
@@ -166,8 +173,13 @@ export default function ProductBasics({ data }) {
             <ButtonGroup size="sm" className="mt-2">
               <Button
                 className="text-sm font-normal px-3 py-1"
-                disabled={prodQuantity === 1}
-                onClick={() => setProdQuantity(prodQuantity - 1)}
+                disabled={
+                  (!isProdExist_inCart && prodQuantity === 1) ||
+                  isProdExist_inCart?.quantity === 1 ||
+                  crtQntLoad ||
+                  isLoading
+                }
+                onClick={() => updateCartProuctQuantity(false)}
               >
                 -
               </Button>
@@ -176,20 +188,38 @@ export default function ProductBasics({ data }) {
                 variant="text"
               >
                 {" "}
-                {prodQuantity}
+                {crtQntLoad ? (
+                  <Spinner className="w-3" />
+                ) : isProdExist_inCart ? (
+                  isProdExist_inCart?.quantity
+                ) : (
+                  prodQuantity
+                )}
               </Button>
               <Button
                 className="text-sm font-normal px-3 py-1"
-                disabled={data?.data?.stock === prodQuantity}
-                onClick={() => setProdQuantity(prodQuantity + 1)}
+                disabled={
+                  data?.data?.stock ===
+                    (isProdExist_inCart?.quantity || prodQuantity) || crtQntLoad
+                }
+                onClick={() => updateCartProuctQuantity(true)}
               >
                 +
               </Button>
             </ButtonGroup>
 
-            <Button className="mt-5" onClick={() => handleAddCart(data?.data)}>
-              {isLoading ? <Spinner className="w-4" /> : "Add to cart"}
-            </Button>
+            {isProdExist_inCart ? (
+              <Button className="mt-5" disabled variant="outlined">
+                Selected
+              </Button>
+            ) : (
+              <Button
+                className="mt-5"
+                onClick={() => handleAddCart(data?.data)}
+              >
+                {isLoading ? <Spinner className="w-4" /> : "Add to cart"}
+              </Button>
+            )}
           </div>
         </div>
       </div>
