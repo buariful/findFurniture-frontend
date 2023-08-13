@@ -5,6 +5,7 @@ import { useUserOrdersQuery } from "../../features/user/userApi";
 import { LoaderBig } from "../../utils/Loader";
 import { AlertError } from "../../utils/Alert";
 import { Link } from "react-router-dom";
+import { formatDate } from "../../utils/formateDate";
 
 const UserOrder = () => {
   const { isLoading, error, data } = useUserOrdersQuery();
@@ -81,7 +82,7 @@ const UserOrder = () => {
                   <span>{d?.shipping_address}</span>
                 </td>
                 <td className="px-2 py-4 text-gray-900 whitespace-nowrap">
-                  <span>{d?.shipping_time} days</span>
+                  <span>{formatDate(d?.shipping_time)}</span>
                 </td>
                 <td className="px-2 py-4 text-blue-600 font-bold ">
                   <div className="flex justify-center items-center font">
