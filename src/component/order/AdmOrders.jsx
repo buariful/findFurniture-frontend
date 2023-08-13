@@ -29,7 +29,7 @@ const AdmOrders = () => {
   const [serachTxt, setSearchText] = useState("");
   const [shipExpired, setShipExpired] = useState(null);
   const [transId, setTransId] = useState("");
-  const limitOrder = 3;
+  const limitOrder = 20;
 
   const handlePaginationAction = (index) => {
     setPageNumber(index);

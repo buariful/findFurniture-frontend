@@ -76,12 +76,6 @@ const AdProdImages = ({ product, refetch }) => {
         {/* ---------- the images that are using ------ */}
         <h3 className="font-semibold text-xl text-start">Product Images</h3>
         <div className="flex items-center flex-wrap gap-8">
-          {console.log(
-            "product image",
-            product?.data?.images.find(
-              (f) => f.publicId === "findFurniture/omtee8paw4zfmac7nr7d"
-            )
-          )}
           {product?.data?.images?.map((img) => (
             <div key={img?.url} className="relative">
               <img

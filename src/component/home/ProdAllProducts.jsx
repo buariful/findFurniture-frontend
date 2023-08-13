@@ -29,7 +29,8 @@ const ProdAllProducts = ({ data }) => {
 
   const [addProdToWishlist, { isLoading: wishLoading }] =
     useAddProdToWishlistMutation();
-  const [deleteProdFromWishlist] = useDeleteProdFromWishlistMutation();
+  const [deleteProdFromWishlist, { isLoading: dltWishLoading }] =
+    useDeleteProdFromWishlistMutation();
   const [btnClicked, setBtnClicked] = useState(null);
   const [clickedHrtIcon, setClickedHrtIcon] = useState(null);
   const { cartItem, wishList } = useSelector((state) => state?.user?.data);
@@ -118,7 +119,7 @@ const ProdAllProducts = ({ data }) => {
             </Link>
 
             <p>
-              {wishLoading && clickedHrtIcon === d?._id ? (
+              {(wishLoading || dltWishLoading) && clickedHrtIcon === d?._id ? (
                 <Spinner className="w-5" />
               ) : isWishlisted ? (
                 <HeartIconFill

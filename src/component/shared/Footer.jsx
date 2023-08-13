@@ -48,7 +48,7 @@ const Footer = () => {
   return (
     <footer className="bg-gradient-to-t from-[#0e94ff] to-[#004a85] py-10 ">
       <div className="w-11/12 max-w-7xl mx-auto mb-6">
-        <Link>
+        <Link className="inline-block" to="/">
           <img
             src={require("../../images/logo.png")}
             alt=""

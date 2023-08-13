@@ -248,6 +248,24 @@ const CheckoutLft = ({ props }) => {
         Shipping Address
       </h2>
 
+      <div className="p-3 rounded text-slate-800 text-sm bg-green-50 text-start">
+        <p className="text-gray-500 text-center text-sm italic">
+          It's a static text. Just for testing...
+        </p>
+        <p>
+          <span className="font-semibold">Free shipping areas -- </span> Dhaka-
+          Adabor,Airport, Badda, Banani
+        </p>
+        <p>
+          <span className="font-semibold">Low shipping areas -- </span> Dhaka-
+          Demra, Dhamrai, Dhanmondi
+        </p>
+        <p>
+          <span className="font-semibold">Standard shipping areas -- </span>{" "}
+          Others Areas
+        </p>
+      </div>
+
       <form className="p-5 border rounded-md md:mb-16 shadow-md text-start ">
         <div className="text-center mb-3">
           {" "}

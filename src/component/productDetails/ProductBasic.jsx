@@ -24,6 +24,8 @@ export default function ProductBasics({ data }) {
   const dispatch = useDispatch();
 
   const handleAddCart = (prod) => {
+    console.log(prod);
+
     addProdToCart({ productId: prod?._id })
       .unwrap()
       .then((res) => {
@@ -68,11 +70,11 @@ export default function ProductBasics({ data }) {
           </Swiper>
 
           <ArrowLeftCircleIcon
-            className="w-8 cursor-pointer absolute left-0 top-1/2 -translate-y-1/2 z-50 text-white "
+            className="w-8 cursor-pointer absolute left-0 top-1/2 -translate-y-1/2 z-50 text-blue-100 hover:text-blue-500 duration-300 "
             onClick={() => productDetailsSlider.current.slidePrev()}
           />
           <ArrowRightCircleIcon
-            className="w-8 cursor-pointer absolute right-0 top-1/2 -translate-y-1/2 z-50 text-white "
+            className="w-8 cursor-pointer absolute right-0 top-1/2 -translate-y-1/2 z-50 text-blue-100 hover:text-blue-500 duration-300 "
             onClick={() => productDetailsSlider.current.slideNext()}
           />
 
@@ -185,10 +187,7 @@ export default function ProductBasics({ data }) {
               </Button>
             </ButtonGroup>
 
-            <Button
-              className="mt-5"
-              onClick={() => handleAddCart(data?.data?._id)}
-            >
+            <Button className="mt-5" onClick={() => handleAddCart(data?.data)}>
               {isLoading ? <Spinner className="w-4" /> : "Add to cart"}
             </Button>
           </div>
