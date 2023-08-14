@@ -9,7 +9,10 @@ const CheckoutRgt = ({ props }) => {
   const [placeOrder, { isLoading }] = usePlaceOrderMutation();
 
   const handleOrder = () => {
-    const products = cartItem.map((item) => item?.product?._id);
+    const products = cartItem.map((item) => {
+      return { item: item?.product?._id, quantity: item?.quantity };
+    });
+
     const data = {
       products,
       shipping_time: shippingInfo?.time,

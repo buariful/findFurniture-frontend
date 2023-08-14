@@ -6,6 +6,7 @@ import { Button, Card } from "@material-tailwind/react";
 import { LoaderBig } from "../utils/Loader";
 import { useEffect } from "react";
 import { ToastSuccess } from "../utils/Toast";
+import { formatDate } from "../utils/formateDate";
 
 const OrderSuccess = () => {
   const { trans_id } = useParams();
@@ -44,7 +45,7 @@ const OrderSuccess = () => {
         <div className="flex justify-between mb-2 pb-1 border-b border-b-blue-gray">
           <span>Shipping Time</span>
           <span className="text-[13px] text-black text-end">
-            {data?.data?.shipping_time} days
+            {formatDate(data?.data?.shipping_time)}
           </span>
         </div>
 
