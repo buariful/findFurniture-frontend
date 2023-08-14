@@ -45,6 +45,44 @@ export default function Login() {
 
   return (
     <div className="w-full my-10 grid place-items-center">
+      {/* login info */}
+      <div className="overflow-x-auto w-11/12 max-w-[500px] mx-auto my-8">
+        <table className="min-w-full border text-center text-sm font-light ">
+          <tbody>
+            <tr
+              className="border-b font-semibold cursor-pointer hover:bg-blue-gray-50 duration-300"
+              onClick={() => {
+                setEmail("admin@gmail.com");
+                setPassword("111111");
+              }}
+            >
+              <td className="whitespace-nowrap border-r px-4 py-2 font-medium ">
+                <span className="font-semibold">Admin</span>
+              </td>
+              <td className="whitespace-nowrap border-r px-4 py-2">
+                admin@gmail.com
+              </td>
+              <td className="whitespace-nowrap px-4 py-2">111111</td>
+            </tr>
+
+            <tr
+              className="border-b font-semibold cursor-pointer hover:bg-blue-gray-50 duration-300"
+              onClick={() => {
+                setEmail("user@gmail.com");
+                setPassword("111111");
+              }}
+            >
+              <td className="whitespace-nowrap border-r px-4 py-2 font-medium ">
+                <span className="font-semibold">User</span>
+              </td>
+              <td className="whitespace-nowrap border-r px-4 py-2">
+                user@gmail.com
+              </td>
+              <td className="whitespace-nowrap px-4 py-2">111111</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       {error && <AlertError text={error?.data?.message} />}
       <Card className="shadow-lg p-10 bg-gray-100">
         <Typography variant="h4" color="blue-gray">
@@ -92,44 +130,6 @@ export default function Login() {
         </form>
       </Card>
 
-      {/* login info */}
-      <div className="overflow-x-auto w-11/12 max-w-[500px] mx-auto my-8">
-        <table className="min-w-full border text-center text-sm font-light ">
-          <tbody>
-            <tr
-              className="border-b font-semibold cursor-pointer hover:bg-blue-gray-50 duration-300"
-              onClick={() => {
-                setEmail("admin@gmail.com");
-                setPassword("111111");
-              }}
-            >
-              <td className="whitespace-nowrap border-r px-4 py-2 font-medium ">
-                <span className="font-semibold">Admin</span>
-              </td>
-              <td className="whitespace-nowrap border-r px-4 py-2">
-                admin@gmail.com
-              </td>
-              <td className="whitespace-nowrap px-4 py-2">111111</td>
-            </tr>
-
-            <tr
-              className="border-b font-semibold cursor-pointer hover:bg-blue-gray-50 duration-300"
-              onClick={() => {
-                setEmail("user@gmail.com");
-                setPassword("111111");
-              }}
-            >
-              <td className="whitespace-nowrap border-r px-4 py-2 font-medium ">
-                <span className="font-semibold">User</span>
-              </td>
-              <td className="whitespace-nowrap border-r px-4 py-2">
-                user@gmail.com
-              </td>
-              <td className="whitespace-nowrap px-4 py-2">111111</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
       {isLoading && <LoaderFullScreen />}
     </div>
   );
