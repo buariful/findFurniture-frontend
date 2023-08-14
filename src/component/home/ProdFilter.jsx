@@ -7,7 +7,7 @@ import {
   Input,
   Radio,
 } from "@material-tailwind/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ChevronDownIcon,
   XMarkIcon,
@@ -17,6 +17,7 @@ import {
 import { Drawer, IconButton } from "@material-tailwind/react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  resetFilter,
   setBrands,
   setCategories,
   setColors,
@@ -133,13 +134,34 @@ const ProdFilter = () => {
       </div>
     ));
   }
+  const isFiltering =
+    selectedCategories.length > 0 ||
+    selectedBrands.length > 0 ||
+    selectedColors.length > 0 ||
+    selectedWithDiscount !== null ||
+    highPrice !== 40000 ||
+    lowPrice !== 0;
 
+  useEffect(() => {
+    setValue([lowPrice, highPrice]);
+  }, [lowPrice, highPrice]);
   return (
     <>
       {/* ---- filter options ---- */}
-      <h3 className="border-b border-b-blue-500 pb-1 mb-3 font-bold text-lg hidden xl:block">
+      {/* <h3 className="border-b border-b-blue-500 pb-1 mb-3 font-bold text-lg hidden xl:block">
         Filter
-      </h3>
+      </h3> */}
+      <div className="border-b border-b-blue-500 pb-1 mb-3 hidden xl:flex xl:justify-between xl:items-center">
+        <h3 className="font-bold text-lg">Filter</h3>
+        <Button
+          className="flex gap-1 items-center text-sm capitalize font-normal py-1"
+          size="sm"
+          disabled={!isFiltering}
+          onClick={() => dispatch(resetFilter())}
+        >
+          clear <XMarkIcon className="w-4" />
+        </Button>
+      </div>
       <div className="hidden xl:block ">
         <Accordion
           open={filterOptionsToggle.price}

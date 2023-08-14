@@ -145,6 +145,7 @@ function App() {
               <Route path="admin/brand" element={<AdmAllBrand />} />
             </Route>
           </Route>
+
           <Route
             path="*"
             element={
