@@ -42,9 +42,9 @@ const ProdFilter = () => {
   } = useSelector((state) => state.categories);
   const { isLoading: brandLoading, data: brandsData } = useGetAllBrandsQuery();
   const [filterOptionsToggle, setFilterOptionToggle] = useState({
-    category: true,
-    color: true,
-    brand: true,
+    category: false,
+    color: false,
+    brand: false,
     discount: true,
     price: true,
   });
