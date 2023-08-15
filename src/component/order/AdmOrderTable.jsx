@@ -97,11 +97,11 @@ const AdmOrderTable = ({
                 <td className="px-2 py-4 text-gray-900 whitespace-nowrap">
                   {d?.products?.map((prod) => (
                     <Link
-                      key={prod?._id}
-                      to={`/product/${prod?._id}`}
+                      key={prod?.item._id}
+                      to={`/product/${prod?.item?._id}`}
                       className="font-semibold hover:text-blue-500 duration-300 block mb-1"
                     >
-                      {prod?.name}
+                      {prod?.item?.name}
                     </Link>
                   ))}
                 </td>

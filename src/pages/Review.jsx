@@ -20,6 +20,13 @@ const Review = () => {
     error: reviewError,
     data: reviews,
   };
+
+  let revProd_arrToObj = {};
+  if (reviews?.data.length > 0) {
+    for (const revProd of reviews?.data) {
+      revProd_arrToObj[revProd?.product?._id] = revProd;
+    }
+  }
   return (
     <div className="w-11/12 mx-auto">
       <div className="mt-16 mb-8">
@@ -27,7 +34,7 @@ const Review = () => {
       </div>
       <PurchasedProducts
         orderData={orderData}
-        reviewedProducts={reviews?.data}
+        reviewedProducts={revProd_arrToObj}
         refetchReview={refetch}
       />
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Textarea } from "@material-tailwind/react";
-import { LoaderSmall } from "../../utils/Loader";
+import { LoaderFullScreen, LoaderSmall } from "../../utils/Loader";
 import { useState } from "react";
 import {
   PencilSquareIcon,
@@ -17,8 +17,9 @@ import ReactStars from "react-stars";
 
 const PurchasedProducts = ({ orderData, reviewedProducts, refetchReview }) => {
   const { isLoading, error, data } = orderData;
-  const [addReview] = useAddReviewMutation();
-  const [updateReview] = useUpdateReviewMutation();
+  const [addReview, { isLoading: addRev_loading }] = useAddReviewMutation();
+  const [updateReview, { isLoading: upRev_loading }] =
+    useUpdateReviewMutation();
   const [reviewModal, setReviewModal] = useState(false);
   const [products, setProducts] = useState([]);
   const [prodForReview, setProdForReview] = useState();
@@ -28,9 +29,6 @@ const PurchasedProducts = ({ orderData, reviewedProducts, refetchReview }) => {
     product: null,
     reviewId: null,
   });
-  const isProductExist = (_id) => {
-    return products.some((product) => product._id === _id);
-  };
   const handleReviewModal = (matchingReview, prod) => {
     setReview({ rating: null, comment: null, product: null, reviewId: null });
     setProdForReview(prod);
@@ -51,7 +49,6 @@ const PurchasedProducts = ({ orderData, reviewedProducts, refetchReview }) => {
       comment: review.comment,
       rating: review.rating,
     };
-
     if (isReviewUpdating) {
       const updatedRevData = { reviewId: review.reviewId, data };
       updateReview(updatedRevData)
@@ -78,40 +75,43 @@ const PurchasedProducts = ({ orderData, reviewedProducts, refetchReview }) => {
     setReviewModal(false);
   };
 
+  const isProductExist = (_id) => {
+    return products.some((product) => product._id === _id);
+  };
   if (data?.data?.length > 0) {
     data?.data?.forEach((order) => {
       if (order?.isDelivered) {
         order?.products?.forEach((prod) => {
-          if (!isProductExist(prod._id)) {
+          if (!isProductExist(prod?._id)) {
             setProducts((prevProducts) => [...prevProducts, prod]);
           }
         });
       }
     });
   }
-  let myProducts;
+
+  let myProducts = "ddd";
   if (products?.length > 0) {
     myProducts = products?.map((prod) => {
-      const matchingReview = reviewedProducts?.find(
-        (revProd) => revProd?.product?._id === prod?._id
-      );
+      const matchingReview = reviewedProducts[prod?.item?._id];
+      console.log("matchingReview", matchingReview);
       return (
         <tr className="bg-white border-b" key={prod?._id}>
           <td className="px-2 py-4 text-gray-900 whitespace-nowrap">
             <img
-              src={prod?.images[0]?.url}
+              src={prod?.item?.images[0]?.url}
               alt=""
               className="w-[50px] rounded mx-auto"
             />
           </td>
           <td className="px-2 py-4 text-gray-900 whitespace-nowrap">
-            {prod?.name}
+            {prod?.item.name}
           </td>
           <td className="px-2 py-4 text-gray-900 whitespace-nowrap">
-            {prod?.brand}
+            {prod?.item?.brand}
           </td>
           <td className="px-2 py-4 text-gray-900 whitespace-nowrap">
-            {prod?.category}
+            {prod?.item?.category}
           </td>
           <td className="px-2 py-4 font-semibold">
             {matchingReview ? (
@@ -120,7 +120,7 @@ const PurchasedProducts = ({ orderData, reviewedProducts, refetchReview }) => {
                 variant="outlined"
                 onClick={() => {
                   // setProdForReview(prod);
-                  handleReviewModal(matchingReview, prod);
+                  handleReviewModal(matchingReview, prod?.item);
                 }}
               >
                 <ChatBubbleOvalLeftEllipsisIcon className="w-4" />
@@ -130,8 +130,7 @@ const PurchasedProducts = ({ orderData, reviewedProducts, refetchReview }) => {
               <Button
                 className="flex items-center mx-auto p-2 text-[10px] gap-2"
                 onClick={() => {
-                  // setProdForReview(prod);
-                  handleReviewModal(null, prod);
+                  handleReviewModal(null, prod?.item);
                 }}
               >
                 <PencilSquareIcon className="w-4" />
@@ -252,6 +251,8 @@ const PurchasedProducts = ({ orderData, reviewedProducts, refetchReview }) => {
           )}
         </div>
       </Modal>
+
+      {(addRev_loading || upRev_loading) && <LoaderFullScreen />}
     </>
   );
 };
