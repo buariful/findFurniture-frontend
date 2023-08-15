@@ -94,7 +94,6 @@ const PurchasedProducts = ({ orderData, reviewedProducts, refetchReview }) => {
   if (products?.length > 0) {
     myProducts = products?.map((prod) => {
       const matchingReview = reviewedProducts[prod?.item?._id];
-      console.log("matchingReview", matchingReview);
       return (
         <tr className="bg-white border-b" key={prod?._id}>
           <td className="px-2 py-4 text-gray-900 whitespace-nowrap">

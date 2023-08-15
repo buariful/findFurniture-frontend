@@ -148,19 +148,18 @@ const ProdFilter = () => {
   return (
     <>
       {/* ---- filter options ---- */}
-      {/* <h3 className="border-b border-b-blue-500 pb-1 mb-3 font-bold text-lg hidden xl:block">
-        Filter
-      </h3> */}
       <div className="border-b border-b-blue-500 pb-1 mb-3 hidden xl:flex xl:justify-between xl:items-center">
         <h3 className="font-bold text-lg">Filter</h3>
-        <Button
-          className="flex gap-1 items-center text-sm capitalize font-normal py-1"
-          size="sm"
-          disabled={!isFiltering}
-          onClick={() => dispatch(resetFilter())}
-        >
-          clear <XMarkIcon className="w-4" />
-        </Button>
+        {location !== "/category-product" && (
+          <Button
+            className="flex gap-1 items-center text-sm capitalize font-normal py-1"
+            size="sm"
+            disabled={!isFiltering}
+            onClick={() => dispatch(resetFilter())}
+          >
+            clear <XMarkIcon className="w-4" />
+          </Button>
+        )}
       </div>
       <div className="hidden xl:block ">
         <Accordion

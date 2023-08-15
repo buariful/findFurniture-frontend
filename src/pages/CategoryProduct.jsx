@@ -10,7 +10,7 @@ import { resetFilter } from "../features/searchFilter/searchFilterSlice";
 const CategoryProduct = () => {
   const category = useSelector((state) => state.filter.categories[0]);
   const dispatch = useDispatch();
-  const location = useLocation();
+  const location = useLocation().pathname;
   return (
     <>
       <div className="py-5">
