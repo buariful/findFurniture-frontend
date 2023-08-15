@@ -14,6 +14,7 @@ import {
 } from "../../features/review/reviewApi";
 import { ToastError, ToastSuccess } from "../../utils/Toast";
 import ReactStars from "react-stars";
+import { Link } from "react-router-dom";
 
 const PurchasedProducts = ({ orderData, reviewedProducts, refetchReview }) => {
   const { isLoading, error, data } = orderData;
@@ -104,7 +105,12 @@ const PurchasedProducts = ({ orderData, reviewedProducts, refetchReview }) => {
             />
           </td>
           <td className="px-2 py-4 text-gray-900 whitespace-nowrap">
-            {prod?.item.name}
+            <Link
+              to={`/product/${prod?.item._id}`}
+              className="font-semibold hover:text-blue-500"
+            >
+              {prod?.item.name}
+            </Link>
           </td>
           <td className="px-2 py-4 text-gray-900 whitespace-nowrap">
             {prod?.item?.brand}

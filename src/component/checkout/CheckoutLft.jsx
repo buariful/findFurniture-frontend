@@ -21,6 +21,7 @@ import {
   useGetUpazilasMutation,
 } from "../../features/locations/locationApi";
 import ReactSelect from "react-select";
+import { Link } from "react-router-dom";
 
 const CheckoutLft = ({ props }) => {
   const {
@@ -157,7 +158,12 @@ const CheckoutLft = ({ props }) => {
                       />
                     </td>
                     <td className="p-2 font-medium text-gray-900 whitespace-nowrap capitalize">
-                      {cart?.product?.name}
+                      <Link
+                        className="hover:text-blue-500 font-semibold"
+                        to={`/product/${cart?.product?._id}`}
+                      >
+                        {cart?.product?.name}
+                      </Link>
                     </td>
                     <td className="p-2 font-medium text-gray-900 whitespace-nowrap">
                       <span

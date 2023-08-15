@@ -9,6 +9,7 @@ import {
 import { addToCart, deleteFromWishlist } from "../features/user/userSlice";
 import { ToastError, ToastSuccess } from "../utils/Toast";
 import { AlertError } from "../utils/Alert";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
   const wishlist = useSelector((state) => state.user?.data?.wishList);
@@ -77,7 +78,12 @@ const Cart = () => {
                               />
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 capitalize">
-                              {item?.name}
+                              <Link
+                                to={`/product/${item?._id}`}
+                                className="font-semibold hover:text-blue-500"
+                              >
+                                {item?.name}
+                              </Link>
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 font-semibold">
                               {item?.sellPrice ? item?.sellPrice : item?.price}
