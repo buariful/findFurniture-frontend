@@ -9,8 +9,9 @@ import { LoaderFullScreen } from "../utils/Loader";
 const ProductDetails = () => {
   let { id } = useParams();
   const { data, isLoading } = useGetSingleProductQuery(id);
-
-  return (
+  return isLoading ? (
+    <LoaderFullScreen />
+  ) : (
     <div className="w-11/12 mx-auto py-14">
       <div className="mb-14">
         <ProductBasic data={data} />
